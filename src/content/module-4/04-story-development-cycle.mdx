@@ -1,0 +1,209 @@
+# Story Development Cycle — O Loop Central
+
+O **Story Development Cycle** e o workflow mais usado do AIOX. Ele automatiza o fluxo completo de uma story — desde a criacao ate a entrega com quality gate — seguindo a sequencia: **criar → validar → implementar → QA review**.
+
+---
+
+## O Ciclo em 4 Fases
+
+<WorkflowVisualizer
+  title="Story Development Cycle"
+  steps={[
+    {
+      agent: "@sm",
+      agentIcon: "🌊",
+      title: "Fase 1: Criar Story",
+      description: "River identifica a proxima story do backlog, extrai requisitos do epic/PRD e popula o template com titulo, acceptance criteria, escopo e dependencias.",
+      artifacts: ["{epic}.{story}.story.md"]
+    },
+    {
+      agent: "@po",
+      agentIcon: "🎯",
+      title: "Fase 2: Validar Story",
+      description: "Pax executa um checklist rigoroso de 10 pontos, garantindo que a story esta pronta para implementacao. Se falhar, retorna para o SM com feedback.",
+      artifacts: ["validation_report.json"]
+    },
+    {
+      agent: "@dev",
+      agentIcon: "💻",
+      title: "Fase 3: Implementar Story",
+      description: "Dex implementa a story seguindo os acceptance criteria, escreve testes, executa o CodeRabbit Self-Healing Loop e verifica o Definition of Done.",
+      artifacts: ["codigo fonte", "testes", "commit"]
+    },
+    {
+      agent: "@qa",
+      agentIcon: "✅",
+      title: "Fase 4: QA Review",
+      description: "Quinn executa review final com quality gate: code review, testes unitarios, acceptance criteria, regressoes, performance, seguranca e documentacao.",
+      artifacts: ["gate-file.yaml"]
+    }
+  ]}
+/>
+
+---
+
+## Fluxo de Status da Story
+
+Cada story passa por um ciclo de vida definido:
+
+```
+Draft → Ready → In Progress → In Review → Done
+  ↑       ↑                       |
+  |       |                       ↓
+  └── PO rejeita          QA rejeita → volta para In Progress
+```
+
+| Status | Quem define | Proximo passo |
+|---|---|---|
+| **Draft** | @sm cria a story | @po valida |
+| **Ready** | @po aprova (10 checks) | @dev implementa |
+| **In Progress** | @dev inicia trabalho | @dev conclui |
+| **In Review** | @dev termina + CodeRabbit | @qa revisa |
+| **Done** | @qa aprova | Proxima story |
+
+---
+
+## Fase 2: Validacao — Os 10 Checks do PO
+
+O `@po` (Pax) executa um checklist rigido antes de liberar para desenvolvimento:
+
+| # | Check | O que verifica |
+|---|---|---|
+| 1 | Titulo claro | Descreve precisamente o que sera feito |
+| 2 | Descricao completa | Problema/necessidade claramente explicado |
+| 3 | Acceptance criteria testaveis | Formato Given/When/Then preferido |
+| 4 | Escopo bem definido | O que esta IN e OUT claramente listado |
+| 5 | Dependencias mapeadas | Stories ou recursos prerequisitos identificados |
+| 6 | Estimativa de complexidade | Pontos ou T-shirt sizing |
+| 7 | Valor de negocio | Beneficio para usuario/negocio claro |
+| 8 | Riscos documentados | Potenciais problemas identificados |
+| 9 | Criterios de Done | Definicao clara de quando esta completa |
+| 10 | Alinhamento com PRD/Epic | Consistencia com documentos fonte |
+
+Se qualquer check critico falhar, a story retorna para o `@sm` com feedback detalhado.
+
+---
+
+## Fase 3: Implementacao — 3 Modos de Execucao
+
+O `@dev` (Dex) pode operar em tres modos diferentes, dependendo da complexidade e preferencia:
+
+| Modo | Prompts | Quando usar |
+|---|---|---|
+| **YOLO** | 0-1 | Tarefas simples e deterministicas. Decisoes autonomas com logging. |
+| **Interactive** (default) | 5-10 | Aprendizado e decisoes complexas. Checkpoints de feedback. |
+| **Pre-Flight** | 10-15 | Requisitos ambiguos, trabalho critico. Planejamento completo antes de executar. |
+
+### CodeRabbit Self-Healing Loop
+
+Antes de marcar a story como "In Review", o @dev executa automaticamente o CodeRabbit:
+
+```
+1. Executar CodeRabbit scan
+2. Se sem CRITICAL issues → documentar HIGH e prosseguir
+3. Se CRITICAL encontrados → tentar auto-fix
+4. Incrementar iteracao (max: 2)
+5. Se issues persistem apos 2 tentativas → HALT
+```
+
+<Callout type="info" title="Self-Healing automatico">
+O CodeRabbit Self-Healing tenta corrigir issues CRITICAL automaticamente ate 2 vezes. Issues MEDIUM sao documentados como tech debt. Issues LOW sao ignorados.
+</Callout>
+
+---
+
+## Fase 4: QA Review — O Quality Gate
+
+O `@qa` (Quinn) executa 7 checks antes de aprovar:
+
+| # | Check | Descricao |
+|---|---|---|
+| 1 | Code review | Padroes, legibilidade, manutenibilidade |
+| 2 | Testes unitarios | Adequados e passando |
+| 3 | Acceptance criteria | Todos atendidos |
+| 4 | Sem regressoes | Funcionalidades existentes preservadas |
+| 5 | Performance | Dentro dos limites aceitaveis |
+| 6 | Seguranca | OWASP basics verificados |
+| 7 | Documentacao | Atualizada se necessario |
+
+### Decisoes do Gate
+
+| Decisao | Criterio | Acao |
+|---|---|---|
+| **PASS** | Todos checks passaram, sem issues HIGH | Story aprovada → Done |
+| **CONCERNS** | Issues nao-bloqueantes presentes | Aprovada com observacoes |
+| **FAIL** | Issues HIGH/CRITICAL presentes | Retorna para @dev com fixes |
+| **WAIVED** | Issues explicitamente aceitos | Aprovada com waiver documentado |
+
+---
+
+## Condicoes de Bloqueio
+
+O workflow HALT e solicita intervencao humana quando:
+
+1. **Dependencias nao aprovadas** — nova lib ou recurso requerido
+2. **Ambiguidade nos requisitos** — story nao clara apos verificacao
+3. **3 falhas consecutivas** — tentativas de implementacao ou correcao
+4. **Configuracao faltando** — core-config.yaml ou templates ausentes
+5. **Regressao** — testes existentes quebraram
+
+---
+
+## Os 4 Agentes do Ciclo
+
+| Agente | Nome | Arquetipo | Papel | Comandos Chave |
+|---|---|---|---|---|
+| `@sm` | River | Facilitator | Criacao de stories | `*draft` |
+| `@po` | Pax | Balancer | Validacao de stories | `*validate-story-draft` |
+| `@dev` | Dex | Builder | Implementacao | `*develop`, `*apply-qa-fixes` |
+| `@qa` | Quinn | Guardian | Quality gate | `*review`, `*gate` |
+
+---
+
+## Quando Usar e Quando NAO Usar
+
+| Cenario | Usar SDC? | Alternativa |
+|---|---|---|
+| Qualquer story (greenfield ou brownfield) | Sim | — |
+| Ciclo completo com validacao e QA | Sim | — |
+| Hotfixes urgentes | Nao | Fluxo simplificado sem QA gate |
+| Spikes/POCs exploratorios | Nao | Desenvolvimento ad-hoc |
+| Tasks puramente tecnicas sem story | Nao | Tarefas diretas com @dev |
+
+---
+
+## Artefatos de Saida
+
+| Artefato | Local | Descricao |
+|---|---|---|
+| Story file | `{devStoryLocation}/{epic}.{story}.story.md` | Story completa com logs |
+| Implementation | Sistema de arquivos | Codigo implementado |
+| Test files | Padrao do projeto | Testes unitarios |
+| QA Gate | `{qaLocation}/gates/{epic}.{story}-{slug}.yml` | Decisao de QA |
+| Decision Log | `.ai/decision-log-{story-id}.md` | Log de decisoes (modo YOLO) |
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Quantos checks o @po executa na validacao da story?",
+      options: ["5 checks", "7 checks", "10 checks", "12 checks"],
+      correct: 2,
+      explanation: "O @po (Pax) executa exatamente 10 checks que cobrem titulo, descricao, acceptance criteria, escopo, dependencias, complexidade, valor de negocio, riscos, criterios de done e alinhamento com PRD."
+    },
+    {
+      question: "O que o CodeRabbit Self-Healing faz quando encontra issues CRITICAL?",
+      options: ["Ignora e prossegue", "Documenta como tech debt", "Tenta auto-fix ate 2 vezes", "Cancela a story"],
+      correct: 2,
+      explanation: "O Self-Healing tenta corrigir issues CRITICAL automaticamente ate 2 iteracoes. Se persistirem, o workflow faz HALT e requer intervencao manual."
+    },
+    {
+      question: "Qual modo de execucao do @dev e ideal para requisitos ambiguos?",
+      options: ["YOLO", "Interactive", "Pre-Flight", "Auto"],
+      correct: 2,
+      explanation: "O modo Pre-Flight faz um planejamento completo e resolve ambiguidades ANTES de iniciar a execucao, com 10-15 prompts upfront."
+    }
+  ]}
+/>

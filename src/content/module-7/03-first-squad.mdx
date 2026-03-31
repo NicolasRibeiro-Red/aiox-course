@@ -1,0 +1,400 @@
+# Construindo sua Primeira Squad
+
+Nesta licao, voce vai construir uma squad funcional do zero — passo a passo. Ao final, tera um time de agentes IA trabalhando juntos em um dominio especifico.
+
+---
+
+## O que Vamos Construir
+
+Vamos criar uma **code-review-squad** — uma squad simples com:
+- 1 agente reviewer
+- 1 task de review
+- Configuracao de coding standards
+- Manifesto completo
+
+---
+
+## Pre-requisitos
+
+Antes de comecar, certifique-se de ter:
+
+- Node.js 18+
+- Projeto AIOX inicializado (`.aiox-core/` existe)
+- Git configurado
+
+---
+
+## Passo 1: Criar a Estrutura de Diretorios
+
+```bash
+# Criar a estrutura da squad
+mkdir -p squads/code-review-squad/{agents,tasks,config,checklists}
+```
+
+A estrutura inicial ficara:
+
+```
+squads/code-review-squad/
+├── agents/
+├── tasks/
+├── config/
+└── checklists/
+```
+
+---
+
+## Passo 2: Criar o Manifesto (squad.yaml)
+
+O manifesto e o primeiro arquivo a ser criado. Ele define a identidade e os componentes da squad:
+
+```yaml
+# squads/code-review-squad/squad.yaml
+
+name: code-review-squad
+version: 1.0.0
+description: >
+  Squad especializada em revisao de codigo.
+  Analisa qualidade, seguranca, performance e
+  aderencia a padroes.
+
+author: Seu Nome <seu@email.com>
+license: MIT
+slashPrefix: review
+
+aiox:
+  minVersion: "2.1.0"
+  type: squad
+
+components:
+  agents:
+    - code-reviewer.md
+  tasks:
+    - review-pull-request.md
+  workflows: []
+  checklists:
+    - review-checklist.md
+  templates: []
+  tools: []
+  scripts: []
+
+config:
+  extends: extend
+  coding-standards: config/coding-standards.md
+
+dependencies:
+  node: []
+  python: []
+  squads: []
+
+tags:
+  - code-review
+  - quality
+  - security
+```
+
+<Callout type="tip" title="slashPrefix">
+Com `slashPrefix: review`, os comandos dessa squad apareceriam como `/review-pull-request`, `/review-security`, etc. na IDE.
+</Callout>
+
+---
+
+## Passo 3: Criar o Agente
+
+Crie o arquivo do agente reviewer:
+
+```yaml
+# squads/code-review-squad/agents/code-reviewer.md
+
+---
+agent:
+  name: CodeReviewer
+  id: code-reviewer
+  title: Especialista em Code Review
+  icon: "🔍"
+  whenToUse: >
+    Quando precisar revisar codigo, analisar PRs,
+    ou verificar aderencia a padroes de qualidade.
+
+persona_profile:
+  archetype: Guardian
+
+  communication:
+    tone: analytical
+    emoji_frequency: low
+    vocabulary:
+      - code smell
+      - refactoring
+      - SOLID
+      - clean code
+      - security vulnerability
+    greeting_levels:
+      minimal: "Review pronto."
+      named: "Ola! Vou revisar seu codigo."
+      archetypal: >
+        CodeReviewer ativo. Analisando qualidade,
+        seguranca e aderencia a padroes.
+    signature_closing: "Codigo revisado. Qualidade garantida."
+
+persona:
+  role: "Revisor de codigo especializado"
+  style: "Analitico e detalhista"
+  identity: >
+    Especialista em revisao de codigo com foco em
+    qualidade, seguranca e melhores praticas.
+  focus: "Qualidade e seguranca do codigo"
+
+  core_principles:
+    - Codigo limpo e legivel e prioridade
+    - Seguranca nunca e opcional
+    - Sugestoes construtivas, nao criticas destrutivas
+    - Padroes existem para serem seguidos
+
+commands:
+  - help: Mostrar comandos disponiveis
+  - review: Revisar codigo ou PR
+  - security-check: Focar em vulnerabilidades
+  - standards-check: Verificar aderencia a padroes
+
+dependencies:
+  tasks:
+    - review-pull-request.md
+---
+
+# CodeReviewer
+
+Especialista em revisao de codigo com foco em
+qualidade, seguranca e aderencia a padroes.
+```
+
+---
+
+## Passo 4: Criar a Task
+
+Crie a task principal da squad:
+
+```markdown
+# squads/code-review-squad/tasks/review-pull-request.md
+
+# Review Pull Request
+
+**Description:** Revisar um pull request analisando
+qualidade, seguranca, performance e padroes.
+**Agent(s):** @code-reviewer
+**Elicit:** true
+
+---
+
+## Prerequisites
+
+- Repositorio Git inicializado
+- PR ou branch para revisar
+- Coding standards definidos
+
+## Steps
+
+### Step 1: Identificar Escopo
+
+Analise quais arquivos foram modificados e qual
+o objetivo da mudanca.
+
+**Elicitation Point:**
+- Qual branch ou PR devo revisar?
+- Ha alguma area de foco especifico?
+
+### Step 2: Analise de Qualidade
+
+Revisar o codigo quanto a:
+- Nomenclatura clara
+- Funcoes pequenas e focadas
+- DRY (Don't Repeat Yourself)
+- Complexidade ciclomatica
+
+### Step 3: Analise de Seguranca
+
+Verificar:
+- Input validation
+- SQL injection
+- XSS vulnerabilities
+- Secrets expostos
+- Dependencias com CVEs
+
+### Step 4: Analise de Performance
+
+Avaliar:
+- Queries N+1
+- Memory leaks
+- Operacoes sincronas desnecessarias
+
+### Step 5: Relatorio
+
+Gerar relatorio estruturado com findings
+classificados por severidade (P1/P2/P3).
+
+## Deliverables
+
+- [ ] Relatorio de review com findings classificados
+- [ ] Sugestoes de melhoria por arquivo
+- [ ] Avaliacao geral (aprovar/solicitar mudancas)
+
+## Error Handling
+
+Se o PR tiver mais de 500 linhas modificadas,
+sugerir split em PRs menores antes de revisar.
+```
+
+---
+
+## Passo 5: Criar Configuracoes
+
+### Coding Standards
+
+```markdown
+# squads/code-review-squad/config/coding-standards.md
+
+# Coding Standards — Code Review Squad
+
+## Nomenclatura
+- Variaveis e funcoes: camelCase
+- Classes e componentes: PascalCase
+- Constantes: UPPER_SNAKE_CASE
+- Arquivos: kebab-case
+
+## Funcoes
+- Maximo 20 linhas por funcao
+- Uma responsabilidade por funcao
+- Nomes descritivos (evitar abreviacoes)
+
+## Seguranca
+- Nunca commitar secrets ou API keys
+- Validar todo input do usuario
+- Usar parametros preparados para queries SQL
+
+## Testes
+- Todo codigo novo deve ter testes
+- Cobertura minima: 80%
+- Nomear testes descritivamente
+```
+
+### Checklist de Review
+
+```markdown
+# squads/code-review-squad/checklists/review-checklist.md
+
+# Review Checklist
+
+## Qualidade
+- [ ] Codigo limpo e legivel
+- [ ] Sem duplicacao
+- [ ] Funcoes pequenas e focadas
+- [ ] Nomenclatura clara
+
+## Seguranca
+- [ ] Sem secrets expostos
+- [ ] Input validado
+- [ ] Sem vulnerabilidades conhecidas
+
+## Performance
+- [ ] Sem queries N+1
+- [ ] Sem memory leaks obvios
+
+## Testes
+- [ ] Testes adicionados para novo codigo
+- [ ] Testes existentes passando
+```
+
+---
+
+## Passo 6: Validar a Squad
+
+```bash
+# Ativar o squad-creator
+@squad-creator
+
+# Validar estrutura
+*validate-squad code-review-squad
+
+# Validacao strict (para CI/CD)
+*validate-squad code-review-squad --strict
+```
+
+<Callout type="warning" title="Erros Comuns na Validacao">
+Os erros mais comuns sao: `squad.yaml` com YAML invalido, agentes sem `id` unico, e tasks sem `Description` ou `Steps`. Corrija esses campos antes de tudo.
+</Callout>
+
+---
+
+## Passo 7: Usar a Squad
+
+Com a squad validada, voce pode usa-la imediatamente:
+
+```bash
+# O agente fica disponivel no projeto
+@code-reviewer
+
+# Executar a task de review
+*review
+
+# Ou especificamente
+*review-pull-request
+```
+
+---
+
+## Usando o Squad Designer (Alternativa)
+
+Se voce ja tem documentacao do projeto (PRD, specs), o Squad Designer pode gerar a squad automaticamente:
+
+```bash
+@squad-creator
+
+# Design guiado a partir de docs
+*design-squad --docs ./docs/prd/requirements.md
+
+# O sistema analisa os docs e recomenda:
+# - Agentes necessarios
+# - Tasks sugeridas
+# - Workflows relevantes
+
+# Salva blueprint
+# Gera squad a partir do blueprint
+*create-squad my-squad --from-design
+```
+
+O Squad Designer gera um arquivo `.squad-design.yaml` com recomendacoes e confidence scores para cada componente sugerido.
+
+---
+
+## Proximos Passos
+
+Agora que voce tem sua primeira squad funcionando:
+
+1. **Estenda**: Adicione mais agentes e tasks
+2. **Teste**: Valide com `*validate-squad --strict`
+3. **Compartilhe**: Publique com `*publish-squad`
+4. **Componha**: Combine com outras squads
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Qual e o primeiro arquivo a criar ao montar uma squad?",
+      options: ["README.md", "agents/main-agent.md", "squad.yaml", "config/settings.yaml"],
+      correct: 2,
+      explanation: "O squad.yaml (manifesto) e o primeiro arquivo a ser criado. Ele define a identidade, componentes e configuracao da squad."
+    },
+    {
+      question: "Como o Squad Designer gera recomendacoes?",
+      options: ["Copiando de templates", "Analisando documentacao do projeto", "Fazendo perguntas ao usuario", "Usando IA generativa aleatoria"],
+      correct: 1,
+      explanation: "O Squad Designer analisa documentacao do projeto (PRDs, specs, requirements) e extrai conceitos, workflows e papeis para recomendar agentes e tasks."
+    },
+    {
+      question: "Qual comando valida a estrutura de uma squad em modo rigoroso?",
+      options: ["*check-squad --full", "*validate-squad --strict", "*test-squad --all", "*lint-squad --rigorous"],
+      correct: 1,
+      explanation: "O comando *validate-squad --strict executa validacao rigorosa, ideal para uso em pipelines de CI/CD."
+    }
+  ]}
+/>

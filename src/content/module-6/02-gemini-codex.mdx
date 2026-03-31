@@ -1,0 +1,231 @@
+# Gemini CLI e Codex CLI
+
+Alem do Claude Code, o AIOX oferece integracao robusta com o **Gemini CLI** (Google) e o **Codex CLI** (OpenAI). Ambas sao opcoes terminal-first com bom suporte ao framework, cada uma com suas particularidades.
+
+---
+
+## Gemini CLI
+
+O Gemini CLI e a interface de linha de comando do Google para modelos de IA. O AIOX integra com ele atraves de slash launcher commands e hooks nativos.
+
+### Status no AIOX
+
+| Aspecto | Nivel |
+|---------|-------|
+| Status Geral | Funciona (Works) |
+| Ativacao de Agentes | `/aiox-menu` e `/aiox-<agent>` |
+| Auto-Checks | Alto (diferencas menores em event handling) |
+| Session Tracking | Automatico |
+| MCP Support | Nativo |
+
+### Setup
+
+O setup do Gemini CLI segue o fluxo do instalador AIOX:
+
+```yaml
+config_file: .gemini/rules.md
+agent_folder: .gemini/rules/AIOX/agents
+activation: slash launcher commands
+format: text
+mcp_support: native
+special_features:
+  - Google AI models
+  - CLI-based workflow
+  - Multimodal support
+  - Native hooks events and hook commands
+  - Native MCP server support
+```
+
+### Instalacao Passo a Passo
+
+```bash
+# 1. Selecionar Gemini no wizard do instalador AIOX
+# 2. O AIOX cria automaticamente:
+#    - .gemini/rules.md
+#    - .gemini/rules/AIOX/agents/*.md
+#    - .gemini/commands/*.toml (/aiox-menu, /aiox-<agent>)
+#    - .gemini/hooks/*.js
+#    - .gemini/settings.json (hooks habilitados)
+
+# 3. Validar integracao
+npm run sync:ide:gemini
+npm run validate:gemini-sync
+npm run validate:gemini-integration
+```
+
+### Ativando Agentes
+
+O Gemini CLI usa um sistema de menu para ativacao de agentes:
+
+```bash
+# Abrir menu de atalhos
+/aiox-menu
+
+# Ativar agentes diretamente
+/aiox-dev
+/aiox-architect
+/aiox-qa
+
+# Launcher generico
+/aiox-agent <agent-id>
+```
+
+<Callout type="tip" title="Hooks Nativos">
+O Gemini CLI suporta hooks nativos com eventos e comandos. Isso coloca ele proximo ao Claude Code em termos de automacao pre/pos acao.
+</Callout>
+
+### O que Funciona Bem
+
+- **Hooks nativos**: O Gemini CLI tem suporte nativo a eventos de hook, similar ao Claude Code
+- **MCP nativo**: Servidores MCP funcionam nativamente
+- **Multimodal**: Suporte a imagens e outros formatos alem de texto
+- **Auto-checks**: A maioria dos cenarios e coberta automaticamente
+
+### Limitacoes
+
+A unica diferenca significativa em relacao ao Claude Code sao **diferencas menores em timing de event handling**. Na pratica, isso raramente afeta o workflow diario.
+
+---
+
+## Codex CLI
+
+O Codex CLI (OpenAI) e uma opcao terminal-first que funciona bem com AIOX, embora com algumas limitacoes em comparacao ao Claude Code e Gemini.
+
+### Status no AIOX
+
+| Aspecto | Nivel |
+|---------|-------|
+| Status Geral | Limitado |
+| Ativacao de Agentes | `/skills` e `aiox-<agent-id>` |
+| Auto-Checks | Parcial |
+| Session Tracking | Manual ou parcial |
+| MCP Support | Nativo via tooling Codex |
+
+### Setup
+
+```yaml
+config_file: AGENTS.md
+agent_folder: .codex/agents
+activation: terminal instructions
+skills_folder: .codex/skills (source), ~/.codex/skills (Codex menu)
+format: markdown
+mcp_support: native via Codex tooling
+special_features:
+  - AGENTS.md project instructions
+  - /skills activators (aiox-<agent-id>)
+  - Strong CLI workflow support
+  - Notify command plus emerging tool hooks
+```
+
+### Instalacao
+
+```bash
+# 1. Manter AGENTS.md na raiz do repositorio
+# 2. Sincronizar arquivos auxiliares
+npm run sync:ide:codex
+npm run sync:skills:codex
+
+# 3. Validar setup
+npm run validate:codex-sync
+npm run validate:codex-integration
+npm run validate:codex-skills
+
+# 4. Verificar
+ls -la AGENTS.md .codex/agents/ .codex/skills/
+```
+
+### Ativando Agentes
+
+```bash
+# Abrir menu de skills
+/skills
+
+# Selecionar o agente desejado
+# aiox-architect, aiox-dev, aiox-qa, etc.
+```
+
+<Callout type="warning" title="Sync Manual Necessario">
+Diferente do Claude Code, o Codex CLI requer sync manual para manter os agentes atualizados. Execute `npm run sync:ide:codex` sempre que houver mudancas nos agentes.
+</Callout>
+
+### O que Funciona Bem
+
+- **AGENTS.md**: Instrucoes de projeto claras e respeitadas
+- **Skills activators**: Sistema de `/skills` funciona bem para ativacao
+- **CLI workflow**: Otimo para quem prefere fluxo 100% terminal
+- **Notify command**: Hooks emergentes em releases recentes
+
+### Limitacoes
+
+| Limitacao | Impacto | Workaround |
+|-----------|---------|------------|
+| Session tracking parcial | Menos contexto entre sessoes | Use `AGENTS.md` + `/skills` |
+| Alguns checks manuais | Pre/pos acao nao totalmente automaticos | Execute scripts de sync/validacao |
+| Sem audit trail automatico | Menos rastreabilidade | Use saida de validadores |
+
+---
+
+## Comparativo Direto
+
+<ComparisonTable
+  title="Gemini CLI vs Codex CLI"
+  headers={["Aspecto", "Gemini CLI vs Codex CLI"]}
+  rows={[
+    ["Status AIOX", "Works vs Limited"],
+    ["Auto-Checks", "Alto vs Parcial"],
+    ["Session Tracking", "Automatico vs Manual/Parcial"],
+    ["Hooks", "Nativos vs Emergentes"],
+    ["Ativacao", "/aiox-menu + /aiox-agent vs /skills"],
+    ["MCP", "Nativo vs Nativo via tooling"],
+    ["Melhor para", "Quem usa Google AI vs Quem prefere OpenAI"],
+  ]}
+/>
+
+---
+
+## Guia de Decisao
+
+```
+Prefere terminal-first?
+├── Sim
+│   ├── Usa Google AI? → Gemini CLI
+│   ├── Usa OpenAI? → Codex CLI
+│   └── Quer o maximo do AIOX? → Claude Code
+└── Nao → Veja a proxima licao (Cursor/Copilot)
+```
+
+### Recomendacoes por Caso de Uso
+
+| Cenario | Recomendacao |
+|---------|-------------|
+| Maximo de automacao | Gemini CLI |
+| Ja usa ecossistema Google | Gemini CLI |
+| Ja usa ecossistema OpenAI | Codex CLI |
+| Precisa de session tracking | Gemini CLI |
+| Workflow simples, poucas features | Codex CLI |
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Qual comando ativa o menu de agentes no Gemini CLI?",
+      options: ["/agents", "/skills", "/aiox-menu", "@agents"],
+      correct: 2,
+      explanation: "No Gemini CLI, o comando /aiox-menu abre o menu de atalhos para ativacao de agentes AIOX."
+    },
+    {
+      question: "Qual arquivo de configuracao o Codex CLI usa para instrucoes de projeto?",
+      options: [".codex/config.yaml", "AGENTS.md", ".codex/rules.md", "codex.config.js"],
+      correct: 1,
+      explanation: "O Codex CLI utiliza o arquivo AGENTS.md na raiz do repositorio como principal fonte de instrucoes do projeto."
+    },
+    {
+      question: "Qual IDE CLI tem hooks nativos mais completos (alem do Claude Code)?",
+      options: ["Codex CLI", "Gemini CLI", "Cursor CLI", "Copilot CLI"],
+      correct: 1,
+      explanation: "O Gemini CLI suporta hooks nativos com eventos e comandos, ficando muito proximo do Claude Code em automacao."
+    }
+  ]}
+/>

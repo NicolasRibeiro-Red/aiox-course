@@ -1,0 +1,346 @@
+# Anatomia de uma Squad — Manifesto, Agentes, Tasks e Workflows
+
+Entender a estrutura interna de uma squad e fundamental para criar, customizar e debugar times de agentes. Nesta licao, vamos dissecar cada componente — do manifesto ate os workflows.
+
+---
+
+## Visao Geral da Estrutura
+
+Uma squad AIOX completa tem a seguinte organizacao:
+
+```
+./squads/my-squad/
+├── squad.yaml              # Manifesto (obrigatorio)
+├── README.md               # Documentacao
+├── LICENSE                  # Licenca
+├── config/                  # Configuracoes
+│   ├── coding-standards.md
+│   ├── tech-stack.md
+│   └── source-tree.md
+├── agents/                  # Definicoes de agentes
+│   └── my-agent.md
+├── tasks/                   # Definicoes de tarefas
+│   └── my-task.md
+├── workflows/               # Workflows multi-step
+│   └── my-workflow.yaml
+├── checklists/              # Checklists de validacao
+├── templates/               # Templates de documentos
+├── tools/                   # Ferramentas customizadas
+├── scripts/                 # Scripts utilitarios
+└── data/                    # Dados estaticos
+```
+
+---
+
+## O Manifesto (squad.yaml)
+
+O manifesto e o coracao da squad. Ele define **o que** a squad e, **o que** contem e **como** se comporta.
+
+### Campos Obrigatorios
+
+```yaml
+name: my-squad          # kebab-case, identificador unico
+version: 1.0.0          # Versionamento semantico
+description: O que este squad faz
+```
+
+### Metadados
+
+```yaml
+author: Seu Nome <email@example.com>
+license: MIT
+slashPrefix: my         # Prefixo de comando para IDE
+```
+
+O `slashPrefix` define como os comandos da squad aparecem na IDE. Por exemplo, com `slashPrefix: etl`, os comandos seriam `/etl-extract`, `/etl-transform`, etc.
+
+### Compatibilidade AIOX
+
+```yaml
+aiox:
+  minVersion: "2.1.0"   # Versao minima do AIOX
+  type: squad            # Tipo do pacote
+```
+
+<Callout type="warning" title="Versao Minima">
+Squads requerem AIOX 2.1.0 ou superior. Sempre defina `aiox.minVersion` para evitar incompatibilidades.
+</Callout>
+
+### Declaracao de Componentes
+
+```yaml
+components:
+  agents:
+    - my-agent.md
+  tasks:
+    - my-task.md
+  workflows: []
+  checklists: []
+  templates: []
+  tools: []
+  scripts: []
+```
+
+Cada entrada aponta para um arquivo dentro do diretorio correspondente da squad.
+
+### Heranca de Configuracao
+
+```yaml
+config:
+  extends: extend        # extend | override | none
+  coding-standards: config/coding-standards.md
+  tech-stack: config/tech-stack.md
+  source-tree: config/source-tree.md
+```
+
+| Modo | Comportamento |
+|------|---------------|
+| `extend` | Regras da squad somam-se as regras core do AIOX |
+| `override` | Regras da squad substituem as regras core |
+| `none` | Configuracao independente, sem heranca |
+
+### Dependencias
+
+```yaml
+dependencies:
+  node: []               # Pacotes npm
+  python: []             # Pacotes pip
+  squads: []             # Outras squads
+```
+
+As dependencias sao verificadas durante a validacao da squad. Squads podem depender de outras squads:
+
+```yaml
+dependencies:
+  squads:
+    - etl-squad@^2.0.0
+  node:
+    - axios
+    - cheerio
+```
+
+---
+
+## Agentes
+
+Agentes sao personas de IA com expertise e comandos especificos. Cada agente e definido em um arquivo Markdown dentro de `agents/`.
+
+### Estrutura de um Agente
+
+```yaml
+agent:
+  name: AgentName
+  id: agent-id              # kebab-case, unico
+  title: Titulo Descritivo
+  icon: emoji
+  whenToUse: "Quando ativar este agente"
+
+persona_profile:
+  archetype: Builder | Analyst | Guardian | Operator | Strategist
+
+  communication:
+    tone: pragmatic | friendly | formal | analytical
+    emoji_frequency: none | low | medium | high
+
+    vocabulary:
+      - termo-1
+      - termo-2
+
+    greeting_levels:
+      minimal: "Saudacao curta"
+      named: "Saudacao com nome"
+      archetypal: "Saudacao arquetipica completa"
+
+    signature_closing: "Frase de assinatura"
+
+persona:
+  role: "Papel primario"
+  style: "Estilo de comunicacao"
+  identity: "Descricao da identidade"
+  focus: "Foco de atuacao"
+
+  core_principles:
+    - Principio 1
+    - Principio 2
+
+commands:
+  - help: Mostrar comandos disponiveis
+  - custom-command: Descricao do comando
+
+dependencies:
+  tasks:
+    - related-task.md
+  tools:
+    - tool-name
+```
+
+### Arquetipos Disponiveis
+
+| Arquetipo | Perfil | Exemplo |
+|-----------|--------|---------|
+| **Builder** | Constroi e implementa | @dev (Dex) |
+| **Analyst** | Pesquisa e analisa | @analyst (Atlas) |
+| **Guardian** | Protege qualidade | @qa (Quinn) |
+| **Operator** | Gerencia infraestrutura | @devops (Gage) |
+| **Strategist** | Planeja e prioriza | @pm (Morgan) |
+
+---
+
+## Tasks
+
+Tasks sao workflows executaveis — o ponto de entrada primario na arquitetura task-first. Cada task e um arquivo Markdown em `tasks/`.
+
+### Estrutura de uma Task
+
+```markdown
+# Nome da Task
+
+**Description:** O que esta task faz
+**Agent(s):** @dev, @qa
+**Elicit:** true | false
+
+---
+
+## Prerequisites
+
+- Pre-requisito 1
+- Pre-requisito 2
+
+## Steps
+
+### Step 1: Primeiro Passo
+
+Descricao detalhada.
+
+**Elicitation Point (se elicit: true):**
+- Pergunta para o usuario
+- Opcoes a apresentar
+
+### Step 2: Segundo Passo
+
+Continue com mais passos...
+
+## Deliverables
+
+- [ ] Entregavel 1
+- [ ] Entregavel 2
+
+## Error Handling
+
+Se X acontecer, faca Y.
+
+---
+
+## Dependencies
+
+- `dependency-1.md`
+- `dependency-2.md`
+```
+
+<Callout type="tip" title="Elicitation Points">
+Tasks com `elicit: true` fazem perguntas ao usuario durante a execucao. Isso e util para decisoes que dependem de contexto humano — como escolher uma stack ou definir prioridades.
+</Callout>
+
+---
+
+## Workflows
+
+Workflows orquestram multiplas tasks em sequencia ou paralelo. Sao definidos em YAML dentro de `workflows/`.
+
+### Exemplo de Workflow
+
+```yaml
+name: full-development-cycle
+description: Ciclo completo de desenvolvimento
+version: 1.0.0
+
+steps:
+  - task: create-story
+    agent: sm
+    required: true
+
+  - task: develop-story
+    agent: dev
+    required: true
+    depends_on: create-story
+
+  - task: review-story
+    agent: qa
+    required: false
+    depends_on: develop-story
+
+  - task: apply-fixes
+    agent: dev
+    required: false
+    depends_on: review-story
+    condition: "qa_found_issues == true"
+```
+
+---
+
+## Config — Coding Standards, Tech Stack e Source Tree
+
+O diretorio `config/` contem as regras contextuais da squad:
+
+### coding-standards.md
+
+Define padroes de codigo especificos do dominio da squad — nomenclatura, padroes de design, regras de estilo.
+
+### tech-stack.md
+
+Documenta as tecnologias utilizadas pela squad — linguagens, frameworks, banco de dados, servicos.
+
+### source-tree.md
+
+Descreve a estrutura de diretorios esperada — onde cada tipo de arquivo fica no projeto.
+
+Essas configuracoes sao carregadas automaticamente quando a squad e ativada, e o modo de heranca (`extend`, `override`, `none`) define como elas interagem com as configuracoes globais do AIOX.
+
+---
+
+## Checklist de Validacao
+
+Antes de publicar ou usar uma squad, valide:
+
+- [ ] `squad.yaml` existe e esta valido
+- [ ] `aiox.type` e `"squad"`
+- [ ] `aiox.minVersion` esta definido
+- [ ] Todos os agentes estao em `agents/`
+- [ ] Todas as tasks estao em `tasks/`
+- [ ] Arquivos de agentes estao em formato Markdown
+- [ ] Tasks seguem TASK-FORMAT-SPEC-V1
+- [ ] Validacao passa: `*validate-squad --strict`
+
+```bash
+# Validar squad
+*validate-squad my-squad
+
+# Modo strict (para CI/CD)
+*validate-squad my-squad --strict
+```
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Qual campo do manifesto define como os comandos da squad aparecem na IDE?",
+      options: ["commandPrefix", "slashPrefix", "namespace", "prefix"],
+      correct: 1,
+      explanation: "O campo slashPrefix define o prefixo dos comandos. Ex: slashPrefix: etl gera comandos como /etl-extract."
+    },
+    {
+      question: "Qual modo de config.extends adiciona regras da squad sem substituir as regras core?",
+      options: ["override", "merge", "extend", "append"],
+      correct: 2,
+      explanation: "O modo 'extend' adiciona as regras da squad as regras existentes do AIOX core, sem substituir."
+    },
+    {
+      question: "O que sao Elicitation Points em uma Task?",
+      options: ["Pontos de erro", "Perguntas feitas ao usuario durante execucao", "Metricas de performance", "Checkpoints de salvamento"],
+      correct: 1,
+      explanation: "Elicitation Points sao momentos na execucao de uma task onde o agente faz perguntas ao usuario para obter contexto ou decisoes."
+    }
+  ]}
+/>

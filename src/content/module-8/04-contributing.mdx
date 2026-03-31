@@ -1,0 +1,375 @@
+# Contribuindo para o AIOX Open Source
+
+O AIOX e um projeto open source que cresce com contribuicoes da comunidade. Nesta licao, voce vai aprender o processo completo para contribuir — de um fix simples ate a criacao de squads inteiras.
+
+---
+
+## Tipos de Contribuicao
+
+| Tipo | Descricao | Dificuldade |
+|------|-----------|-------------|
+| **Documentacao** | Corrigir typos, melhorar guias | Facil |
+| **Bug Fixes** | Corrigir issues reportados | Facil-Medio |
+| **Tasks** | Adicionar novos workflows de tarefas | Medio |
+| **Agents** | Criar novas personas de agentes IA | Medio |
+| **Squads** | Pacote de agentes + tasks + workflows | Avancado |
+| **Core Features** | Melhorias no framework | Avancado |
+
+<Callout type="tip" title="Comece Pequeno">
+Se e sua primeira contribuicao, comece com documentacao ou bug fixes. Isso ajuda a entender o codebase e o processo de review antes de trabalhar em features maiores.
+</Callout>
+
+---
+
+## Quick Start
+
+### 1. Fork e Clone
+
+```bash
+# Fork via GitHub UI, depois clone seu fork
+git clone https://github.com/SEU_USERNAME/aiox-core.git
+cd aiox-core
+
+# Adicionar remote upstream
+git remote add upstream https://github.com/SynkraAI/aiox-core.git
+```
+
+### 2. Setup do Ambiente
+
+**Pre-requisitos:** Node.js >= 20.0.0, npm, Git
+
+```bash
+# Instalar dependencias
+npm install
+
+# Verificar setup
+npm test
+npm run lint
+npm run typecheck
+```
+
+### 3. Criar Branch
+
+```bash
+git checkout -b feature/your-feature-name
+```
+
+**Convencoes de branch:**
+
+| Prefixo | Uso |
+|---------|-----|
+| `feature/` | Novas features, agentes, tasks |
+| `fix/` | Bug fixes |
+| `docs/` | Atualizacoes de documentacao |
+| `refactor/` | Refatoracao de codigo |
+| `test/` | Adicoes/melhorias de testes |
+
+### 4. Fazer Mudancas
+
+Siga o guia relevante abaixo para cada tipo de contribuicao.
+
+### 5. Validacao Local
+
+```bash
+npm run lint      # Estilo de codigo
+npm run typecheck # Verificacao de tipos
+npm test          # Rodar testes
+npm run build     # Verificar build
+```
+
+### 6. Push e PR
+
+```bash
+git push origin feature/your-feature-name
+```
+
+Depois crie um Pull Request no GitHub targeting a branch `main`.
+
+---
+
+## Contribuindo Agentes
+
+Agentes sao o tipo de contribuicao mais comum. Cada agente e um arquivo Markdown com YAML frontmatter.
+
+### Localizacao
+
+```
+.aiox-core/development/agents/your-agent.md
+```
+
+### Estrutura Obrigatoria
+
+```yaml
+agent:
+  name: AgentName
+  id: agent-id           # kebab-case, unico
+  title: Titulo Descritivo
+  icon: emoji
+  whenToUse: "Quando ativar"
+
+persona_profile:
+  archetype: Builder | Analyst | Guardian | Operator | Strategist
+  communication:
+    tone: pragmatic | friendly | formal | analytical
+
+commands:
+  - help: Mostrar comandos
+  - custom: Descricao
+
+dependencies:
+  tasks:
+    - related-task.md
+```
+
+### Checklist de Validacao
+
+- [ ] Agent ID e unico e usa kebab-case
+- [ ] `persona_profile` completo com archetype e communication
+- [ ] Todos os commands tem descricao
+- [ ] Dependencies listam todas as tasks necessarias
+- [ ] Sem credenciais ou dados sensiveis hardcoded
+- [ ] Segue padroes existentes no codebase
+
+---
+
+## Contribuindo Tasks
+
+Tasks sao workflows executaveis que agentes podem rodar.
+
+### Localizacao
+
+```
+.aiox-core/development/tasks/your-task.md
+```
+
+### Estrutura Obrigatoria
+
+```markdown
+# Task Name
+
+**Description:** O que a task faz
+**Agent(s):** @dev, @qa
+**Elicit:** true | false
+
+---
+
+## Prerequisites
+- Prerequisito 1
+
+## Steps
+### Step 1: Primeiro Passo
+Descricao detalhada.
+
+## Deliverables
+- [ ] Entregavel 1
+
+## Error Handling
+Se X acontecer, faca Y.
+```
+
+---
+
+## Contribuindo Squads
+
+Squads sao a contribuicao mais complexa — pacotes completos de agentes + tasks + workflows.
+
+### Estrutura
+
+```
+your-squad/
+├── squad.yaml        # Manifesto
+├── agents/
+│   └── your-agent.md
+├── tasks/
+│   └── your-task.md
+└── workflows/
+    └── your-workflow.yaml
+```
+
+### Manifesto Minimo
+
+```yaml
+name: your-squad
+version: 1.0.0
+description: O que este squad faz
+author: Seu Nome
+dependencies:
+  - base-squad (opcional)
+agents:
+  - your-agent
+tasks:
+  - your-task
+```
+
+---
+
+## Processo de Code Review
+
+### Checks Automaticos
+
+Ao submeter um PR, os seguintes checks rodam automaticamente:
+
+| Check | Descricao | Obrigatorio |
+|-------|-----------|-------------|
+| **ESLint** | Estilo e qualidade | Sim |
+| **TypeScript** | Type checking | Sim |
+| **Jest Tests** | Suite de testes (Node 18 e 20) | Sim |
+| **Validation Summary** | Gate agregado | Sim |
+| **Build** | Verificacao de build | Nao (advisory) |
+| **Coverage** | Relatorio de cobertura | Nao (advisory) |
+
+### CodeRabbit AI Review
+
+O [CodeRabbit](https://coderabbit.ai) revisa automaticamente seu PR e fornece feedback sobre:
+
+- Qualidade de codigo e melhores praticas
+- Preocupacoes de seguranca
+- Padroes especificos do AIOX
+- Issues de performance
+
+| Severidade | Acao Necessaria |
+|-----------|-----------------|
+| **CRITICAL** | Obrigatorio corrigir antes do merge |
+| **HIGH** | Fortemente recomendado corrigir |
+| **MEDIUM** | Considerar corrigir ou documentar como tech debt |
+| **LOW** | Melhoria opcional |
+
+### Review de Maintainer
+
+Apos os checks automaticos, um maintainer:
+1. Verifica se as mudancas atendem os padroes
+2. Checa implicacoes de seguranca
+3. Garante que documentacao esta atualizada
+4. Aprova ou solicita mudancas
+
+---
+
+## Sistema de Validacao — Defense in Depth
+
+O AIOX implementa 3 camadas de validacao:
+
+### Camada 1: Pre-commit (Local)
+
+Performance: < 5 segundos
+
+- ESLint com cache
+- TypeScript compilacao incremental
+- IDE sync (auto-stage arquivos de comando)
+
+### Camada 2: Pre-push (Local)
+
+Performance: < 2 segundos
+
+- Validacao de checkboxes de stories
+- Checks de consistencia de status
+
+### Camada 3: CI/CD (Cloud)
+
+Performance: 2-5 minutos
+
+- Lint e type checking completos
+- Suite de testes completa
+- Relatorio de cobertura
+- Validacao de stories
+
+---
+
+## Convencoes de Commit
+
+O AIOX usa [Conventional Commits](https://www.conventionalcommits.org/):
+
+```bash
+# Exemplos
+git commit -m "feat(agent): add security-auditor agent"
+git commit -m "fix: resolve memory leak in config loader"
+git commit -m "docs: update contribution guide"
+```
+
+**Tipos:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+---
+
+## Branch Protection
+
+Todas as mudancas na `main` passam por Pull Request. Push direto e bloqueado.
+
+### Requisitos para Merge
+
+- [ ] Todos os CI checks passam
+- [ ] Pelo menos 1 aprovacao de maintainer
+- [ ] Todas as conversas resolvidas
+- [ ] Sem conflitos de merge
+- [ ] Branch atualizada com main
+
+### CODEOWNERS
+
+Paths criticos requerem aprovacao de maintainers especificos:
+
+| Path | Razao |
+|------|-------|
+| `.aiox-core/core/orchestration/` | Camada de orquestracao |
+| `.aiox-core/core/execution/` | Engine de execucao |
+| `packages/` | Installer, CLI, libs |
+| `.github/` | CI/CD workflows |
+
+---
+
+## Trabalhando com Pro
+
+O AIOX usa modelo Open Core com um submodulo privado `pro/`:
+
+```bash
+# Para contribuidores open-source:
+# Voce NAO precisa do submodulo pro/
+git clone https://github.com/SynkraAI/aiox-core.git
+cd aiox-core
+npm install && npm test  # Tudo funciona sem pro/
+```
+
+O diretorio `pro/` simplesmente nao existira no seu clone — isso e esperado e todos os testes passam sem ele.
+
+---
+
+## FAQ
+
+**P: Quanto tempo leva o review?**
+R: Buscamos primeiro review em 24-48 horas. Mudancas complexas podem demorar mais.
+
+**P: Posso contribuir sem testes?**
+R: Testes sao fortemente encorajados. Para mudancas somente de docs, testes podem nao ser necessarios.
+
+**P: Meu PR tem conflitos. O que faco?**
+```bash
+git fetch upstream
+git rebase upstream/main
+git push --force-with-lease
+```
+
+**P: Posso contribuir em portugues?**
+R: Sim! PRs em portugues sao aceitos.
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Qual e o numero minimo de aprovacoes necessarias para merge de um PR?",
+      options: ["0", "1", "2", "3"],
+      correct: 1,
+      explanation: "E necessaria pelo menos 1 aprovacao de um maintainer/CODEOWNERS reviewer para que o PR possa ser mergeado."
+    },
+    {
+      question: "Qual formato de commit o AIOX usa?",
+      options: ["Free-form", "Conventional Commits", "Semantic Commits", "Gitmoji"],
+      correct: 1,
+      explanation: "O AIOX usa Conventional Commits: feat:, fix:, docs:, style:, refactor:, test:, chore:."
+    },
+    {
+      question: "Contribuidores open-source precisam do submodulo pro/?",
+      options: ["Sim, e obrigatorio", "Nao, tudo funciona sem ele", "Depende da feature", "Apenas para testes"],
+      correct: 1,
+      explanation: "Contribuidores open-source NAO precisam do submodulo pro/. O clone padrao funciona perfeitamente e todos os testes passam sem ele."
+    }
+  ]}
+/>

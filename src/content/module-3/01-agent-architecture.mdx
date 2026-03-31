@@ -1,0 +1,208 @@
+# Arquitetura de Agentes
+
+Os agentes sao a alma do AIOX. Cada um e mais do que um prompt -- e uma **persona completa** com expertise, personalidade, dependencias e regras de colaboracao. Nesta licao, voce vai entender como agentes sao construidos, como se ativam e como se comunicam entre si.
+
+---
+
+## Anatomia de um Agente
+
+Todo agente AIOX e definido em um arquivo Markdown com frontmatter YAML. Essa definicao inclui:
+
+| Componente | Descricao | Exemplo |
+|---|---|---|
+| **Persona** | Nome, titulo e personalidade | Dex -- The Builder |
+| **Archetype** | Papel arquetipico (inspirado em arquetipos jungianos) | Builder, Strategist, Guardian |
+| **Zodiac** | Signo associado (parte da persona) | Aquarius, Capricorn, Virgo |
+| **Icon** | Icone visual para identificacao rapida | 💻, 📋, 🧪 |
+| **Dependencies** | Tasks, templates e checklists que o agente utiliza | `dev-develop-story.md`, `story-dod-checklist.md` |
+| **Commands** | Lista de comandos `*` disponiveis | `*develop`, `*help`, `*exit` |
+| **Restrictions** | O que o agente NAO pode fazer | "NO git push" |
+| **Signature** | Frase de encerramento caracteristica | "-- Dex, sempre construindo" |
+
+### Vocabulario e Tom
+
+Cada agente tem vocabulario e tom de comunicacao distintos:
+
+| Agente | Tom | Vocabulario Chave |
+|---|---|---|
+| **Dex** (@dev) | Pragmatico, conciso | Construir, implementar, refatorar, otimizar |
+| **Morgan** (@pm) | Estrategico, analítico | Planejar, priorizar, alinhar, escalar |
+| **Quinn** (@qa) | Sistematico, educacional | Validar, verificar, garantir, proteger |
+| **River** (@sm) | Empatico, colaborativo | Adaptar, pivotar, simplificar, fluir |
+| **Aria** (@architect) | Holistico, pragmatico | Projetar, integrar, escalar, otimizar |
+| **Atlas** (@analyst) | Analitico, inquisitivo | Pesquisar, investigar, descobrir, sintetizar |
+
+---
+
+## O Sistema de Agentes Completo
+
+O AIOX possui 12 agentes organizados em 5 camadas:
+
+| Camada | Agentes | Funcao |
+|---|---|---|
+| **Orquestracao** | Orion (@aiox-master) | Meta-agente que coordena todos |
+| **Discovery e Planejamento** | Atlas (@analyst), Morgan (@pm) | Pesquisa, requisitos, estrategia |
+| **Design e Arquitetura** | Aria (@architect), Uma (@ux-design-expert), Dara (@data-engineer) | Arquitetura tecnica, UX, dados |
+| **Gestao** | Pax (@po), River (@sm) | Backlog, stories, sprints |
+| **Execucao** | Dex (@dev), Quinn (@qa), Gage (@devops), Craft (@squad-creator) | Codigo, testes, deploy, squads |
+
+---
+
+## Pipeline de Ativacao (Unified Activation Pipeline)
+
+Quando voce ativa um agente com `@agent-name`, o seguinte pipeline e executado:
+
+| Step | O que acontece |
+|---|---|
+| 1. **Load Agent** | Arquivo de definicao do agente e carregado |
+| 2. **Load Dependencies** | Tasks, checklists e dados referenciados sao carregados |
+| 3. **Context Detection** | Pipeline detecta projeto atual, stories em progresso, estado do git |
+| 4. **Contextual Greeting** | Saudacao inteligente baseada no contexto detectado |
+| 5. **Quick Commands** | Lista os 3-6 comandos mais relevantes para o contexto atual |
+| 6. **HALT** | Aguarda o primeiro comando do usuario |
+
+### Sistema de Saudacao Inteligente
+
+O greeting system nao e um "Ola!" generico. Ele analisa o contexto e adapta:
+
+```
+# Exemplo: Ativando @dev em projeto com story em andamento
+
+🔨 Dex online.
+
+Story ativa: STORY-42 (Implement User Auth)
+  Tasks: 2/4 completas
+  Ultimo arquivo: src/auth/login.ts
+
+Quick commands:
+  *develop STORY-42  -- continuar implementacao
+  *help              -- ver todos os comandos
+  *status            -- ver estado atual
+
+-- Dex, sempre construindo
+```
+
+<Callout type="info" title="O agente NAO age sozinho">
+Apos o greeting, o agente sempre faz HALT e aguarda o comando do usuario. Nenhuma acao e tomada automaticamente na ativacao.
+</Callout>
+
+---
+
+## Modos de Execucao
+
+Todos os agentes suportam tres modos de execucao:
+
+| Modo | Interacao | Ideal para |
+|---|---|---|
+| **YOLO** | 0-1 prompts, decisoes autonomas | Tasks simples e deterministicas |
+| **Interactive** (padrao) | 5-10 prompts, checkpoints de decisao | Aprendizado, decisoes complexas |
+| **Pre-Flight** | Planejamento completo antes de executar | Requisitos ambiguos, trabalho critico |
+
+Para alternar o modo YOLO:
+
+```
+*yolo    # Toggle on/off
+```
+
+---
+
+## Arvore de Decisao para Escolha de Agente
+
+Quando voce nao sabe qual agente usar, siga esta arvore:
+
+```
+Precisa de pesquisa/analise?     → @analyst
+    ↓
+Precisa de PRD/epic?             → @pm
+    ↓
+Precisa de arquitetura?          → @architect
+    ↓
+Precisa de design de database?   → @data-engineer
+    ↓
+Precisa de stories detalhadas?   → @sm
+    ↓
+Precisa implementar codigo?      → @dev
+    ↓
+Precisa de testes/review?        → @qa
+    ↓
+Precisa de deploy/infra?         → @devops
+    ↓
+Precisa de UX/wireframes?        → @ux-design-expert
+    ↓
+Precisa criar agentes/squads?    → @squad-creator
+    ↓
+Nao sabe? Meta-operacoes?       → @aiox-master
+```
+
+---
+
+## Diagrama de Relacionamentos
+
+Os agentes nao trabalham isolados. Existe um fluxo claro de artefatos entre eles:
+
+| De | Para | Artefato | Gatilho |
+|---|---|---|---|
+| @analyst | @pm | project-brief.md, market-research.md | Pesquisa completa |
+| @pm | @architect | prd.md | PRD aprovado (pm-checklist PASS) |
+| @pm | @ux-design-expert | prd.md (secoes UI) | PRD com requisitos de UI |
+| @ux-design-expert | @architect | front-end-spec.md | Spec de frontend completa |
+| @architect | @data-engineer | Requisitos de schema | Arquitetura data-heavy |
+| @architect | @dev | architecture.md | Arquitetura aprovada |
+| @po | @sm | Backlog priorizado | Epics validados |
+| @sm | @dev | STORY-*.md | Story aprovada pelo usuario |
+| @dev | @qa | Codigo implementado | Story marcada "ready for review" |
+| @qa | @dev | qa-report.md (com fix requests) | Issues encontradas no review |
+| @dev | @devops | Codigo pronto para deploy | QA aprovado |
+
+---
+
+## Restricoes e Boundaries
+
+Cada agente tem limites claros sobre o que pode e nao pode fazer:
+
+| Agente | FAZ | NAO FAZ |
+|---|---|---|
+| @architect | Seleciona database, projeta APIs | Git push (delega para @devops) |
+| @dev | Implementa stories, escreve testes | Cria stories (recebe do @sm) |
+| @qa | Revisa codigo, gera testes | Implementa fixes (cria fix-request para @dev) |
+| @data-engineer | Schema, migrations, RLS | Selecao de tecnologia de DB (cabe ao @architect) |
+| @devops | Git push, PR, CI/CD | Implementacao de features |
+| @analyst | Pesquisa, brainstorming | Criacao de PRD (cabe ao @pm) |
+
+<Callout type="tip" title="Boundaries evitam conflitos">
+As restricoes existem para que nao haja duplicacao de responsabilidade. Se dois agentes pudessem fazer a mesma coisa, nenhum faria direito.
+</Callout>
+
+---
+
+## Teste seus Conhecimentos
+
+<QuizBlock
+  title="Arquitetura de Agentes"
+  questions={[
+    {
+      question: "O que acontece quando voce ativa um agente com @agent-name?",
+      options: ["O agente comeca a executar tasks automaticamente", "O pipeline carrega dependencias, detecta contexto, exibe greeting e aguarda comando", "O agente pede para voce escolher uma task", "Nada -- voce precisa executar *help primeiro"],
+      correct: 1,
+      explanation: "O Unified Activation Pipeline carrega dependencias, detecta contexto do projeto, exibe saudacao inteligente com quick commands e faz HALT aguardando o primeiro comando do usuario."
+    },
+    {
+      question: "Quais sao as 5 camadas de agentes do AIOX?",
+      options: ["Frontend, Backend, Database, DevOps, QA", "Orquestracao, Discovery/Planejamento, Design/Arquitetura, Gestao, Execucao", "Input, Process, Output, Validate, Deploy", "Core, Plugins, Extensions, Themes, Config"],
+      correct: 1,
+      explanation: "As 5 camadas sao: Orquestracao (Orion), Discovery/Planejamento (Atlas, Morgan), Design/Arquitetura (Aria, Uma, Dara), Gestao (Pax, River), Execucao (Dex, Quinn, Gage, Craft)."
+    },
+    {
+      question: "Por que o @architect nao pode fazer git push?",
+      options: ["Por limitacao tecnica", "Para evitar duplicacao de responsabilidade -- git push e exclusivo do @devops", "Porque nao e seguro", "Porque o @architect so funciona no Web UI"],
+      correct: 1,
+      explanation: "Cada agente tem boundaries claros. Git push e responsabilidade exclusiva do @devops (Gage). O @architect e read-only para git (status, log, diff)."
+    }
+  ]}
+/>
+
+---
+
+## Proximo Passo
+
+Agora que voce entende a arquitetura, vamos conhecer o primeiro agente em detalhe: **Orion, o AIOX Master** -- o orquestrador universal.

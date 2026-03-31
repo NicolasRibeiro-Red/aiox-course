@@ -1,0 +1,209 @@
+# QA Loops e Design System Workflows
+
+O AIOX vai alem de um unico review — ele implementa **loops automatizados de QA** que repetem o ciclo `Review → Fix → Re-review` ate atingir qualidade aceitavel ou escalar para intervencao humana. Este capitulo cobre o **QA Loop Orchestrator** e como ele se integra com o workflow de Design System.
+
+---
+
+## QA Loop Orchestrator
+
+O QA Loop e um workflow automatizado que orquestra o ciclo completo de revisao iterativa. Ele executa ate um maximo de iteracoes configuravel (padrao: 5), rastreando os resultados de cada ciclo.
+
+### Anatomia de uma Iteracao
+
+Cada iteracao do loop segue 4 passos:
+
+| Passo | Agente | Acao | Artefato |
+|---|---|---|---|
+| 1. Review | `@qa` (Quinn) | Executa `qa-review-story.md` com CodeRabbit | `gate-file.yaml` |
+| 2. Verdict | Sistema | Avalia: APPROVE, REJECT ou BLOCKED | — |
+| 3. Fix Request | `@qa` (Quinn) | Gera documento priorizado de correcoes | `fix-request.md` |
+| 4. Apply Fixes | `@dev` (Dex) | Aplica correcoes e valida com testes | `fixes-applied.json` |
+
+Apos o passo 4, o loop incrementa a iteracao e volta ao passo 1. O ciclo para quando:
+
+- **APPROVE** — Story aprovada, sai do loop
+- **BLOCKED** — Issue grave, escala imediatamente
+- **Max iteracoes atingidas** — Escala para humano
+
+---
+
+### Status do Loop
+
+O QA Loop mantem um arquivo de estado persistente (`qa/loop-status.json`) com o historico completo:
+
+```json
+{
+  "storyId": "STORY-42",
+  "currentIteration": 3,
+  "maxIterations": 5,
+  "status": "in_progress",
+  "history": [
+    { "iteration": 1, "verdict": "REJECT", "issuesFound": 7, "issuesFixed": 5 },
+    { "iteration": 2, "verdict": "REJECT", "issuesFound": 4, "issuesFixed": 3 },
+    { "iteration": 3, "verdict": "APPROVE", "issuesFound": 1, "issuesFixed": null }
+  ]
+}
+```
+
+Os status possiveis sao: `pending`, `in_progress`, `completed`, `stopped`, `escalated`.
+
+---
+
+### Comandos de Controle
+
+| Comando | Acao |
+|---|---|
+| `*qa-loop {storyId}` | Inicia loop completo |
+| `*qa-loop-review` | Inicia apenas do step review |
+| `*qa-loop-fix` | Inicia apenas do step fix |
+| `*stop-qa-loop` | Para loop e salva estado |
+| `*resume-qa-loop` | Retoma loop parado/escalado |
+| `*escalate-qa-loop` | Forca escalacao manual |
+| `*qa-loop --reset` | Deleta status e reinicia |
+
+<Callout type="tip" title="Stop e Resume">
+Voce pode parar o loop a qualquer momento com `*stop-qa-loop` e retomar depois com `*resume-qa-loop`. O estado e preservado incluindo iteracao atual e historico completo.
+</Callout>
+
+---
+
+### Escalacao Automatica
+
+O loop escala automaticamente em 4 cenarios:
+
+| Trigger | Razao | Acao |
+|---|---|---|
+| Max iterations | Loop atingiu o limite sem APPROVE | Escala com contexto completo |
+| BLOCKED | QA retornou verdict BLOCKED | Escala imediatamente |
+| Fix failure | @dev nao conseguiu corrigir apos retries | Escala com log de erros |
+| Manual | Usuario executou `*escalate-qa-loop` | Escala sob demanda |
+
+Quando escalado, o sistema prepara um pacote de contexto com todos os gate files, fix requests e um sumario de todas as iteracoes.
+
+---
+
+## O Fix Request — Comunicacao Estruturada
+
+Um dos artefatos mais importantes do QA Loop e o `fix-request.md`. Ele e um documento estruturado que o `@qa` gera para o `@dev`, contendo:
+
+```markdown
+# QA Fix Request: STORY-42
+
+## Instructions for @dev
+- Fix ONLY the issues listed below
+- Do not add features or refactor unrelated code
+
+## Summary
+| Severity | Count | Status                    |
+|----------|-------|---------------------------|
+| CRITICAL | 2     | Must fix before merge     |
+| MAJOR    | 3     | Should fix before merge   |
+| MINOR    | 1     | Optional improvements     |
+
+## Issues to Fix
+### 1. [CRITICAL] SQL Injection in login handler
+- Location: `src/auth/login.ts:42`
+- Problem: Input not sanitized before query
+- Verification: [ ] Run security tests
+```
+
+<Callout type="warning" title="Scope discipline">
+O fix request inclui a instrucao explicita: "Fix ONLY the issues listed below. Do not add features or refactor unrelated code." Isso evita scope creep durante correcoes.
+</Callout>
+
+---
+
+## Design System Build Quality Workflow
+
+O AIOX tambem oferece um workflow especifico para construcao e validacao de design systems. Ele foca em:
+
+### Checks de Qualidade para Design Systems
+
+| Area | O que verifica |
+|---|---|
+| **Tokens** | Cores, tipografia, espacamento consistentes |
+| **Componentes** | Atomic Design (atoms → molecules → organisms) |
+| **Acessibilidade** | Contraste WCAG 2.1, aria labels, teclado |
+| **Responsividade** | Breakpoints cobertos, mobile-first |
+| **Estados** | Loading, error, empty, hover, focus, disabled |
+| **Documentacao** | Props documentadas, exemplos de uso |
+
+### Integracao com QA Loop
+
+O workflow de Design System se integra com o QA Loop de forma natural:
+
+1. `@ux-design-expert` especifica os componentes e tokens
+2. `@dev` implementa seguindo a especificacao
+3. `@qa` revisa focando em consistencia visual, acessibilidade e estados
+4. O QA Loop garante iteracoes ate atingir os padroes
+
+---
+
+## Configuracao do QA Loop
+
+Os parametros do loop sao configuraveis por projeto:
+
+```yaml
+# .aiox-core/core-config.yaml
+autoClaude:
+  qaLoop:
+    maxIterations: 5        # Maximo de iteracoes
+    reviewTimeout: 1800000  # 30 min para review
+    fixTimeout: 3600000     # 60 min para fixes
+```
+
+Para projetos menores, voce pode reduzir o numero de iteracoes:
+
+```yaml
+autoClaude:
+  qaLoop:
+    maxIterations: 3
+    reviewTimeout: 900000   # 15 min
+    fixTimeout: 1800000     # 30 min
+```
+
+---
+
+## Integracao CodeRabbit no QA Loop
+
+O `@qa` integra o CodeRabbit como parte do review, com self-healing automatico:
+
+```yaml
+self_healing:
+  enabled: true
+  max_iterations: 3
+  severity_filter: [CRITICAL, HIGH]
+  behavior:
+    CRITICAL: auto_fix
+    HIGH: auto_fix
+    MEDIUM: document_as_debt
+    LOW: ignore
+```
+
+Isso significa que antes mesmo de gerar o verdict, o CodeRabbit tenta resolver issues CRITICAL e HIGH automaticamente.
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Qual e o numero maximo padrao de iteracoes do QA Loop?",
+      options: ["3", "5", "7", "10"],
+      correct: 1,
+      explanation: "O padrao e 5 iteracoes. Pode ser configurado em core-config.yaml via autoClaude.qaLoop.maxIterations."
+    },
+    {
+      question: "O que acontece quando o QA Loop atinge o maximo de iteracoes sem APPROVE?",
+      options: ["A story e automaticamente aprovada", "O loop reinicia do zero", "Escala para intervencao humana", "O @dev e substituido por @architect"],
+      correct: 2,
+      explanation: "Quando o maximo de iteracoes e atingido, o loop escala para intervencao humana com um pacote de contexto contendo todos os gate files e historico."
+    },
+    {
+      question: "Qual instrucao explicita o fix-request inclui para o @dev?",
+      options: ["Refatorar todo o codigo", "Adicionar testes extras", "Fix ONLY the issues listed, nao adicionar features", "Migrar para TypeScript"],
+      correct: 2,
+      explanation: "O fix request inclui scope discipline: corrigir APENAS os issues listados, sem adicionar features ou refatorar codigo nao relacionado."
+    }
+  ]}
+/>

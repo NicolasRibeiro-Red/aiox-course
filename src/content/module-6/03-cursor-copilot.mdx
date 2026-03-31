@@ -1,0 +1,295 @@
+# AIOX em IDEs Visuais — Cursor, Copilot e AntiGravity
+
+Nem todo desenvolvedor prefere o terminal. O AIOX tambem funciona em IDEs visuais como **Cursor**, **GitHub Copilot** e **AntiGravity**, embora com um nivel de automacao mais limitado. Nesta licao, vamos entender como configurar e usar o AIOX nessas plataformas.
+
+---
+
+## Cursor
+
+O Cursor e uma das IDEs de IA mais populares do mercado. Baseado no VS Code, ele oferece composer, chat modes e @codebase como features nativas.
+
+### Status no AIOX
+
+| Aspecto | Nivel |
+|---------|-------|
+| Status Geral | Limitado |
+| Ativacao de Agentes | `@agent` + regras sincronizadas |
+| Auto-Checks | Nao disponivel |
+| Session Tracking | Manual ou parcial |
+| MCP Support | Via configuracao |
+
+### Setup
+
+```yaml
+config_file: .cursor/rules.md
+agent_folder: .cursor/rules
+activation: @agent-name
+format: condensed-rules
+mcp_support: via configuration
+special_features:
+  - Composer integration
+  - Chat modes
+  - @codebase context
+  - Multi-file editing
+  - Subagents and cloud handoff support
+  - Long-running agent workflows (research preview)
+```
+
+### Instalacao
+
+```bash
+# Sincronizar regras AIOX para o Cursor
+npm run sync:ide:cursor
+
+# Verificar setup
+ls -la .cursor/rules/
+```
+
+### Ativando Agentes
+
+No Cursor, agentes sao ativados com @mention no chat:
+
+```
+@dev implemente o login com OAuth
+@qa revise os testes do modulo de pagamento
+@architect proponha a arquitetura do microservico
+```
+
+### Configurando MCP
+
+Crie o arquivo `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "url": "https://mcp.context7.com/sse"
+    }
+  }
+}
+```
+
+<Callout type="warning" title="Sem Auto-Checks">
+O Cursor nao oferece auto-checks pre/pos acao. Voce precisa executar validadores manualmente: `npm run validate:parity`
+</Callout>
+
+### O que Funciona Bem
+
+- **Composer**: Edicao multi-arquivo poderosa
+- **@codebase**: Contexto completo do projeto para o agente
+- **Chat modes**: Diferentes modos de interacao
+- **Subagentes**: Suporte emergente a cloud handoff
+
+### Limitacoes e Workarounds
+
+| Limitacao | Workaround |
+|-----------|------------|
+| Sem auto-checks | Execute `npm run validate:parity` manualmente |
+| Sem audit trail | Use output dos validadores como registro |
+| Sem session tracking | Registre manualmente o inicio/fim de sessoes |
+| Sem hooks | Siga as regras sincronizadas em `.cursor/rules/` |
+
+---
+
+## GitHub Copilot
+
+O GitHub Copilot se integra diretamente ao VS Code e oferece acesso ao ecossistema GitHub — PRs, code review e issues.
+
+### Status no AIOX
+
+| Aspecto | Nivel |
+|---------|-------|
+| Status Geral | Limitado |
+| Ativacao de Agentes | Chat modes + repo instructions |
+| Auto-Checks | Nao disponivel |
+| Session Tracking | Manual |
+| MCP Support | Via VS Code MCP config |
+
+### Setup
+
+```yaml
+config_file: .github/copilot-instructions.md
+agent_folder: .github/agents
+activation: chat modes
+format: text
+mcp_support: via VS Code MCP config
+special_features:
+  - GitHub integration
+  - PR assistance
+  - Code review
+  - Works with repo instructions and VS Code MCP config
+```
+
+### Instalacao
+
+```bash
+# Habilitar Copilot no repositorio
+# AIOX cria automaticamente:
+# .github/copilot-instructions.md
+
+# Sincronizar instrucoes
+npm run sync:ide
+
+# Verificar
+cat .github/copilot-instructions.md
+```
+
+### Vantagens Unicas
+
+O Copilot se destaca por sua integracao nativa com GitHub:
+
+- **PR Assistance**: Sugestoes inteligentes para pull requests
+- **Code Review**: Revisao automatizada de codigo
+- **Issues**: Contexto de issues do repositorio
+- **Repo Instructions**: Instrucoes persistentes no repositorio
+
+---
+
+## AntiGravity
+
+O AntiGravity e a IDE de IA com integracao Google Cloud e Firebase nativa.
+
+### Status no AIOX
+
+| Aspecto | Nivel |
+|---------|-------|
+| Status Geral | Limitado |
+| Ativacao de Agentes | Workflow-driven |
+| Auto-Checks | Nao disponivel |
+| MCP Support | Nativo (Google) |
+
+### Setup
+
+```yaml
+config_file: .antigravity/rules.md
+config_json: .antigravity/antigravity.json
+agent_folder: .agent/workflows
+activation: workflow-based
+format: cursor-style
+mcp_support: native (Google)
+special_features:
+  - Google Cloud integration
+  - Workflow system
+  - Native Firebase tools
+```
+
+Os agentes AIOX sao sincronizados como workflows no AntiGravity, seguindo o formato cursor-style de regras.
+
+---
+
+## Compensando Limitacoes
+
+Todas as tres IDEs visuais compartilham a ausencia de auto-checks. Aqui esta o fluxo recomendado para compensar:
+
+### Fluxo Manual de Validacao
+
+```bash
+# 1. Antes de comecar uma task
+npm run validate:parity
+
+# 2. Executar a task com o agente
+
+# 3. Apos a task
+npm run sync:ide:check
+npm run lint
+npm run typecheck
+npm test
+```
+
+<Callout type="tip" title="Dica de Produtividade">
+Crie um script `validate-all.sh` que execute todos os validadores de uma vez. Isso reduz a friccao de rodar manualmente cada comando.
+</Callout>
+
+### Script de Validacao Sugerido
+
+```bash
+#!/bin/bash
+# validate-all.sh
+echo "=== Validando AIOX ==="
+npm run validate:parity
+npm run sync:ide:check
+npm run lint
+npm run typecheck
+npm test
+echo "=== Validacao completa ==="
+```
+
+---
+
+## Guia de Decisao para IDEs Visuais
+
+```
+Quer IDE visual?
+├── Usa Google Cloud/Firebase? → AntiGravity
+├── Quer integracao GitHub nativa? → GitHub Copilot
+└── Quer a IDE de IA mais popular? → Cursor
+```
+
+<ComparisonTable
+  title="Cursor vs Copilot vs AntiGravity"
+  headers={["Aspecto", "Resultado"]}
+  rows={[
+    ["Ativacao de agentes", "Cursor: @agent | Copilot: chat modes | AntiGravity: workflows"],
+    ["MCP", "Cursor: config JSON | Copilot: VS Code MCP | AntiGravity: nativo Google"],
+    ["Melhor para", "Cursor: edicao multi-arquivo | Copilot: PRs/review | AntiGravity: Google Cloud"],
+    ["Auto-Checks", "Nenhuma das tres — requer validacao manual"],
+    ["Curva de aprendizado AIOX", "Cursor: media | Copilot: media | AntiGravity: alta"],
+  ]}
+/>
+
+---
+
+## Migrando Entre IDEs
+
+O AIOX facilita a migracao entre IDEs, ja que a fonte de verdade dos agentes e unica:
+
+### De Cursor para Claude Code
+
+```bash
+# Exportar regras atuais (backup)
+cp -r .cursor/rules/ ./rules-backup/
+
+# Inicializar Claude Code
+npm run sync:ide
+
+# Verificar migracao
+diff -r ./rules-backup/ .claude/commands/AIOX/agents/
+```
+
+### De Claude Code para Cursor
+
+```bash
+# Sincronizar para Cursor
+npm run sync:ide:cursor
+
+# Configurar MCP se necessario
+# Copie config MCP para .cursor/mcp.json
+```
+
+A beleza do sistema de sync e que voce pode usar **multiplas IDEs simultaneamente** — todas apontando para a mesma definicao de agentes.
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Como se ativa um agente AIOX no Cursor?",
+      options: ["/agent-name", "@agent-name", "*agent-name", "#agent-name"],
+      correct: 1,
+      explanation: "No Cursor, agentes sao ativados com @mention: @dev, @qa, @architect."
+    },
+    {
+      question: "Qual comando compensa a falta de auto-checks nas IDEs visuais?",
+      options: ["npm run auto-check", "npm run validate:parity", "npm run fix-all", "npm run ide-check"],
+      correct: 1,
+      explanation: "O comando npm run validate:parity executa a validacao de paridade que as IDEs visuais nao fazem automaticamente."
+    },
+    {
+      question: "Qual IDE visual tem integracao nativa com GitHub PRs e code review?",
+      options: ["Cursor", "AntiGravity", "GitHub Copilot", "Todas as tres"],
+      correct: 2,
+      explanation: "O GitHub Copilot se destaca pela integracao nativa com o ecossistema GitHub: PRs, issues e code review."
+    }
+  ]}
+/>

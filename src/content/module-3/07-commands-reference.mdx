@@ -1,0 +1,355 @@
+# Referencia Completa de Comandos
+
+Esta e a referencia definitiva de todos os comandos `*` do AIOX, organizados por agente. Use como consulta rapida -- cada comando esta mapeado para sua funcao e contexto de uso.
+
+---
+
+## Sintaxe de Comandos
+
+Todos os comandos seguem este padrao:
+
+```
+*command-name [required-param] [--optional-flag value]
+```
+
+- Comandos comecam com `*` (asterisco)
+- Parametros em `[]` sao obrigatorios quando presentes
+- Flags comecam com `--` e podem ter valores
+- Multiplas flags podem ser combinadas
+
+---
+
+## Comandos Universais
+
+Estes comandos funcionam em **todos** os agentes:
+
+| Comando | Descricao |
+|---|---|
+| `*help` | Lista todos os comandos disponiveis do agente ativo |
+| `*status` | Mostra contexto atual, story em progresso e estado do projeto |
+| `*guide` | Exibe guia de uso completo do agente |
+| `*yolo` | Alterna modo YOLO (pula confirmacoes, decisoes autonomas) |
+| `*exit` | Sai do modo agente e volta ao estado padrao |
+| `*session-info` | Mostra detalhes da sessao atual |
+| `*doc-out` | Gera output completo do documento em progresso |
+
+---
+
+## @aiox-master (Orion)
+
+<CommandReference
+  agent="aiox-master"
+  agentIcon="👑"
+  commands={[
+    { name: "create agent", args: "{name}", description: "Cria novo agente via elicitacao progressiva" },
+    { name: "create task", args: "{name}", description: "Cria nova task com estrutura padronizada" },
+    { name: "create workflow", args: "{name}", description: "Cria novo workflow multi-agente" },
+    { name: "create-doc", args: "{template}", description: "Cria documento a partir de template YAML" },
+    { name: "create-next-story", description: "Cria proxima user story do backlog" },
+    { name: "modify agent", args: "{name}", description: "Modifica agente existente (backup + rollback)" },
+    { name: "modify task", args: "{name}", description: "Modifica task preservando compatibilidade" },
+    { name: "modify workflow", args: "{name}", description: "Modifica workflow mantendo integridade" },
+    { name: "analyze-framework", description: "Analise completa de estrutura e performance" },
+    { name: "deprecate-component", description: "Deprecia componente com timeline de migracao" },
+    { name: "propose-modification", description: "Cria proposta de modificacao para revisao" },
+    { name: "correct-course", description: "Analisa e corrige desvios de processo" },
+    { name: "task", args: "{name}", description: "Executa qualquer task diretamente" },
+    { name: "workflow", args: "{name}", description: "Inicia workflow multi-agente" },
+    { name: "execute-checklist", args: "{name}", description: "Executa checklist de validacao" },
+    { name: "kb", description: "Ativa modo Knowledge Base interativo" },
+    { name: "update-manifest", description: "Atualiza manifesto de equipe" },
+    { name: "shard-doc", description: "Fragmenta documento grande em partes" },
+    { name: "index-docs", description: "Indexa documentacao para busca rapida" },
+    { name: "advanced-elicitation", description: "Executa elicitacao avancada multi-metodo" }
+  ]}
+/>
+
+---
+
+## @analyst (Atlas)
+
+<CommandReference
+  agent="analyst"
+  agentIcon="🔍"
+  commands={[
+    { name: "brainstorm", args: "{topic}", description: "Sessao de brainstorming estruturada (4 fases)" },
+    { name: "perform-market-research", description: "Pesquisa de mercado completa (TAM/SAM/SOM)" },
+    { name: "create-competitor-analysis", description: "Analise competitiva (SWOT, Blue Ocean)" },
+    { name: "research-prompt", args: "{topic}", description: "Gera prompt de pesquisa profunda estruturado" },
+    { name: "create-project-brief", description: "Cria project brief (discovery)" },
+    { name: "elicit", description: "Sessao avancada de elicitacao de requisitos" }
+  ]}
+/>
+
+---
+
+## @pm (Morgan)
+
+<CommandReference
+  agent="pm"
+  agentIcon="📋"
+  commands={[
+    { name: "create-prd", description: "Cria PRD greenfield (8 secoes com elicitacao)" },
+    { name: "create-brownfield-prd", description: "Cria PRD para projeto existente" },
+    { name: "create-epic", description: "Cria epic brownfield (1-3 stories)" },
+    { name: "create-story", description: "Cria story isolada para brownfield" },
+    { name: "research", args: "{topic}", description: "Gera prompt de pesquisa profunda" },
+    { name: "correct-course", description: "Navega mudancas mid-sprint (change checklist)" },
+    { name: "shard-prd", description: "Fragmenta PRD em arquivos por epic" },
+    { name: "checklist", description: "Executa pm-checklist de validacao" }
+  ]}
+/>
+
+---
+
+## @architect (Aria)
+
+<CommandReference
+  agent="architect"
+  agentIcon="🏛️"
+  commands={[
+    { name: "create-full-stack-architecture", description: "Arquitetura fullstack completa" },
+    { name: "create-backend-architecture", description: "Arquitetura backend (APIs, servicos)" },
+    { name: "create-front-end-architecture", description: "Arquitetura frontend (estado, routing)" },
+    { name: "create-brownfield-architecture", description: "Arquitetura para projeto existente" },
+    { name: "analyze-impact", description: "Analisa impacto de modificacoes em componentes" },
+    { name: "assess-complexity", description: "Avalia complexidade (5 dimensoes, score 5-25)" },
+    { name: "document-project", description: "Gera documentacao de projeto existente" },
+    { name: "research", description: "Pesquisa de tecnologias e best practices" },
+    { name: "execute-checklist", description: "Executa checklist de arquitetura" }
+  ]}
+/>
+
+---
+
+## @data-engineer (Dara)
+
+<CommandReference
+  agent="data-engineer"
+  agentIcon="📊"
+  commands={[
+    { name: "model-domain", description: "Sessao interativa de modelagem de dominio" },
+    { name: "setup-database", args: "{type}", description: "Setup de database (supabase, postgresql, mongodb, mysql, sqlite)" },
+    { name: "bootstrap", description: "Cria estrutura padrao de projeto Supabase" },
+    { name: "env-check", description: "Valida variaveis de ambiente do database" },
+    { name: "apply-migration", args: "{path}", description: "Aplica migracao com snapshot e lock" },
+    { name: "dry-run", args: "{path}", description: "Testa migracao sem commit" },
+    { name: "seed", args: "{path}", description: "Aplica seed data (idempotent)" },
+    { name: "snapshot", args: "{label}", description: "Cria snapshot do schema atual" },
+    { name: "rollback", args: "{snapshot}", description: "Restaura snapshot ou executa rollback" },
+    { name: "smoke-test", args: "{version}", description: "Testes abrangentes de database" },
+    { name: "security-audit", args: "{scope}", description: "Auditoria (rls, schema, full)" },
+    { name: "analyze-performance", args: "{type}", description: "Performance (query, hotpaths, interactive)" },
+    { name: "policy-apply", args: "{table} {mode}", description: "Instala politica RLS (KISS ou granular)" },
+    { name: "test-as-user", args: "{user_id}", description: "Emula usuario para testar RLS" },
+    { name: "verify-order", args: "{path}", description: "Valida ordenacao DDL" },
+    { name: "load-csv", args: "{table} {file}", description: "Carrega CSV (staging -> merge)" },
+    { name: "run-sql", args: "{file}", description: "Executa SQL com transacao" }
+  ]}
+/>
+
+---
+
+## @ux-design-expert (Uma)
+
+<CommandReference
+  agent="ux-design-expert"
+  agentIcon="🎨"
+  commands={[
+    { name: "research", description: "Pesquisa de usuario, personas e jornadas" },
+    { name: "wireframe", description: "Criar wireframes (low/mid/high fidelity)" },
+    { name: "generate-ui-prompt", description: "Gera prompts para v0/Lovable" },
+    { name: "create-front-end-spec", description: "Especificacao frontend completa" },
+    { name: "audit", args: "{path}", description: "Escanear redundancias de UI no codebase" },
+    { name: "consolidate", description: "Clustering inteligente de componentes" },
+    { name: "shock-report", description: "Relatorio visual HTML de redundancias" },
+    { name: "tokenize", description: "Extrair design tokens do codebase" },
+    { name: "setup", description: "Inicializar design system" },
+    { name: "migrate", description: "Estrategia de migracao de design system" },
+    { name: "build", args: "{component}", description: "Construir atom (componente basico)" },
+    { name: "compose", args: "{molecule}", description: "Compor molecule (grupo de atoms)" },
+    { name: "extend", args: "{component}", description: "Adicionar variante a componente" },
+    { name: "a11y-check", description: "Auditoria de acessibilidade WCAG" },
+    { name: "calculate-roi", description: "Calcular ROI do design system" }
+  ]}
+/>
+
+---
+
+## @sm (River)
+
+<CommandReference
+  agent="sm"
+  agentIcon="🌊"
+  commands={[
+    { name: "draft", description: "Cria proxima story do backlog (task principal)" },
+    { name: "story-checklist", description: "Executa checklist de validacao de story draft" },
+    { name: "correct-course", description: "Analisa e corrige desvios de processo" }
+  ]}
+/>
+
+---
+
+## @dev (Dex)
+
+<CommandReference
+  agent="dev"
+  agentIcon="💻"
+  commands={[
+    { name: "develop", args: "{story-id}", description: "Implementa story completa (3 modos: YOLO/Interactive/Pre-flight)" },
+    { name: "improve-code-quality", args: "{path}", description: "Melhora qualidade (formatting, linting, modern-syntax)" },
+    { name: "optimize-performance", args: "{path}", description: "Analisa e otimiza performance" },
+    { name: "suggest-refactoring", args: "{path}", description: "Sugere oportunidades de refactoring" },
+    { name: "backlog-debt", description: "Registra divida tecnica no backlog" },
+    { name: "apply-qa-fixes", description: "Aplica correcoes baseadas em qa-report.md" },
+    { name: "validate-story-draft", description: "Valida qualidade e completude de story" },
+    { name: "sync-documentation", description: "Sincroniza docs com mudancas de codigo" },
+    { name: "execute-checklist", description: "Executa story-dod-checklist" }
+  ]}
+/>
+
+---
+
+## @qa (Quinn)
+
+<CommandReference
+  agent="qa"
+  agentIcon="🧪"
+  commands={[
+    { name: "gate", args: "{story}", description: "Decisao de quality gate (PASS/CONCERNS/FAIL/WAIVED)" },
+    { name: "review", args: "{story}", description: "Revisao completa de story com decisao" },
+    { name: "test-design", args: "{story}", description: "Cria cenarios de teste abrangentes" },
+    { name: "risk-profile", args: "{story}", description: "Gera matriz de avaliacao de risco" },
+    { name: "nfr-assess", args: "{story}", description: "Valida requisitos nao-funcionais" },
+    { name: "trace", args: "{story}", description: "Mapeia requisitos para testes (Given-When-Then)" },
+    { name: "generate-tests", description: "Gera suites de teste automaticamente" },
+    { name: "run-tests", description: "Executa testes com quality gate" },
+    { name: "backlog-add", description: "Adiciona follow-ups ao backlog" },
+    { name: "create-fix-request", args: "{story}", description: "Gera fix request detalhado para @dev" }
+  ]}
+/>
+
+---
+
+## @po (Pax)
+
+<CommandReference
+  agent="po"
+  agentIcon="🎯"
+  commands={[
+    { name: "backlog-prioritize", description: "Prioriza backlog por valor de negocio" },
+    { name: "validate-story-draft", description: "Valida story contra PRD e arquitetura" },
+    { name: "sync-story", description: "Sincroniza story com artefatos atuais" },
+    { name: "execute-checklist", description: "Executa PO master checklist" },
+    { name: "shard-doc", description: "Fragmenta documentos grandes" }
+  ]}
+/>
+
+---
+
+## @devops (Gage)
+
+<CommandReference
+  agent="devops"
+  agentIcon="⚙️"
+  commands={[
+    { name: "push", description: "Pre-push quality gate + git push" },
+    { name: "version-check", description: "Verifica e gerencia versoes (semantic)" },
+    { name: "cleanup", description: "Limpeza de repositorio (branches, tags)" },
+    { name: "ci-cd", description: "Configura pipeline CI/CD" },
+    { name: "release", description: "Gerencia versionamento e releases" },
+    { name: "environment-bootstrap", description: "Bootstrap completo de ambiente" },
+    { name: "search-mcp", description: "Pesquisa catalogo de MCPs" },
+    { name: "add-mcp", description: "Instala e configura servidor MCP" },
+    { name: "list-mcps", description: "Lista MCPs habilitados" },
+    { name: "remove-mcp", description: "Remove servidor MCP" },
+    { name: "setup-mcp-docker", description: "Configura MCPs via Docker" },
+    { name: "setup-github", description: "Configura repositorio GitHub" },
+    { name: "security-audit", description: "Auditoria completa de seguranca" },
+    { name: "security-scan", description: "Varredura rapida por vulnerabilidades" },
+    { name: "create-worktree", args: "{story}", description: "Cria worktree Git isolada" },
+    { name: "list-worktrees", description: "Lista worktrees ativas" },
+    { name: "merge-worktree", args: "{story}", description: "Merge worktree de volta ao main" },
+    { name: "cleanup-worktrees", description: "Remove worktrees stale/merged" }
+  ]}
+/>
+
+---
+
+## @squad-creator (Craft)
+
+<CommandReference
+  agent="squad-creator"
+  agentIcon="🔧"
+  commands={[
+    { name: "create-squad", description: "Cria novo squad com estrutura completa" },
+    { name: "design-squad", description: "Analisa docs e gera blueprint de squad" },
+    { name: "validate-squad", description: "Valida squad contra JSON Schema" },
+    { name: "list-squads", description: "Lista squads locais do projeto" },
+    { name: "analyze-squad", description: "Analisa estrutura e sugere melhorias" },
+    { name: "extend-squad", description: "Estende squad com novos componentes" },
+    { name: "migrate-to-v2", description: "Migra squad para formato v2" },
+    { name: "generate-skills", description: "Gera skills de conhecimento do squad" },
+    { name: "generate-workflow", description: "Gera workflow de orquestracao YAML" }
+  ]}
+/>
+
+---
+
+## Atalhos de Comandos
+
+Para os comandos mais usados, existem atalhos:
+
+| Atalho | Comando completo |
+|---|---|
+| `*h` | `*help` |
+| `*s` | `*status` |
+| `*la` | `*list-agents` |
+| `*lt` | `*list-tasks` |
+| `*lw` | `*list-workflows` |
+| `*ca` | `*create-agent` |
+| `*ct` | `*create-task` |
+| `*cw` | `*create-workflow` |
+
+---
+
+## Padrao de Uso
+
+```bash
+# 1. Ativar agente
+@dev
+
+# 2. Ver comandos disponiveis
+*help
+
+# 3. Executar comando principal
+*develop STORY-42
+
+# 4. Verificar status
+*status
+
+# 5. Sair do agente
+*exit
+```
+
+<Callout type="tip" title="AIOX Master executa tudo">
+O @aiox-master pode executar comandos de qualquer agente diretamente via `*task {name}`, sem precisar ativar o agente especializado. Util para operacoes pontuais.
+</Callout>
+
+---
+
+## Cenarios Comuns
+
+| Cenario | Sequencia |
+|---|---|
+| **Nova feature** | `@analyst *brainstorm` -> `@pm *create-prd` -> `@architect *create-full-stack-architecture` -> `@sm *draft` -> `@dev *develop` -> `@qa *review` -> `@devops *push` |
+| **Bug fix rapido** | `@dev *develop STORY-fix` -> `@qa *gate` -> `@devops *push` |
+| **Entender codebase** | `@architect *document-project` -> `@analyst *brainstorm` (ideias de melhoria) |
+| **Trabalho paralelo** | `@devops *create-worktree STORY-42` -> `@dev *develop` -> `@devops *merge-worktree` |
+| **Novo dominio** | `@squad-creator *design-squad` -> `*create-squad` -> `*validate-squad` |
+
+---
+
+## Proximo Passo
+
+Parabens -- voce completou o **Modulo 3: Sistema de Agentes**. Voce agora conhece todos os 12 agentes, seus comandos, responsabilidades e como trabalham juntos. No proximo modulo, vamos mergulhar nos **Workflows** -- as sequencias completas que conectam todos esses agentes.

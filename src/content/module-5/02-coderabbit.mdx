@@ -1,0 +1,267 @@
+# CodeRabbit — Review Automatizado por IA
+
+O [CodeRabbit](https://coderabbit.ai/) e uma ferramenta de review de codigo alimentada por IA que analisa mudancas automaticamente, detectando vulnerabilidades de seguranca, problemas de qualidade e oportunidades de otimizacao. No AIOX, ele e integrado como parte da **Layer 2: PR Automation** do sistema de Quality Gates.
+
+---
+
+## O que o CodeRabbit Faz
+
+| Capacidade | Descricao |
+|---|---|
+| **Security Scanning** | Detecta SQL injection, XSS, credenciais hardcoded |
+| **Code Quality** | Analisa complexidade, duplicacao, padroes |
+| **Performance** | Identifica anti-patterns e oportunidades de otimizacao |
+| **Best Practices** | Enforce de padroes de codigo e convencoes |
+
+---
+
+## Posicao na Arquitetura
+
+O CodeRabbit vive na Layer 2 do sistema de Quality Gates:
+
+```
+Layer 1: LOCAL (Pre-commit)
+├── ESLint, Prettier, TypeScript
+├── Unit tests rapidos
+└── Captura: ~30% dos issues
+
+Layer 2: PR AUTOMATION  ← CodeRabbit vive aqui
+├── CodeRabbit AI review
+├── Integration tests, coverage
+├── Security scan, performance
+└── Captura: +50% (80% total)
+
+Layer 3: HUMAN REVIEW
+├── Alinhamento arquitetural
+├── Corretude de logica de negocio
+└── Captura: +20% (100% total)
+```
+
+---
+
+## Agentes que Usam CodeRabbit
+
+### @qa (Quinn) — Quality Assurance
+
+Quinn usa o CodeRabbit para reviews abrangentes com capacidade de self-healing:
+
+```bash
+@qa
+*review {story}       # Inclui CodeRabbit scan
+*code-review uncommitted  # Review de mudancas locais
+*code-review committed    # Review vs branch main
+```
+
+### @devops (Gage) — DevOps
+
+Gage usa o CodeRabbit como quality gate antes de push e criacao de PR:
+
+```bash
+@devops
+*pre-push    # Inclui validacao CodeRabbit
+*create-pr   # Bloqueia se CRITICAL encontrados
+```
+
+---
+
+## Niveis de Severidade e Acoes
+
+| Severidade | Descricao | Acao no AIOX |
+|---|---|---|
+| **CRITICAL** | Vulnerabilidades, risco de perda de dados | Bloqueia PR, auto-fix (max 3 tentativas) |
+| **HIGH** | Bugs significativos, problemas de performance | Bloqueia PR, recomenda fix |
+| **MEDIUM** | Code quality, manutenibilidade | Documenta como tech debt |
+| **LOW** | Melhorias opcionais, estilo | Nota no review apenas |
+
+<Callout type="danger" title="CRITICAL e HIGH bloqueiam">
+Issues CRITICAL e HIGH bloqueiam a criacao de PRs pelo @devops. Resolva antes de tentar fazer push.
+</Callout>
+
+---
+
+## Self-Healing Workflow
+
+O recurso mais poderoso da integracao CodeRabbit no AIOX e o **Self-Healing Loop**. Quando o @qa encontra issues, ele tenta corrigi-los automaticamente:
+
+```
+iteration = 0
+max_iterations = 3
+
+LOOP:
+  1. Executar CodeRabbit scan
+  2. Parse resultados por severidade
+
+  SE sem CRITICAL/HIGH:
+    → Documentar MEDIUM como tech debt
+    → Log: "QA passed"
+    → SAIR (pronto para aprovar)
+
+  SE CRITICAL ou HIGH:
+    → Tentar auto-fix para cada issue
+    → iteration++
+    → CONTINUAR loop
+
+SE iteracoes esgotadas E issues persistem:
+  → Log: "Issues remain after 3 iterations"
+  → Gerar relatorio detalhado de QA gate
+  → Definir gate: FAIL
+  → HALT (requer intervencao humana)
+```
+
+### Configuracao do Self-Healing
+
+```yaml
+self_healing:
+  enabled: true
+  type: full
+  max_iterations: 3
+  timeout_minutes: 30
+  severity_filter: [CRITICAL, HIGH]
+  behavior:
+    CRITICAL: auto_fix
+    HIGH: auto_fix
+    MEDIUM: document_as_debt
+    LOW: ignore
+```
+
+---
+
+## Instalacao e Configuracao
+
+O CodeRabbit CLI e instalado no WSL para consistencia cross-platform:
+
+```bash
+# Verificar instalacao
+wsl bash -c '~/.local/bin/coderabbit --version'
+
+# Verificar autenticacao
+wsl bash -c '~/.local/bin/coderabbit auth status'
+
+# Se nao instalado
+wsl bash -c 'curl -fsSL https://coderabbit.ai/install.sh | bash'
+
+# Se nao autenticado
+wsl bash -c '~/.local/bin/coderabbit auth login'
+```
+
+---
+
+## Comandos Disponiveis
+
+### Review de Mudancas Nao-Commitadas
+
+```bash
+# Via agente
+@qa
+*code-review uncommitted
+
+# Comando direto
+wsl bash -c 'cd /mnt/c/.../projeto && \
+  ~/.local/bin/coderabbit --prompt-only -t uncommitted'
+```
+
+### Review de Mudancas Commitadas
+
+```bash
+# Via agente
+@qa
+*code-review committed
+
+# Comando direto
+wsl bash -c 'cd /mnt/c/.../projeto && \
+  ~/.local/bin/coderabbit --prompt-only -t committed --base main'
+```
+
+### Pre-PR Review
+
+```bash
+# Via agente
+@devops
+*pre-push
+```
+
+---
+
+## Boas Praticas
+
+### 1. Rode Cedo, Rode Sempre
+
+Execute o CodeRabbit em mudancas nao-commitadas durante o desenvolvimento. Quanto mais cedo encontrar problemas, mais facil corrigi-los.
+
+### 2. CRITICAL = Imediato
+
+Nunca faca push de codigo com issues CRITICAL. Eles indicam vulnerabilidades de seguranca, credenciais expostas ou riscos de injection.
+
+### 3. Documente Tech Debt
+
+Issues MEDIUM devem ser rastreados, nao ignorados:
+
+```bash
+@qa
+*backlog-add {story} tech-debt medium "CodeRabbit: Reduzir complexidade em utils.js"
+```
+
+### 4. Avalie Sugestoes
+
+Nem toda sugestao exige acao. Use julgamento:
+- **Aceitar** melhorias que adicionam valor
+- **Ignorar** sugestoes que nao se encaixam no codebase
+- **Discutir** recomendacoes controversas com a equipe
+
+---
+
+## Integracao com o Fluxo de Desenvolvimento
+
+```
+1. Dev trabalha na story (@dev)
+2. Pre-commit (Layer 1): lint, tests
+3. Pronto para review:
+   └── @qa *review {story}
+       └── CodeRabbit scan (Layer 2)
+       └── Self-healing se necessario
+       └── Decisao de QA gate
+4. Push para remoto:
+   └── @devops *pre-push
+       └── CodeRabbit valida
+5. Criar PR:
+   └── @devops *create-pr
+       └── CodeRabbit bloqueia se CRITICAL
+6. Human review (Layer 3)
+```
+
+---
+
+## Resolucao de Problemas
+
+| Problema | Causa | Solucao |
+|---|---|---|
+| "coderabbit: command not found" | Path nao configurado | Verificar `~/.local/bin/coderabbit` no WSL |
+| "not authenticated" | CLI nao autenticado | `wsl bash -c '~/.local/bin/coderabbit auth login'` |
+| Timeout | Changeset grande | Aumentar timeout ou dividir PR |
+| "No changes to review" | Sem mudancas | Verificar `git status` |
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Quantas tentativas o Self-Healing faz antes de HALT?",
+      options: ["1", "2", "3", "5"],
+      correct: 2,
+      explanation: "O Self-Healing Loop tenta auto-fix ate 3 iteracoes (max_iterations: 3). Se issues CRITICAL/HIGH persistirem, faz HALT para intervencao humana."
+    },
+    {
+      question: "Onde o CodeRabbit CLI e instalado no AIOX?",
+      options: ["Windows nativo", "Docker container", "WSL (Windows Subsystem for Linux)", "npm global"],
+      correct: 2,
+      explanation: "O CodeRabbit CLI e instalado no WSL (~/.local/bin/coderabbit) para consistencia cross-platform."
+    },
+    {
+      question: "O que acontece com issues de severidade MEDIUM?",
+      options: ["Bloqueiam o PR", "Sao auto-fixados", "Sao documentados como tech debt", "Sao ignorados"],
+      correct: 2,
+      explanation: "Issues MEDIUM sao documentados como tech debt para serem enderecados futuramente, sem bloquear o fluxo atual."
+    }
+  ]}
+/>

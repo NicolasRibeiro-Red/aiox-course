@@ -1,0 +1,234 @@
+# Primeiro Valor em 10 Minutos
+
+O AIOX tem uma regra interna: **primeiro valor em 10 minutos ou menos**. Isso significa que, a partir de um projeto instalado, voce deve conseguir ativar um agente, interagir com ele e receber output util em no maximo 10 minutos. Vamos fazer isso agora.
+
+---
+
+## O que e "Primeiro Valor"?
+
+O AIOX define primeiro valor como tres condicoes cumpridas:
+
+1. Voce **ativa** um agente AIOX
+2. Voce recebe uma **resposta valida** de ativacao (greeting)
+3. Voce roda um **comando starter** (`*help`) e recebe output util
+
+Se as tres condicoes forem atendidas em ate 10 minutos, o setup esta correto.
+
+<Callout type="info" title="Por que 10 minutos?">
+Essa regra existe para detectar problemas de instalacao cedo. Se voce nao consegue atingir primeiro valor em 10 minutos, algo na configuracao esta errado -- e e mais facil diagnosticar agora do que depois de horas tentando usar o framework.
+</Callout>
+
+---
+
+## Passo 1: Certifique-se de que o AIOX esta Instalado
+
+Se voce seguiu as licoes anteriores, seu projeto ja esta pronto. Verifique:
+
+```bash
+cd my-first-project
+npx aiox-core doctor
+```
+
+O doctor deve reportar todos os checks como OK. Se algo falhar, volte para as licoes de instalacao e plataforma.
+
+---
+
+## Passo 2: Abra seu IDE
+
+O proximo passo depende do IDE que voce esta usando.
+
+### Claude Code
+
+```bash
+# Se ainda nao instalou globalmente
+npm install -g @anthropic-ai/claude-code
+
+# Abrir Claude Code no diretorio do projeto
+cd my-first-project
+claude
+```
+
+### Gemini CLI
+
+```bash
+# Abrir Gemini no diretorio do projeto
+cd my-first-project
+gemini
+```
+
+### Cursor
+
+Abra o diretorio do projeto no Cursor normalmente. As regras AIOX foram instaladas em `.cursor/rules/`.
+
+---
+
+## Passo 3: Ativar seu Primeiro Agente
+
+Agora vem a parte boa. Vamos ativar o **@aiox-master** (Orion) -- o orquestrador mestre que conhece todos os outros agentes.
+
+| IDE | Comando de Ativacao |
+|---|---|
+| Claude Code | `/aiox-master` |
+| Gemini CLI | `/aiox-menu` depois `/aiox-aiox-master` |
+| Codex CLI | `/skills` depois `aiox-aiox-master` |
+| Cursor | `@aiox-master` no chat |
+
+Apos a ativacao, voce deve receber um **greeting** -- uma mensagem de apresentacao do agente com seu nome, papel e capabilities. Algo como:
+
+```
+Orion (AIOX Master) ativado.
+Orquestrador Mestre do framework AIOX.
+Digite *help para ver comandos disponiveis.
+```
+
+<Callout type="tip" title="Se nao receber greeting">
+1. Verifique se os arquivos de agente existem em `.aiox-core/development/agents/`
+2. Rode `npm run sync:ide` para resincronizar
+3. Reinicie o IDE/CLI
+4. Rode `npx aiox-core doctor` para diagnostico
+</Callout>
+
+---
+
+## Passo 4: Rodar *help
+
+Com o agente ativo, digite:
+
+```
+*help
+```
+
+O comando `*help` e **universal** -- funciona em qualquer agente AIOX. Ele retorna:
+
+- Lista de comandos disponiveis para aquele agente
+- Breve descricao de cada comando
+- Exemplos de uso
+
+<CommandReference
+  title="Comandos Universais"
+  commands={[
+    { command: "*help", description: "Lista todos os comandos disponiveis do agente ativo", example: "*help" },
+    { command: "*guide", description: "Mostra guia detalhado de uso do agente", example: "*guide" },
+    { command: "*session-info", description: "Exibe detalhes da sessao atual", example: "*session-info" },
+    { command: "*exit", description: "Desativa o agente e volta ao modo padrao", example: "*exit" }
+  ]}
+/>
+
+---
+
+## Passo 5: Explorar Outros Agentes
+
+Agora que voce sabe o basico, vamos experimentar com mais agentes. Saia do aiox-master e ative outro:
+
+```
+*exit
+```
+
+Agora ative o agente `@dev` (Dex) -- o desenvolvedor senior:
+
+| IDE | Comando |
+|---|---|
+| Claude Code | `/dev` |
+| Gemini CLI | `/aiox-dev` |
+| Cursor | `@dev` |
+
+Rode `*help` novamente e note como os comandos sao diferentes -- cada agente tem seu proprio set de comandos especializados.
+
+### Exemplos de Interacao com Agentes
+
+**Com @dev (Dex):**
+
+```
+*help
+# Mostra comandos de desenvolvimento: implementacao, refactoring, debug
+```
+
+**Com @pm (Morgan):**
+
+```
+*help
+# Mostra comandos de produto: criar PRD, criar epic, roadmap
+```
+
+**Com @qa (Quinn):**
+
+```
+*help
+# Mostra comandos de qualidade: review, testes, audit
+```
+
+---
+
+## O Fluxo Tipico de Trabalho
+
+Agora que voce ativou agentes, vale entender o fluxo completo que voce vai usar no dia a dia:
+
+```
+1. @pm cria um PRD              *create-epic
+2. @sm faz o draft das stories  *draft
+3. @po valida as stories        *validate-story-draft
+4. @dev implementa              (trabalha a partir do arquivo de story)
+5. @qa revisa                   *review STORY-ID
+6. @devops faz push             *push
+7. @po fecha a story            *close-story STORY-ID
+```
+
+<Callout type="warning" title="Nao pule etapas">
+Esse fluxo existe por um motivo. Cada etapa tem um quality gate que valida o trabalho antes de avancar. Pular de @pm direto para @dev funciona tecnicamente, mas voce perde a validacao de arquitetura e stories -- e isso cobra depois.
+</Callout>
+
+---
+
+## Brownfield: Primeiro Uso em Projeto Existente
+
+Se voce instalou o AIOX em um projeto existente, o primeiro uso e ligeiramente diferente:
+
+| Situacao | Workflow Recomendado |
+|---|---|
+| Adicionar feature grande | `@pm` seguido de `*create-doc brownfield-prd` |
+| Auditar codebase legado | Workflow `brownfield-discovery.yaml` |
+| Enhancement rapido | `@pm` seguido de `*brownfield-create-epic` |
+| Bug fix isolado | `@pm` seguido de `*brownfield-create-story` |
+
+Na primeira ativacao em brownfield, o agente oferece analisar o codebase:
+
+```
+Detectei codigo existente sem documentacao AIOX.
+Posso analisar o codebase e gerar:
+- Documentacao de arquitetura
+- Relatorio de debito tecnico
+
+Isso leva 4-8 horas. Deseja continuar?
+```
+
+Aceitar essa analise e opcional mas altamente recomendado -- ela cria a base de contexto que todos os agentes vao usar.
+
+---
+
+## Checklist de Primeiro Valor
+
+Confirme que voce completou tudo:
+
+- [ ] AIOX instalado e `doctor` sem erros
+- [ ] IDE aberto no diretorio do projeto
+- [ ] Agente ativado com greeting recebido
+- [ ] `*help` executado com output valido
+- [ ] Pelo menos 2 agentes testados
+- [ ] Entendeu o fluxo tipico de trabalho
+
+---
+
+## Diagnostico: Se Algo Deu Errado
+
+| Sintoma | Causa Provavel | Solucao |
+|---|---|---|
+| Agente nao responde | IDE nao suportado ou arquivos faltando | `npm run sync:ide` + reiniciar IDE |
+| Greeting incompleto | Arquivo de agente corrompido | Reinstalar: `npx aiox-core install` |
+| `*help` nao reconhecido | Agente nao ativado corretamente | Verifique o comando de ativacao do seu IDE |
+| Comandos retornam erro | Dependencias de task faltando | `npx aiox-core doctor --fix` |
+
+---
+
+## Proximo Passo
+
+Voce ja viu o AIOX funcionando. Na proxima licao, vamos explorar a **estrutura de diretorios** em detalhe -- entender o que cada pasta e arquivo faz e como o framework se organiza internamente.

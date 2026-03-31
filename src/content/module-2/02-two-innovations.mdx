@@ -1,0 +1,213 @@
+# As Duas Inovacoes do AIOX
+
+O AIOX nao e apenas mais um framework de agentes -- ele introduz duas inovacoes que mudam fundamentalmente como software e planejado e construido: **Agentic Planning** e **Engineering-Contextualized Development**. Nesta licao, voce vai entender como cada uma funciona e por que juntas elas criam algo que nenhum framework tradicional consegue replicar.
+
+---
+
+## Inovacao 1: Agentic Planning
+
+### O Problema
+
+No desenvolvimento tradicional, uma unica pessoa (ou time pequeno) precisa dominar simultaneamente:
+
+- Pesquisa de mercado e analise competitiva
+- Definicao de requisitos e escopo
+- Arquitetura tecnica e escolha de stack
+- Planejamento de sprints e stories
+- Implementacao e testes
+- Deploy e operacoes
+
+Resultado? **Sobrecarga cognitiva**, decisoes apressadas e retrabalho constante.
+
+### A Solucao AIOX
+
+O AIOX distribui essa carga cognitiva entre **agentes especializados**, cada um com expertise profunda em sua area:
+
+<WorkflowVisualizer
+  title="Pipeline de Planejamento AIOX"
+  steps={[
+    { agent: "Atlas", agentIcon: "🔍", title: "Discovery", description: "Pesquisa de mercado, analise competitiva, brainstorming estruturado", artifacts: "project-brief.md, market-research.md" },
+    { agent: "Morgan", agentIcon: "📋", title: "Product Requirements", description: "Transforma insights em PRD com epics, stories e acceptance criteria", artifacts: "prd.md" },
+    { agent: "Uma", agentIcon: "🎨", title: "UX Specification", description: "Define fluxos de usuario, wireframes e design system", artifacts: "front-end-spec.md" },
+    { agent: "Aria", agentIcon: "🏛️", title: "Architecture", description: "Projeta arquitetura tecnica baseada no PRD e specs de UX", artifacts: "fullstack-architecture.md" },
+    { agent: "Pax", agentIcon: "🎯", title: "Validation", description: "Executa master checklist para garantir alinhamento entre documentos", artifacts: "Checklist aprovado" },
+    { agent: "River", agentIcon: "🌊", title: "Story Preparation", description: "Quebra epics em stories detalhadas e acionaveis para desenvolvimento", artifacts: "STORY-*.md" }
+  ]}
+/>
+
+### Quality Gates entre Fases
+
+O que torna o Agentic Planning robusto sao os **quality gates** -- pontos de validacao obrigatorios entre cada fase:
+
+| Gate | Quem valida | O que valida | Resultado |
+|---|---|---|---|
+| Brief -> PRD | Morgan (PM) | Escopo, viabilidade, clareza dos requisitos | PRD aprovado ou revisao |
+| PRD -> Architecture | Pax (PO) | Alinhamento entre PRD, UX spec e arquitetura | Master checklist PASS/FAIL |
+| Architecture -> Stories | Pax (PO) | Completude de epics e acceptance criteria | Documentos fragmentados e prontos |
+| Story -> Code | River (SM) | Story draft checklist -- clareza, testabilidade | Story aprovada para desenvolvimento |
+
+<Callout type="warning" title="Planejamento nao e opcional">
+Voce nao consegue pular etapas no AIOX sem violar quality gates. Isso parece restritivo no inicio, mas elimina retrabalho massivo a longo prazo. Um PRD bem feito economiza semanas de desenvolvimento.
+</Callout>
+
+### Planejamento como Linguagem Natural
+
+Todo o planejamento acontece em linguagem natural:
+
+- **Agentes** sao definidos em Markdown com frontmatter YAML
+- **Tasks** sao procedimentos passo-a-passo em Markdown
+- **Templates** sao estruturas YAML com instrucoes embutidas para LLMs
+- **Workflows** orquestram multiplas tasks em sequencia
+
+Nao existe codigo no core do framework. Qualquer pessoa pode ler, entender e modificar o comportamento dos agentes sem saber programar.
+
+---
+
+## Inovacao 2: Engineering-Contextualized Development
+
+### O Problema
+
+Desenvolvimento com LLMs sofre de um problema critico: **perda de contexto**. Cada sessao comeca do zero. Cada agente desconhece o que os outros fizeram. Decisoes arquiteturais sao esquecidas. Padroes de codigo precisam ser reexplicados.
+
+### A Solucao AIOX
+
+No AIOX, contexto e **compartilhado e persistente**:
+
+```
+Decisao do @architect  -->  Story do @sm  -->  Implementacao do @dev
+    (architecture.md)      (STORY-42.md)       (codigo + testes)
+```
+
+Cada agente sabe:
+
+1. **O que outros agentes ja fizeram** -- PRD, arquitetura, stories estao no filesystem
+2. **Quais padroes de codigo o projeto segue** -- `technical-preferences.md` e referenciado automaticamente
+3. **Quais decisoes foram tomadas e por que** -- documentos de arquitetura incluem rationale
+4. **Qual e o estado de cada story** -- checkboxes `[ ]` e `[x]` rastreiam progresso
+
+### O Ciclo de Desenvolvimento
+
+<WorkflowVisualizer
+  title="Ciclo de Desenvolvimento (SM/Dev/QA)"
+  steps={[
+    { agent: "River", agentIcon: "🌊", title: "Draft Story", description: "Cria story detalhada com tasks, acceptance criteria e contexto de arquitetura", artifacts: "STORY-*.md" },
+    { agent: "User", agentIcon: "👤", title: "Aprovacao", description: "Usuario revisa e aprova story draft antes de desenvolvimento" },
+    { agent: "Dex", agentIcon: "💻", title: "Implement", description: "Implementa story seguindo acceptance criteria e padroes do projeto", artifacts: "Codigo + testes" },
+    { agent: "Quinn", agentIcon: "🧪", title: "QA Review", description: "Revisao completa de codigo com quality gate PASS/CONCERNS/FAIL", artifacts: "qa-report.md" },
+    { agent: "Gage", agentIcon: "⚙️", title: "Deploy", description: "Pre-push quality gate, PR creation, merge", artifacts: "Pull Request" }
+  ]}
+/>
+
+### Stories como Fonte da Verdade
+
+No AIOX, a **story** e o artefato central do desenvolvimento:
+
+```markdown
+## Story 3.12: Implement User Authentication
+
+### Tasks
+- [x] 1. Setup OAuth provider configuration
+- [x] 2. Create login endpoint
+- [ ] 3. Add session management
+- [ ] 4. Write integration tests
+
+### Acceptance Criteria
+- Given a valid Google OAuth token
+- When the user hits /api/auth/login
+- Then a session is created and JWT is returned
+
+### Architecture Reference
+See: docs/architecture/fullstack-architecture.md#authentication
+
+### File List
+- src/auth/login.ts (created)
+- src/auth/session.ts (modified)
+- tests/auth/login.test.ts (created)
+```
+
+Cada task referencia acceptance criteria especificos. O `@dev` sabe exatamente o que implementar. O `@qa` sabe exatamente o que validar. Nao ha ambiguidade.
+
+---
+
+## As Duas Inovacoes Juntas
+
+O poder real aparece quando as duas inovacoes trabalham em conjunto:
+
+| Inovacao | Sozinha | Combinada |
+|---|---|---|
+| **Agentic Planning** | Documentos bem estruturados, mas sem conexao com codigo | Documentos que fluem naturalmente para stories implementaveis |
+| **Engineering Context** | Codigo bem contextualizado, mas sem planejamento estruturado | Codigo que implementa exatamente o que foi planejado, validado e aprovado |
+
+<Callout type="tip" title="O efeito multiplicador">
+Agentic Planning garante que o plano esta correto. Engineering Context garante que o codigo segue o plano. Juntos, eliminam a maior causa de retrabalho: **construir a coisa errada da maneira errada**.
+</Callout>
+
+---
+
+## Transicao Critica: Web para IDE
+
+Um aspecto crucial do workflow AIOX e a **transicao de ambiente**:
+
+```
+[Web UI]  →  Planejamento completo  →  [Switch]  →  [IDE]  →  Desenvolvimento
+ @analyst     @pm    @architect         📁 Docs     @sm    @dev    @qa
+```
+
+1. **Planejamento no Web UI**: Contexto rico, sem limitacao de janela, templates interativos
+2. **Documento Sharding**: PO fragmenta documentos grandes em partes consomiveis
+3. **Desenvolvimento no IDE**: Contexto lean, foco no codigo, stories atomicas
+
+Essa transicao nao e acidental -- e desenhada para maximizar as forcas de cada ambiente.
+
+---
+
+## Na Pratica: Workflow Completo
+
+Aqui esta como um projeto greenfield fullstack flui no AIOX:
+
+| Fase | Agente | Ambiente | Artefato |
+|---|---|---|---|
+| 1. Research | `@analyst` | Web | project-brief.md |
+| 2. Product Requirements | `@pm` | Web | prd.md |
+| 3. UX Specification | `@ux-design-expert` | Web | front-end-spec.md |
+| 4. Architecture | `@architect` | Web | fullstack-architecture.md |
+| 5. Validation | `@po` | Web | Master checklist PASS |
+| 6. Document Sharding | `@po` | IDE | Documentos fragmentados |
+| 7. Story Creation | `@sm` | IDE | STORY-*.md |
+| 8. Development | `@dev` | IDE | Codigo + testes |
+| 9. QA Review | `@qa` | IDE | qa-report.md |
+| 10. Deploy | `@devops` | IDE | PR + merge |
+
+---
+
+## Teste seus Conhecimentos
+
+<QuizBlock
+  title="Duas Inovacoes"
+  questions={[
+    {
+      question: "O que e 'Agentic Planning'?",
+      options: ["Usar IA para escrever codigo automaticamente", "Distribuir o planejamento entre agentes especializados com quality gates", "Criar dashboards para gerenciar projetos", "Automatizar deploys com agentes"],
+      correct: 1,
+      explanation: "Agentic Planning e a distribuicao do planejamento entre agentes especializados (analyst, PM, architect, etc.), cada um com expertise e quality gates obrigatorios entre fases."
+    },
+    {
+      question: "O que resolve o Engineering-Contextualized Development?",
+      options: ["A falta de documentacao", "A perda de contexto entre sessoes e agentes", "A lentidao do terminal", "A falta de testes automatizados"],
+      correct: 1,
+      explanation: "Engineering Context resolve a perda de contexto compartilhando decisoes, padroes e estado entre agentes via filesystem -- cada agente sabe o que os outros fizeram."
+    },
+    {
+      question: "Por que existe uma transicao de Web UI para IDE no workflow AIOX?",
+      options: ["Porque o IDE e mais bonito", "Para maximizar as forcas de cada ambiente: contexto rico no web, contexto lean no IDE", "Porque o web nao suporta codigo", "Para economizar custos de API"],
+      correct: 1,
+      explanation: "O planejamento acontece no Web UI (contexto rico, templates interativos) e o desenvolvimento no IDE (contexto lean, foco no codigo). Cada ambiente e usado onde e mais eficiente."
+    }
+  ]}
+/>
+
+---
+
+## Proximo Passo
+
+Na proxima licao, vamos mergulhar nos **5 building blocks** do AIOX: Agents, Tasks, Templates, Workflows e Checklists.

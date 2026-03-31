@@ -1,0 +1,196 @@
+# Agentes de Desenvolvimento: Dex, Dara e Uma
+
+Estes tres agentes transformam planejamento em realidade. **Dex** constroi codigo, **Dara** arquiteta dados e **Uma** projeta experiencias de usuario. Cada um e especialista profundo no seu dominio, com ferramentas e workflows especificos.
+
+---
+
+## Dex -- O Construtor (@dev)
+
+<AgentCard
+  icon="💻"
+  name="Dex"
+  id="dev"
+  title="Full Stack Developer"
+  archetype="Builder"
+  zodiac="Aquarius"
+  description="Desenvolvedor full-stack pragmatico e orientado a solucoes. Dex implementa stories com precisao, escreve testes abrangentes, refatora codigo e aplica correcoes de QA. Atualiza apenas as secoes autorizadas dos arquivos de story e segue rigorosamente os acceptance criteria."
+  commands={["*develop {story-id}", "*improve-code-quality {path}", "*optimize-performance {path}", "*suggest-refactoring {path}", "*backlog-debt", "*apply-qa-fixes", "*validate-story-draft", "*sync-documentation"]}
+  whenToUse="Quando tem uma story aprovada pronta para implementacao, precisa de refactoring, otimizacao de performance, ou aplicacao de fixes de QA."
+  collaboratesWith={["@sm (recebe stories)", "@qa (recebe fix requests)", "@devops (entrega codigo para deploy)", "@architect (consulta arquitetura)"]}
+  restrictions={["NAO cria stories (recebe do @sm)", "NAO faz git push (delega para @devops)", "NAO faz deploy", "NAO modifica secoes nao-autorizadas de stories"]}
+/>
+
+### O Workflow de Desenvolvimento
+
+Quando Dex recebe `*develop STORY-42`, ele segue este fluxo:
+
+| Step | Acao | Descricao |
+|---|---|---|
+| 1 | Read Story | Carrega STORY-42.md completa |
+| 2 | Load Context | Carrega arquitetura, technical preferences, gotchas |
+| 3 | Plan Approach | Analisa tasks e define ordem de implementacao |
+| 4 | Implement | Executa cada task sequencialmente |
+| 5 | Write Tests | Testes para cada acceptance criteria |
+| 6 | Update Story | Marca tasks como `[x]`, atualiza file list |
+| 7 | Self-Review | Verifica DoD checklist |
+| 8 | Ready for Review | Marca story como pronta para QA |
+
+### Story DoD (Definition of Done)
+
+Antes de marcar uma story como completa, Dex valida:
+
+- Todos os acceptance criteria implementados
+- Testes escritos e passando
+- Lint sem erros (`npm run lint`)
+- Types sem erros (`npm run typecheck`)
+- File list atualizado na story
+- Tasks marcadas como `[x]`
+
+### O Loop QA
+
+Quando @qa encontra issues, Dex recebe um `qa-report.md` e usa `*apply-qa-fixes`:
+
+```
+@qa encontra issue → qa-report.md → @dev *apply-qa-fixes → @qa verifica fix
+```
+
+O loop continua ate que @qa emita PASS no quality gate.
+
+<Callout type="info" title="Recovery System">
+Se Dex falha em implementar uma subtask, ele tem um sistema de recovery: `*track-attempt` registra a tentativa, e apos 3 falhas, `*rollback` reverte para o ultimo estado bom.
+</Callout>
+
+---
+
+## Dara -- A Sage dos Dados (@data-engineer)
+
+<AgentCard
+  icon="📊"
+  name="Dara"
+  id="data-engineer"
+  title="Database Architect & Operations Engineer"
+  archetype="Sage"
+  zodiac="Gemini"
+  description="Especialista em design de schemas, migracoes seguras, Row Level Security (RLS), otimizacao de performance e operacoes de DBA. Dara modela dominios de negocio, implementa migracoes com snapshots e rollback, e garante integridade e seguranca dos dados."
+  commands={["*model-domain", "*setup-database {type}", "*bootstrap", "*apply-migration {path}", "*dry-run {path}", "*snapshot {label}", "*rollback {snapshot}", "*security-audit {scope}", "*analyze-performance {type}", "*policy-apply {table} {mode}", "*test-as-user {user_id}"]}
+  whenToUse="Quando precisa projetar schemas, executar migracoes, configurar RLS, otimizar queries ou fazer operacoes de DBA."
+  collaboratesWith={["@architect (recebe requisitos de schema)", "@dev (fornece schema para implementacao)", "@qa (valida integridade de dados)"]}
+  restrictions={["NAO seleciona tecnologia de database (cabe ao @architect)", "NAO implementa logica de aplicacao"]}
+/>
+
+### Principios Criticos de Dara
+
+| Principio | Significado |
+|---|---|
+| **Corretude antes de velocidade** | Acertar primeiro, otimizar depois |
+| **Tudo versionado e reversivel** | Snapshots + scripts de rollback |
+| **Seguranca por padrao** | RLS, constraints, triggers |
+| **Idempotencia em todo lugar** | Seguro executar operacoes multiplas vezes |
+| **Access pattern first** | Design baseado em como dados serao consultados |
+| **Zero-downtime como objetivo** | Migracoes planejadas cuidadosamente |
+
+### Workflow de Migracao Segura
+
+```
+1. *snapshot "pre-migration"     -- Salva estado atual
+2. *dry-run migration.sql        -- Testa sem commit
+3. *apply-migration migration.sql -- Aplica com lock advisory
+4. *smoke-test v2                -- Testes abrangentes
+5. (se falhar) *rollback "pre-migration"
+```
+
+### Databases Suportados
+
+| Database | Comando | Especialidade |
+|---|---|---|
+| **Supabase** | `*setup-database supabase` | PostgreSQL + Auth + RLS |
+| **PostgreSQL** | `*setup-database postgresql` | Relacional puro |
+| **MongoDB** | `*setup-database mongodb` | Documentos |
+| **MySQL** | `*setup-database mysql` | Relacional classico |
+| **SQLite** | `*setup-database sqlite` | Embarcado |
+
+---
+
+## Uma -- A Designer (@ux-design-expert)
+
+<AgentCard
+  icon="🎨"
+  name="Uma"
+  id="ux-design-expert"
+  title="UX Design Expert"
+  archetype="Designer"
+  zodiac="Pisces"
+  description="Hibrido de UX Research e Design System. Uma combina principios de Sally (empatia, user research) com Brad Frost (Atomic Design, tokens, ROI). Opera em 5 fases: Research, Audit, Tokens, Component Building e Quality/Documentation."
+  commands={["*research", "*wireframe", "*generate-ui-prompt", "*create-front-end-spec", "*audit {path}", "*consolidate", "*tokenize", "*build {component}", "*compose {molecule}", "*a11y-check", "*calculate-roi"]}
+  whenToUse="Quando precisa de pesquisa de usuario, wireframes, design system, auditoria de UI, ou criacao de componentes atomicos."
+  collaboratesWith={["@pm (recebe PRD com requisitos UI)", "@architect (entrega front-end spec)", "@dev (fornece componentes e tokens)"]}
+  restrictions={["NAO implementa codigo de producao", "NAO faz arquitetura backend"]}
+/>
+
+### As 5 Fases de Uma
+
+| Fase | Foco | Comandos | Output |
+|---|---|---|---|
+| **1. UX Research** | Pesquisa de usuario, personas, jornadas | `*research`, `*wireframe`, `*create-front-end-spec` | Personas, wireframes, front-end-spec.md |
+| **2. Design System Audit** | Escanear redundancias em codebase existente | `*audit {path}`, `*consolidate`, `*shock-report` | Relatorio de redundancias HTML |
+| **3. Design Tokens** | Extrair e configurar tokens | `*tokenize`, `*setup`, `*migrate` | Tokens configurados |
+| **4. Component Building** | Construir atoms, molecules, organisms | `*build {component}`, `*compose {molecule}`, `*extend` | Componentes atomicos |
+| **5. Quality & Docs** | Acessibilidade, documentacao, ROI | `*a11y-check`, `*document`, `*calculate-roi` | Pattern library, WCAG report |
+
+### Atomic Design no AIOX
+
+Uma segue a metodologia Atomic Design de Brad Frost:
+
+| Nivel | Descricao | Exemplo |
+|---|---|---|
+| **Atoms** | Elementos basicos indivisiveis | Button, Input, Label |
+| **Molecules** | Grupos de atoms com funcao | SearchBar (Input + Button) |
+| **Organisms** | Secoes complexas da interface | Header (Logo + Nav + SearchBar) |
+
+<Callout type="tip" title="Audit antes de Build">
+Em projetos brownfield, SEMPRE execute `*audit {path}` antes de criar novos componentes. Uma identifica redundancias existentes que podem ser consolidadas em vez de criar duplicatas.
+</Callout>
+
+---
+
+## Como os Tres Trabalham Juntos
+
+| Fluxo | Descricao |
+|---|---|
+| @architect -> @data-engineer | Aria define "usar PostgreSQL com Supabase". Dara projeta o schema, cria migrations e configura RLS |
+| @ux-design-expert -> @architect | Uma cria front-end-spec com tokens e componentes. Aria integra na arquitetura fullstack |
+| @sm -> @dev | River cria STORY-42 com tasks de UI, API e database. Dex implementa, consumindo artefatos de Dara e Uma |
+
+---
+
+## Teste seus Conhecimentos
+
+<QuizBlock
+  title="Agentes de Desenvolvimento"
+  questions={[
+    {
+      question: "O que Dex faz quando @qa encontra issues no codigo?",
+      options: ["Ignora e faz deploy", "Usa *apply-qa-fixes para corrigir baseado no qa-report.md", "Cria uma nova story", "Delega para outro agente"],
+      correct: 1,
+      explanation: "Dex recebe o qa-report.md e usa *apply-qa-fixes para corrigir cada issue. O loop continua ate @qa emitir PASS."
+    },
+    {
+      question: "Qual principio de Dara garante que migracoes sao seguras?",
+      options: ["Speed first", "Tudo versionado e reversivel (snapshots + rollback)", "Nunca fazer migracoes", "Migrar so de noite"],
+      correct: 1,
+      explanation: "Dara sempre cria snapshot antes de migrar, faz dry-run para testar, e mantem rollback disponivel em caso de falha."
+    },
+    {
+      question: "Qual e a primeira fase de Uma em um projeto brownfield?",
+      options: ["Component Building", "Design System Audit (*audit)", "Deploy", "UX Research"],
+      correct: 1,
+      explanation: "Em projetos brownfield, Uma comeca com Design System Audit para identificar redundancias existentes antes de criar novos componentes."
+    }
+  ]}
+/>
+
+---
+
+## Proximo Passo
+
+Na proxima licao, vamos conhecer os **agentes de processo**: River (SM), Quinn (QA) e Pax (PO).

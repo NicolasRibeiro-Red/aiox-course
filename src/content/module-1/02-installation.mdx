@@ -1,0 +1,281 @@
+# Instalacao do AIOX
+
+Hora de instalar. O AIOX usa um wizard interativo via `npx` que cria toda a estrutura do framework no seu projeto. Nesta licao, vamos cobrir a instalacao completa, as opcoes disponiveis e o que cada etapa faz por baixo dos panos.
+
+---
+
+## Instalacao Rapida (Projeto Novo)
+
+Se voce esta comecando um projeto do zero, o caminho mais rapido e:
+
+```bash
+npx aiox-core init my-first-project
+cd my-first-project
+```
+
+Isso cria um diretorio `my-first-project/` com toda a estrutura AIOX pronta para uso.
+
+<Callout type="warning" title="Cuidado com diretorios temporarios do NPX">
+O NPX executa pacotes em diretorios temporarios. Se voce rodar o instalador do diretorio home ou de um local arbitrario, ele pode falhar porque nao consegue detectar seu IDE corretamente. Sempre navegue ate o diretorio do projeto ANTES de rodar o comando.
+</Callout>
+
+### O Erro mais Comum
+
+```bash
+# ERRADO -- vai falhar
+cd ~
+npx aiox-core install
+
+# CORRETO -- navegue ate o projeto primeiro
+cd ~/my-project
+npx aiox-core install
+```
+
+A partir da versao 4.31.1, o AIOX detecta automaticamente quando esta rodando de um diretorio temporario do NPX e exibe uma mensagem de erro clara:
+
+```
+NPX Temporary Directory Detected
+
+NPX executes in a temporary directory, which prevents
+AIOX from detecting your IDE correctly.
+
+Solution:
+  cd /path/to/your/project
+  npx aiox-core install
+```
+
+---
+
+## Instalacao em Projeto Existente (Brownfield)
+
+Ja tem um codebase? O AIOX se instala sem destruir nada:
+
+```bash
+cd existing-project
+npx aiox-core install
+```
+
+### Garantias de Seguranca
+
+- **Nao-destrutivo**: O AIOX cria arquivos, nunca sobrescreve existentes
+- **Rollback simples**: `git checkout HEAD~1 -- .` restaura o estado anterior
+- **Configs preservadas**: Seus `.eslintrc`, `tsconfig.json` etc. permanecem intactos
+
+<Callout type="tip" title="Brownfield Discovery">
+Na primeira vez que voce ativa um agente AIOX em um projeto existente, ele detecta que existe codigo mas nao existem docs AIOX. O agente oferece analisar o codebase (leva 4-8 horas) e gera documentacao de arquitetura + relatorio de debito tecnico automaticamente.
+</Callout>
+
+---
+
+## Opcoes de Instalacao
+
+O installer suporta diversas flags para customizar a instalacao:
+
+```bash
+# Projeto novo com template enterprise
+npx aiox-core init my-project --template enterprise
+
+# Instalar em projeto existente
+npx aiox-core install
+
+# Forcar instalacao em diretorio nao-vazio
+npx aiox-core init my-project --force
+
+# Pular instalacao de dependencias (instalar depois)
+npx aiox-core init my-project --skip-install
+```
+
+### O Wizard Interativo
+
+Quando voce roda o installer, ele pergunta:
+
+1. **Diretorio de instalacao** -- confirme que e o diretorio atual
+2. **Componentes** -- Core (obrigatorio) + Squads (opcional)
+3. **Integracoes de IDE** -- Quais IDEs voce usa (Claude Code, Cursor, Gemini, etc.)
+4. **Organizacao de docs** -- Estrutura de documentacao desejada
+
+---
+
+## O que o Installer Cria
+
+Apos a instalacao, seu projeto tera esta estrutura:
+
+<FileTree>
+  <FileTree.Folder name="my-first-project" defaultOpen>
+    <FileTree.Folder name=".aiox-core" defaultOpen>
+      <FileTree.Folder name="core">
+        <FileTree.File name="config/" />
+        <FileTree.File name="quality-gates/" />
+        <FileTree.File name="utils/" />
+      </FileTree.Folder>
+      <FileTree.Folder name="data">
+        <FileTree.File name="aiox-kb.md" />
+        <FileTree.File name="agent-config-requirements.yaml" />
+        <FileTree.File name="technical-preferences.md" />
+      </FileTree.Folder>
+      <FileTree.Folder name="development">
+        <FileTree.File name="agents/" />
+        <FileTree.File name="tasks/" />
+        <FileTree.File name="workflows/" />
+      </FileTree.Folder>
+      <FileTree.Folder name="infrastructure">
+        <FileTree.File name="integrations/" />
+        <FileTree.File name="scripts/" />
+        <FileTree.File name="templates/" />
+      </FileTree.Folder>
+      <FileTree.Folder name="product">
+        <FileTree.File name="checklists/" />
+        <FileTree.File name="templates/" />
+      </FileTree.Folder>
+      <FileTree.File name="core-config.yaml" />
+    </FileTree.Folder>
+    <FileTree.Folder name=".claude">
+      <FileTree.File name="CLAUDE.md" />
+      <FileTree.File name="commands/" />
+      <FileTree.File name="rules/" />
+    </FileTree.Folder>
+    <FileTree.Folder name="docs">
+      <FileTree.File name="stories/" />
+    </FileTree.Folder>
+    <FileTree.File name="package.json" />
+  </FileTree.Folder>
+</FileTree>
+
+### Detalhamento dos Diretorios Criados
+
+| Diretorio | Conteudo | Proposito |
+|---|---|---|
+| `.aiox-core/core/` | Configuracao, quality gates, utils | Motor do framework |
+| `.aiox-core/data/` | Knowledge base, preferences | Dados compartilhados entre agentes |
+| `.aiox-core/development/` | Agentes, tasks, workflows | Assets de desenvolvimento |
+| `.aiox-core/infrastructure/` | CI/CD, scripts, integ. | Ferramentas de infraestrutura |
+| `.aiox-core/product/` | Checklists, templates | Assets de PM/PO |
+| `.claude/` | CLAUDE.md, commands, rules | Integracao Claude Code |
+| `docs/stories/` | Stories de desenvolvimento | Tracking de features |
+
+---
+
+## Instalacao Global (Alternativa)
+
+Se voce nao quer usar `npx` toda vez:
+
+```bash
+# Instalar globalmente
+npm install -g aiox-core
+
+# Usar de qualquer diretorio de projeto
+cd /path/to/your/project
+aiox-core install
+```
+
+---
+
+## Deteccao de Plataforma
+
+O installer detecta automaticamente seu sistema operacional e aplica configuracoes especificas:
+
+| Plataforma | Ajustes Automaticos |
+|---|---|
+| **Windows** | Paths com backslash, CRLF para batch files, permissoes Windows |
+| **macOS** | Paths Unix, LF, deteccao de case-sensitivity |
+| **Linux** | Permissoes 755/644, XDG compliance, deteccao de distro |
+
+### Paths de IDE por Plataforma
+
+| IDE | Windows | macOS | Linux |
+|---|---|---|---|
+| Cursor | `%APPDATA%\Cursor\` | `~/Library/Application Support/Cursor/` | `~/.config/Cursor/` |
+| Claude Code | `%USERPROFILE%\.claude\` | `~/.claude/` | `~/.claude/` |
+
+---
+
+## Verificando a Instalacao
+
+Apos instalar, rode o diagnostico:
+
+```bash
+npx aiox-core doctor
+```
+
+O doctor verifica:
+- Versoes de Node.js e npm
+- Integridade dos arquivos instalados
+- IDEs detectados e configurados
+- Permissoes de diretorio
+
+Se houver problemas:
+
+```bash
+npx aiox-core doctor --fix
+```
+
+---
+
+## Sincronizacao Multi-IDE
+
+Se voce usa mais de um IDE (ex: Claude Code + Cursor), o AIOX pode sincronizar regras entre eles:
+
+```bash
+# Sincronizar agentes para todos os IDEs configurados
+npm run sync:ide
+
+# Preview do que mudaria (dry run)
+npm run sync:ide -- --dry-run
+
+# Validar paridade entre IDEs
+npm run validate:parity
+```
+
+<Callout type="info" title="Quando sincronizar">
+Rode `npm run sync:ide` sempre que atualizar o AIOX, adicionar um novo agente ou alterar configuracoes de qualquer IDE. O validador de paridade garante que todos os IDEs estao na mesma versao.
+</Callout>
+
+---
+
+## Atualizacao
+
+Para atualizar uma instalacao existente:
+
+```bash
+npx aiox-core install
+```
+
+O updater automaticamente:
+- Detecta a instalacao existente
+- Faz backup de customizacoes em `.aiox-backup/`
+- Atualiza apenas arquivos que mudaram
+- Preserva suas configuracoes
+
+---
+
+## Desinstalacao
+
+Se precisar remover o AIOX:
+
+```bash
+# Remover do projeto
+rm -rf .aiox-core
+rm -rf .claude/commands/AIOX
+
+# Remover instalacao global (se instalou)
+npm uninstall -g aiox-core
+```
+
+---
+
+## Troubleshooting Rapido
+
+| Problema | Solucao |
+|---|---|
+| `NPX Temporary Directory Detected` | `cd` ate o diretorio do projeto antes de rodar |
+| IDE nao detectado | Rode `npm run sync:ide` e reinicie o IDE |
+| Erro de permissao (EACCES) | Corrija permissoes do npm (ver licao de plataforma) |
+| Versao do Node.js muito antiga | Atualize com nvm ou instalador oficial |
+
+Para problemas especificos da sua plataforma, consulte a proxima licao: **Setup por Plataforma**.
+
+---
+
+## Proximo Passo
+
+Na proxima licao, vamos cobrir a configuracao especifica para **Windows, macOS e Linux** -- incluindo troubleshooting detalhado para cada sistema operacional.

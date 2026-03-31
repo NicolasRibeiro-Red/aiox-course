@@ -1,0 +1,203 @@
+# O Spec Pipeline — De Ideias a Especificacoes
+
+O **Spec Pipeline** e o workflow que transforma requisitos informais em especificacoes formais e executaveis. Ele representa um dos pilares do AIOX: a ideia de que **antes de escrever codigo, agentes especializados devem planejar, pesquisar e validar** tudo o que sera construido.
+
+---
+
+## Por que um Pipeline de Especificacao?
+
+Em projetos tradicionais, a especificacao e muitas vezes informal — um Slack, um rascunho, uma conversa. Isso gera:
+
+- Ambiguidade nos requisitos
+- Retrabalho por falta de pesquisa previa
+- Falta de rastreabilidade entre requisito e codigo
+
+O Spec Pipeline resolve isso com **6 fases estruturadas**, cada uma executada por um agente especializado, com quality gates obrigatorios entre elas.
+
+---
+
+## Visao Geral do Fluxo
+
+<WorkflowVisualizer
+  title="Spec Pipeline — 6 Fases"
+  steps={[
+    {
+      agent: "@pm",
+      agentIcon: "📋",
+      title: "Fase 1: Gather Requirements",
+      description: "Morgan coleta requisitos via elicitacao interativa em 9 categorias: funcionais, restricoes, NFRs, aceite, suposicoes, dominio, interacao, edge cases e terminologia.",
+      artifacts: ["requirements.json"]
+    },
+    {
+      agent: "@architect",
+      agentIcon: "🏛️",
+      title: "Fase 2: Assess Complexity",
+      description: "Aria avalia 5 dimensoes de complexidade (Scope, Integration, Infrastructure, Knowledge, Risk) e classifica como SIMPLE, STANDARD ou COMPLEX.",
+      artifacts: ["complexity.json"]
+    },
+    {
+      agent: "@analyst",
+      agentIcon: "🔍",
+      title: "Fase 3: Research Dependencies",
+      description: "Atlas pesquisa dependencias externas usando Context7 e EXA, validando bibliotecas, APIs e conceitos tecnicos.",
+      artifacts: ["research.json"]
+    },
+    {
+      agent: "@pm",
+      agentIcon: "📋",
+      title: "Fase 4: Write Specification",
+      description: "Morgan gera a especificacao formal (spec.md) sem inventar informacao — tudo rastreia para requisitos ou pesquisa.",
+      artifacts: ["spec.md"]
+    },
+    {
+      agent: "@qa",
+      agentIcon: "✅",
+      title: "Fase 5: Critique Specification",
+      description: "Quinn avalia a spec em 5 dimensoes de qualidade (Accuracy, Completeness, Consistency, Feasibility, Alignment) e emite um verdict.",
+      artifacts: ["critique.json"]
+    },
+    {
+      agent: "@architect",
+      agentIcon: "🏛️",
+      title: "Fase 6: Create Plan",
+      description: "Aria gera o plano de implementacao com subtasks atomicas, respeitando dependencias e limites de arquivos por task.",
+      artifacts: ["plan.json"]
+    }
+  ]}
+/>
+
+---
+
+## Adaptacao por Complexidade
+
+O pipeline nao e rigido — ele se adapta automaticamente baseado na complexidade detectada na Fase 2. Isso evita overhead desnecessario para tarefas simples e garante profundidade para tarefas complexas.
+
+| Classificacao | Score | Fases Ativadas | Tempo Estimado |
+|---|---|---|---|
+| **SIMPLE** | 8 ou menos | Gather, Spec, Critique | 30-60 min |
+| **STANDARD** | 9-15 | Todas as 6 fases | 2-4 horas |
+| **COMPLEX** | 16 ou mais | Todas + Revise + 2a Critique | 4-8 horas |
+
+<Callout type="info" title="Fluxo adaptativo">
+Para projetos SIMPLE, o pipeline pula Assess, Research e Plan — indo direto de Gather para Spec e Critique. Isso economiza tempo sem sacrificar qualidade para tarefas triviais.
+</Callout>
+
+---
+
+## O Principio "No Invention"
+
+Um dos principios mais importantes do Spec Pipeline e o **Article IV — No Invention**. Ele determina que:
+
+- Todo statement na especificacao **deve rastrear** para um requisito funcional (`FR-*`), nao-funcional (`NFR-*`), restricao (`CON-*`) ou achado de pesquisa verificado
+- E **proibido** adicionar features nao listadas, assumir detalhes nao pesquisados, ou criar criterios de aceite inventados
+- Informacao sem rastreabilidade deve ir para a secao "Open Questions"
+
+```
+Exemplo de violacao:
+  "O sistema deve suportar cache Redis para melhor performance"
+  ↳ Nenhum requisito menciona Redis. Nenhuma pesquisa validou.
+  ↳ ACAO: Remover ou mover para Open Questions
+```
+
+---
+
+## Os 4 Agentes do Pipeline
+
+| Agente | Nome | Arquetipo | Fases |
+|---|---|---|---|
+| `@pm` | Morgan | Strategist | 1 (Gather), 4 (Spec), 5b (Revise) |
+| `@architect` | Aria | Visionary | 2 (Assess), 6 (Plan) |
+| `@analyst` | Atlas | Decoder | 3 (Research) |
+| `@qa` | Quinn | Guardian | 5 (Critique), 5c (2a Critique) |
+
+Cada agente traz uma perspectiva unica. Morgan foca no **usuario e produto**, Aria na **arquitetura e viabilidade**, Atlas na **pesquisa e evidencia**, e Quinn na **qualidade e rastreabilidade**.
+
+---
+
+## A Critique: Quality Gate Central
+
+A Fase 5 e o ponto mais critico do pipeline. Quinn avalia a especificacao em 5 dimensoes, cada uma com peso diferente:
+
+| Dimensao | Peso | O que verifica |
+|---|---|---|
+| Accuracy | 25% | Spec reflete requisitos corretamente? |
+| Completeness | 25% | Todas as secoes preenchidas? Testes cobrem FRs? |
+| Consistency | 20% | IDs validos? Sem contradicoes? |
+| Feasibility | 15% | Tecnicamente possivel? Dependencias existem? |
+| Alignment | 15% | Alinhado com stack e padroes do projeto? |
+
+O verdict pode ser:
+
+- **APPROVED** — Sem issues HIGH, media >= 4.0, todas dimensoes >= 3. Avanca para Plan.
+- **NEEDS_REVISION** — Issues MEDIUM ou media entre 3.0-3.9. Retorna para o PM revisar.
+- **BLOCKED** — Issues HIGH ou media < 3.0. Escala para o Architect.
+
+---
+
+## Artefatos Gerados
+
+Ao final do pipeline, 6 artefatos ficam disponiveis em `docs/stories/{storyId}/spec/`:
+
+```
+docs/stories/STORY-42/
+├── spec/
+│   ├── requirements.json    # Requisitos estruturados (9 categorias)
+│   ├── complexity.json      # Avaliacao de complexidade (5 dimensoes)
+│   ├── research.json        # Dependencias pesquisadas e validadas
+│   ├── spec.md              # Especificacao completa executavel
+│   └── critique.json        # Resultado da avaliacao de qualidade
+└── plan/
+    └── implementation.yaml  # Plano com subtasks atomicas
+```
+
+---
+
+## Como Executar
+
+O pipeline pode ser iniciado de duas formas:
+
+```bash
+# Comando direto
+*create-spec STORY-42
+
+# Ou automaticamente quando autoSpec esta habilitado
+# e uma story e criada
+```
+
+Para executar fases individuais:
+
+```bash
+*gather-requirements STORY-42   # Apenas Fase 1
+*assess-complexity STORY-42     # Apenas Fase 2
+*critique-spec STORY-42         # Apenas Fase 5
+```
+
+<Callout type="tip" title="Retomando execucoes">
+O pipeline suporta checkpoints. Se uma fase falhar, voce pode retomar de onde parou com `*create-spec STORY-42 --resume`.
+</Callout>
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Qual principio impede que agentes adicionem features nao solicitadas na especificacao?",
+      options: ["Quality Gate", "No Invention (Article IV)", "Adaptive Phases", "Traceability"],
+      correct: 1,
+      explanation: "O Article IV — No Invention determina que todo statement deve rastrear para um requisito ou pesquisa verificada. Nada pode ser inventado."
+    },
+    {
+      question: "Para um projeto classificado como SIMPLE (score <= 8), quais fases sao executadas?",
+      options: ["Todas as 6 fases", "Gather, Spec, Critique", "Gather, Assess, Spec", "Apenas Gather e Spec"],
+      correct: 1,
+      explanation: "Projetos SIMPLE pulam Assess, Research e Plan, executando apenas Gather (coleta), Spec (escrita) e Critique (validacao)."
+    },
+    {
+      question: "O que acontece quando o verdict da Critique e BLOCKED?",
+      options: ["Retorna para o PM revisar", "Avanca para o Plan", "Escala para o Architect", "O pipeline reinicia do zero"],
+      correct: 2,
+      explanation: "BLOCKED indica issues HIGH ou media muito baixa. O pipeline escala para o @architect (Aria) para revisao arquitetural."
+    }
+  ]}
+/>

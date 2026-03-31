@@ -1,0 +1,202 @@
+# Brownfield Workflows — Trabalhando com Codebases Existentes
+
+Nem todo projeto comeca do zero. O **Brownfield Discovery** e o workflow multi-agente do AIOX para avaliar, documentar e planejar a modernizacao de projetos existentes — especialmente aqueles vindos de plataformas como Lovable, v0.dev, ou codebases legados.
+
+---
+
+## Greenfield vs Brownfield
+
+<ComparisonTable
+  title="Quando usar cada abordagem"
+  headers={["Greenfield", "Brownfield"]}
+  rows={[
+    ["Projeto novo, do zero", "Projeto existente com codigo"],
+    ["Foco em planejamento e especificacao", "Foco em descoberta e debito tecnico"],
+    ["9 agentes no pipeline completo", "6 agentes com fases de validacao cruzada"],
+    ["Artefatos: PRD, arquitetura, specs", "Artefatos: assessment, relatorio executivo, stories"],
+    ["Tempo: variavel por complexidade", "Tempo: 4-8 horas tipicamente"],
+    ["Fase 0: Bootstrap do ambiente", "Fase 1: Documentacao do sistema existente"],
+    ["Saida: aplicacao pronta", "Saida: plano de modernizacao com stories"]
+  ]}
+/>
+
+---
+
+## O Fluxo de 10 Fases
+
+O Brownfield Discovery e mais extenso que outros workflows porque precisa **entender o sistema antes de propor mudancas**. Ele opera em 4 blocos:
+
+### Bloco 1: Coleta de Dados (Fases 1-3)
+
+Tres agentes especializados analisam o sistema em paralelo:
+
+| Fase | Agente | O que analisa | Artefato |
+|---|---|---|---|
+| 1 | `@architect` (Aria) | Stack, estrutura, dependencias, padroes, integracoes | `system-architecture.md` |
+| 2 | `@data-engineer` (Dara) | Schema, RLS, indices, migrations, constraints | `SCHEMA.md`, `DB-AUDIT.md` |
+| 3 | `@ux-design-expert` (Uma) | Componentes UI, design tokens, acessibilidade, fluxos | `frontend-spec.md` |
+
+<Callout type="info" title="Fase 2 e condicional">
+A Fase 2 (Database) so executa se o projeto tiver banco de dados. Se nao existir pasta `supabase/` ou similar, o workflow pula direto para a Fase 3.
+</Callout>
+
+### Bloco 2: Consolidacao (Fase 4)
+
+O `@architect` consolida todos os achados em um unico documento DRAFT, criando uma **matriz preliminar de debitos tecnicos** com impacto, esforco e prioridade estimados.
+
+### Bloco 3: Validacao dos Especialistas (Fases 5-7)
+
+Cada especialista valida sua secao do DRAFT:
+
+| Fase | Agente | Responsabilidade |
+|---|---|---|
+| 5 | `@data-engineer` | Confirmar debitos de DB, estimar custos, priorizar |
+| 6 | `@ux-design-expert` | Confirmar debitos de UX, estimar impacto visual |
+| 7 | `@qa` | Quality Gate — identificar gaps, avaliar riscos, decidir APPROVED ou NEEDS WORK |
+
+Se o QA Gate retornar **NEEDS WORK**, o workflow volta para a Fase 4 para retrabalho.
+
+### Bloco 4: Finalizacao (Fases 8-10)
+
+| Fase | Agente | Artefato |
+|---|---|---|
+| 8 | `@architect` | Assessment final consolidado |
+| 9 | `@analyst` | Relatorio executivo com custos e ROI |
+| 10 | `@pm` | Epic + stories prontas para desenvolvimento |
+
+---
+
+## Os 6 Agentes do Discovery
+
+| Agente | Nome | Arquetipo | Especialidade |
+|---|---|---|---|
+| `@architect` | Aria | Visionary | Arquitetura, consolidacao, assessment |
+| `@data-engineer` | Dara | Sage | PostgreSQL, Supabase, RLS, migrations |
+| `@ux-design-expert` | Uma | Empathizer | Atomic Design, tokens, acessibilidade |
+| `@qa` | Quinn | Guardian | Quality gates, testes, rastreabilidade |
+| `@analyst` | Atlas | Decoder | Pesquisa, analise, ROI |
+| `@pm` | Morgan | Strategist | PRDs, epics, priorizacao |
+
+---
+
+## Debitos Tecnicos por Camada
+
+O Discovery identifica debitos em tres camadas distintas:
+
+### Sistema (Nivel Arquitetural)
+
+- Dependencias desatualizadas
+- Codigo duplicado
+- Falta de testes
+- Configuracoes hardcoded
+- Acoplamento excessivo
+
+### Database (Nivel Dados)
+
+- Tabelas sem RLS (Row Level Security)
+- Indices faltantes
+- Normalizacao inadequada
+- Constraints ausentes
+- Migrations nao versionadas
+
+### Frontend/UX (Nivel Interface)
+
+- Inconsistencias visuais
+- Componentes duplicados
+- Falta de design system
+- Problemas de acessibilidade
+- Estados de loading/error faltando
+
+---
+
+## O QA Gate — Ponto Critico
+
+A Fase 7 e onde o `@qa` (Quinn) decide se o assessment esta pronto para finalizacao:
+
+| Criterio | APPROVED | NEEDS WORK |
+|---|---|---|
+| Debitos validados | Todos os debitos validados por especialistas | Debitos faltando validacao |
+| Gaps | Nenhum gap critico identificado | Gaps nao enderecados |
+| Dependencias | Dependencias fazem sentido | Dependencias inconsistentes |
+| Riscos | Riscos mapeados | Riscos cruzados nao mitigados |
+
+Se o QA Gate retornar NEEDS WORK, o fluxo cria um loop de correcao ate ser aprovado.
+
+<Callout type="warning" title="Loop infinito">
+Se o QA Gate ficar em loop, revise os criterios de aprovacao com @qa, foque em enderacar gaps especificos (nao todos), ou considere aprovar com condicoes documentadas.
+</Callout>
+
+---
+
+## O Relatorio Executivo
+
+O artefato mais valioso para stakeholders e o relatorio da Fase 9, gerado pelo `@analyst`. Ele traduz debito tecnico em **linguagem de negocios**:
+
+```
+# Relatorio de Debito Tecnico
+
+## Numeros Chave
+| Metrica          | Valor        |
+|------------------|--------------|
+| Total de Debitos | 23           |
+| Debitos Criticos | 4            |
+| Esforco Total    | 180 horas    |
+| Custo Estimado   | R$ 45.000    |
+
+## Timeline Recomendado
+- Fase 1: Quick Wins (1-2 semanas)
+- Fase 2: Fundacao (2-4 semanas)
+- Fase 3: Otimizacao (4-6 semanas)
+
+## ROI da Resolucao
+- Reducao de 60% em bugs de producao
+- Melhoria de 40% no tempo de onboarding
+```
+
+---
+
+## Da Descoberta ao Desenvolvimento
+
+Apos o Discovery, a Fase 10 gera um **epic de debito tecnico** com stories prontas para o ciclo de desenvolvimento:
+
+1. O `@pm` cria o epic com objetivo, escopo, criterios de sucesso e timeline
+2. Cada story inclui tasks claras, criterios de aceite, testes requeridos e estimativas validadas
+3. O desenvolvimento segue o Story Development Cycle (proximo modulo)
+
+---
+
+## Estimativas de Tempo
+
+| Complexidade | Minimo | Tipico | Maximo |
+|---|---|---|---|
+| Projeto simples (sem DB) | 3h | 4h | 5h |
+| Projeto medio | 4h | 5-6h | 7h |
+| Projeto complexo | 6h | 7-8h | 10h+ |
+
+Fatores que aumentam o tempo: database grande, muitos componentes frontend, multiplas integracoes externas, QA Gate com retrabalho.
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Qual e a principal diferenca entre workflows Greenfield e Brownfield?",
+      options: ["Greenfield usa mais agentes", "Brownfield foca em descoberta e debito tecnico de projetos existentes", "Greenfield e mais rapido", "Brownfield nao usa quality gates"],
+      correct: 1,
+      explanation: "Brownfield foca em entender, documentar e planejar a modernizacao de codebases existentes, enquanto Greenfield planeja e constroi do zero."
+    },
+    {
+      question: "O que acontece se o projeto nao tiver banco de dados?",
+      options: ["O workflow falha", "A Fase 2 (Database) e pulada automaticamente", "O @data-engineer cria um banco", "O workflow usa o Greenfield em vez disso"],
+      correct: 1,
+      explanation: "A Fase 2 e condicional — se nao existir pasta supabase/ ou similar, o workflow pula direto para a Fase 3 (Frontend/UX)."
+    },
+    {
+      question: "Qual agente decide se o assessment esta pronto para finalizacao?",
+      options: ["@architect (Aria)", "@pm (Morgan)", "@qa (Quinn)", "@analyst (Atlas)"],
+      correct: 2,
+      explanation: "O @qa (Quinn) executa o Quality Gate na Fase 7, decidindo APPROVED ou NEEDS WORK baseado em criterios de validacao, gaps e riscos."
+    }
+  ]}
+/>

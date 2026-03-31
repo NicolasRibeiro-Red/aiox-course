@@ -1,0 +1,244 @@
+# Pre-requisitos
+
+Antes de instalar o AIOX, voce precisa ter algumas ferramentas configuradas no seu sistema. Nada exotico -- sao ferramentas padrao de desenvolvimento que provavelmente voce ja tem. Vamos verificar cada uma.
+
+---
+
+## Checklist Rapido
+
+| Ferramenta | Versao Minima | Recomendada | Obrigatoria? |
+|---|---|---|---|
+| Node.js | 18.0.0 | 20.x LTS | Sim |
+| npm | 9.0.0 | 10.x | Sim |
+| Git | 2.30+ | Ultima versao | Recomendado |
+| GitHub CLI (`gh`) | 2.0+ | Ultima versao | Recomendado |
+| IDE compativel | -- | Claude Code / Gemini CLI | Sim |
+
+Para verificar rapidamente se voce tem tudo:
+
+```bash
+node --version    # >= 18.0.0
+npm --version     # >= 9.0.0
+git --version     # >= 2.30
+gh --version      # >= 2.0 (opcional)
+```
+
+---
+
+## 1. Node.js (v18+ obrigatorio, v20 recomendado)
+
+<Callout type="error" title="Obrigatorio">
+Node.js e a unica dependencia hard do AIOX. Sem Node.js 18+, o instalador nao vai rodar. O AIOX usa recursos da linguagem que so existem a partir da v18 (como fetch nativo e structuredClone).
+</Callout>
+
+O Node.js e o runtime JavaScript que executa o CLI do AIOX, o sistema de instalacao e os scripts de build.
+
+### Por que v18 ou superior?
+
+- **ES Modules** nativos com suporte completo
+- **Fetch API** nativa (sem polyfills)
+- **Performance** significativamente melhor em operacoes de I/O
+- **LTS** (Long Term Support) -- recebe patches de seguranca por anos
+
+### Como instalar
+
+A instalacao varia por plataforma. Resumo rapido:
+
+| Plataforma | Metodo recomendado |
+|---|---|
+| **Windows** | Instalador oficial ou `winget install OpenJS.NodeJS.LTS` |
+| **macOS** | Homebrew: `brew install node` |
+| **Linux** | nvm: `nvm install 20` ou NodeSource |
+
+<Callout type="tip" title="Use nvm">
+Se voce trabalha com multiplos projetos que requerem versoes diferentes de Node.js, use o **nvm** (Node Version Manager). Ele permite alternar entre versoes com um comando. No Windows, use o nvm-windows.
+</Callout>
+
+### Verificacao
+
+```bash
+node --version
+# Esperado: v20.x.x (ou qualquer versao >= 18.0.0)
+
+npm --version
+# Esperado: 10.x.x (ou qualquer versao >= 9.0.0)
+```
+
+Se `node --version` retornar um erro ou uma versao abaixo de 18, instale ou atualize antes de continuar.
+
+---
+
+## 2. npm (v9+ obrigatorio)
+
+<Callout type="info" title="Vem junto com Node.js">
+O npm e instalado automaticamente com o Node.js. Se voce instalou Node.js 18+, voce ja tem uma versao compativel do npm. Verifique com `npm --version` -- se for 9.0.0 ou superior, esta pronto.
+</Callout>
+
+O npm (Node Package Manager) e usado para:
+
+- Instalar o AIOX via `npx aiox-core init`
+- Gerenciar dependencias do seu projeto
+- Executar scripts como `npm run sync:ide` e `npm test`
+
+### Atualizar npm (se necessario)
+
+```bash
+# Atualizar para a ultima versao
+npm install -g npm@latest
+
+# Verificar
+npm --version
+```
+
+**pnpm tambem funciona**: Se voce prefere pnpm, o AIOX e compativel. Apenas substitua `npm` por `pnpm` nos comandos.
+
+---
+
+## 3. Git (recomendado)
+
+<Callout type="warning" title="Fortemente recomendado">
+Git nao e tecnicamente obrigatorio para instalar o AIOX, mas e essencial para qualquer fluxo de trabalho real. O agente `@devops` depende de Git para push, branches e PRs. Story-driven development sem Git perde metade do valor.
+</Callout>
+
+O Git e usado para:
+
+- Controle de versao do seu projeto
+- Operacoes do agente `@devops` (push, branch, PR)
+- Rollback seguro: `git checkout HEAD~1 -- .` restaura o estado pre-AIOX
+- Integracao com GitHub para code review automatizado (CodeRabbit)
+
+### Verificacao
+
+```bash
+git --version
+# Esperado: git version 2.30+ (qualquer versao recente funciona)
+```
+
+### Configuracao inicial
+
+Se voce nunca configurou o Git:
+
+```bash
+git config --global user.name "Seu Nome"
+git config --global user.email "seu@email.com"
+```
+
+---
+
+## 4. GitHub CLI (recomendado)
+
+<Callout type="info" title="Recomendado para colaboracao">
+O GitHub CLI (`gh`) nao e obrigatorio para usar o AIOX localmente, mas e necessario para criar PRs, gerenciar issues e usar o fluxo completo de CI/CD. Se voce trabalha em time, instale.
+</Callout>
+
+O GitHub CLI permite:
+
+- Criar Pull Requests diretamente do terminal
+- Gerenciar issues e releases
+- Autenticar com GitHub sem tokens manuais
+
+### Instalacao rapida
+
+| Plataforma | Comando |
+|---|---|
+| **Windows** | `winget install GitHub.cli` |
+| **macOS** | `brew install gh` |
+| **Linux (Ubuntu)** | Ver guia oficial -- requer keyring |
+| **Linux (Fedora)** | `sudo dnf install gh` |
+| **Linux (Arch)** | `sudo pacman -S github-cli` |
+
+### Autenticacao
+
+Apos instalar:
+
+```bash
+gh auth login
+# Escolha "Login with a web browser"
+# Siga as instrucoes no navegador
+```
+
+Verifique:
+
+```bash
+gh auth status
+# Deve mostrar "Logged in to github.com as seu-usuario"
+```
+
+---
+
+## 5. IDE Compativel
+
+<Callout type="error" title="Obrigatorio">
+Voce precisa de pelo menos um IDE/CLI compativel para ativar agentes AIOX. Sem isso, o framework nao tem como se comunicar com voce.
+</Callout>
+
+O AIOX funciona com multiplos IDEs, mas nem todos tem suporte igual:
+
+| IDE/CLI | Status | Como Ativar Agentes |
+|---|---|---|
+| **Claude Code** | Funciona completamente | `/agent-name` |
+| **Gemini CLI** | Funciona completamente | `/aiox-menu` depois `/aiox-<agent>` |
+| **Codex CLI** | Suporte limitado | `/skills` depois `aiox-<agent-id>` |
+| **Cursor** | Suporte limitado | `@agent` + regras sincronizadas |
+| **GitHub Copilot** | Suporte limitado | Chat modes + repo instructions |
+
+### Recomendacao para iniciantes
+
+Se voce esta comecando agora, use **Claude Code** ou **Gemini CLI**. Ambos tem suporte completo e sao os mais testados pela comunidade.
+
+**Instalar Claude Code:**
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+---
+
+## Requisitos de Sistema
+
+### Hardware minimo
+
+| Recurso | Minimo | Recomendado |
+|---|---|---|
+| RAM | 4 GB | 8 GB |
+| Disco | 500 MB livre | 2 GB livre |
+| Internet | Necessaria para instalacao | Banda larga |
+
+### Sistemas operacionais suportados
+
+| SO | Versao | Status |
+|---|---|---|
+| Windows 11 | Qualquer | Totalmente suportado |
+| Windows 10 | 22H2+ | Totalmente suportado |
+| macOS | 10.15+ (Catalina) | Totalmente suportado |
+| Ubuntu | 20.04+ | Totalmente suportado |
+| Fedora | 37+ | Totalmente suportado |
+| Arch Linux | Rolling | Totalmente suportado |
+
+---
+
+## Diagnostico Rapido
+
+Se algo nao esta funcionando, o AIOX tem um comando de diagnostico:
+
+```bash
+npx aiox-core doctor
+```
+
+Esse comando verifica:
+- Versao do Node.js e npm
+- Permissoes de diretorio
+- IDEs detectados
+- Configuracoes de path
+
+Se ele encontrar problemas, tente a correcao automatica:
+
+```bash
+npx aiox-core doctor --fix
+```
+
+---
+
+## Proximo Passo
+
+Com todos os pre-requisitos verificados, vamos para a **instalacao do AIOX** na proxima licao. Se algum item acima falhou, resolva antes de continuar -- vai economizar tempo e frustracao.

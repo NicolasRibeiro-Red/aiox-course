@@ -1,0 +1,235 @@
+# Claude Code — A Melhor Experiencia AIOX
+
+O Claude Code e a plataforma que oferece a **integracao mais completa** com o AIOX. Com suporte nativo a hooks, memoria persistente, MCP integrado e slash commands, ele transforma agentes AIOX em cidadaos de primeira classe do seu ambiente de desenvolvimento.
+
+---
+
+## Por que Claude Code e o Melhor para AIOX?
+
+O Claude Code nao e apenas "mais uma opcao" — e a plataforma de referencia para o AIOX. Todas as features do framework foram desenhadas pensando primeiro no Claude Code, e depois adaptadas para outras IDEs.
+
+<ComparisonTable
+  title="Claude Code vs Outras IDEs"
+  headers={["Capacidade", "Claude Code"]}
+  rows={[
+    ["Auto-Checks (pre/pos acao)", "Completo e nativo"],
+    ["Session Tracking", "Automatico"],
+    ["Audit Trail", "Mais rico disponivel"],
+    ["Ativacao de Agentes", "Slash commands (/dev, /qa)"],
+    ["MCP Support", "Nativo"],
+    ["Hooks System", "Pre/Post nativos"],
+    ["Custom Skills", "Suportado"],
+    ["Memoria Persistente", "Integrado"],
+  ]}
+/>
+
+---
+
+## Setup Inicial
+
+A configuracao do AIOX no Claude Code e automatica. Ao inicializar o projeto, o framework cria toda a estrutura necessaria:
+
+```yaml
+config_file: .claude/CLAUDE.md
+agent_folder: .claude/commands/AIOX/agents
+activation: /agent-name (slash commands)
+format: full-markdown-yaml
+mcp_support: native
+special_features:
+  - Task tool for subagents
+  - Native MCP integration
+  - Hooks system (pre/post)
+  - Custom skills
+  - Memory persistence
+```
+
+### Passos de Instalacao
+
+```bash
+# Sync automatico ao inicializar
+npm run sync:ide
+
+# Verificar se tudo esta no lugar
+ls -la .claude/commands/AIOX/agents/
+```
+
+O AIOX automaticamente cria o diretorio `.claude/` na raiz do projeto e popula os agentes como slash commands.
+
+<Callout type="tip" title="Ativacao Instantanea">
+No Claude Code, basta digitar `/dev`, `/qa`, `/architect` para ativar qualquer agente AIOX. Sem configuracao extra, sem copiar arquivos manualmente.
+</Callout>
+
+---
+
+## Hooks — Automacao Pre e Pos Acao
+
+O sistema de hooks e uma das features mais poderosas do Claude Code com AIOX. Hooks permitem executar validacoes e automacoes antes e depois de cada acao do agente.
+
+### Como Funcionam
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Pre-Hook    │ --> │  Acao do     │ --> │  Post-Hook   │
+│  (validacao) │     │  Agente      │     │  (auditoria) │
+└──────────────┘     └──────────────┘     └──────────────┘
+```
+
+Os hooks no Claude Code cobrem:
+
+- **Pre-action**: Validacao de contexto, verificacao de regras, carregamento de memoria
+- **Post-action**: Auditoria automatica, sincronizacao de estado, quality checks
+- **Session start/end**: Detectados automaticamente pelo Claude Code
+
+### Configurando Hooks
+
+```bash
+# Verificar permissoes dos hooks
+chmod +x .claude/hooks/*.py
+
+# Hooks ficam em .claude/hooks/
+ls -la .claude/hooks/
+```
+
+<Callout type="info" title="Exclusivo do Claude Code">
+O sistema de hooks com pre/post automaticos e exclusivo do Claude Code e Gemini CLI. Outras IDEs requerem execucao manual de validadores.
+</Callout>
+
+---
+
+## Memoria Persistente
+
+O Claude Code oferece persistencia de memoria nativa que o AIOX utiliza para manter contexto entre sessoes. Isso significa que um agente pode "lembrar" decisoes de arquitetura, bugs encontrados e padroes detectados.
+
+### Fluxo de Memoria
+
+```
+Sessao 1: @architect decide usar PostgreSQL
+    ↓ (persiste em .claude/memory/)
+Sessao 2: @dev sabe que o banco e PostgreSQL
+    ↓ (sem precisar re-explicar)
+Sessao 3: @qa valida queries PostgreSQL
+```
+
+A memoria funciona em camadas:
+
+| Camada | Conteudo | Duracao |
+|--------|----------|---------|
+| **Hot** | Contexto ativo da sessao | Sessao atual |
+| **Warm** | Decisoes recentes, padroes | 15 dias a 1 mes |
+| **Cold** | Aprendizados permanentes | Permanente |
+
+---
+
+## MCP Nativo
+
+O Model Context Protocol (MCP) no Claude Code e integrado nativamente, sem wrappers ou configuracoes complexas:
+
+```bash
+# Configurar MCP servers globalmente
+# Edite ~/.claude.json
+
+# Verificar status do MCP
+aiox mcp status
+```
+
+O MCP permite que agentes AIOX acessem ferramentas externas — busca web, documentacao de bibliotecas, scraping, automacao de browser — tudo de forma transparente.
+
+---
+
+## Subagentes com Task Tool
+
+O Claude Code suporta o **Task tool**, que permite a um agente delegar trabalho para sub-agentes. Isso e fundamental para workflows complexos:
+
+```
+@architect (agente principal)
+    ├── Task 1: Pesquisar tecnologias → sub-agente de pesquisa
+    ├── Task 2: Validar seguranca → sub-agente de security
+    └── Task 3: Benchmark performance → sub-agente de benchmark
+```
+
+Cada sub-agente roda em seu proprio contexto, com suas proprias instrucoes, e retorna resultados ao agente principal.
+
+---
+
+## Sync System
+
+O AIOX mantém uma unica fonte de verdade para definicoes de agentes e sincroniza para todas as IDEs configuradas:
+
+```
+┌───────────────────────────────────────────┐
+│              AIOX Core                     │
+│  .aiox-core/development/agents/ (Source)  │
+│                    │                       │
+│        ┌───────────┼───────────┐          │
+│        ▼           ▼           ▼          │
+│  .claude/    .codex/     .cursor/         │
+└───────────────────────────────────────────┘
+```
+
+```bash
+# Sincronizar todas as IDEs
+npm run sync:ide
+
+# Sincronizar apenas Claude Code
+npm run sync:ide
+
+# Validar sincronizacao
+npm run sync:ide:check
+```
+
+---
+
+## Troubleshooting
+
+### Agente nao aparece como slash command
+
+```bash
+# Verificar se o agente existe na fonte
+ls .aiox-core/development/agents/
+
+# Re-sincronizar
+npm run sync:ide
+
+# Verificar diretorio do Claude Code
+ls .claude/commands/AIOX/agents/
+```
+
+### MCP nao conecta
+
+```bash
+# Verificar configuracao MCP
+cat ~/.claude.json
+
+# Checar status
+aiox mcp status
+```
+
+### Hooks nao executam
+
+Verifique permissoes de execucao e que o diretorio `.claude/` esta na raiz do projeto.
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Qual e o nivel de Auto-Checks do Claude Code no AIOX?",
+      options: ["Parcial", "Nenhum", "Completo (Full)", "Limitado"],
+      correct: 2,
+      explanation: "O Claude Code oferece Auto-Checks completos (Full) — o nivel mais alto entre todas as IDEs suportadas pelo AIOX."
+    },
+    {
+      question: "Como se ativa um agente AIOX no Claude Code?",
+      options: ["@agent-name", "/agent-name", "*agent-name", "#agent-name"],
+      correct: 1,
+      explanation: "No Claude Code, agentes sao ativados via slash commands: /dev, /qa, /architect, etc."
+    },
+    {
+      question: "O que o Task tool permite fazer?",
+      options: ["Criar tarefas no ClickUp", "Delegar trabalho para sub-agentes", "Agendar cron jobs", "Editar arquivos em batch"],
+      correct: 1,
+      explanation: "O Task tool permite que um agente delegue trabalho para sub-agentes, cada um com seu proprio contexto e instrucoes."
+    }
+  ]}
+/>

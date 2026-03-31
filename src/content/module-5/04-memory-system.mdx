@@ -1,0 +1,222 @@
+# Sistema de Memoria — Como Agentes Lembram
+
+O AIOX opera um sistema de memoria em **duas camadas independentes** que permitem a agentes manter contexto entre sessoes, aprender com erros e preservar decisoes arquiteturais. Entender como essa memoria funciona e essencial para usar o framework de forma eficaz.
+
+---
+
+## A Arquitetura de 2 Camadas
+
+| Camada | Gerenciado Por | Escopo | Storage |
+|---|---|---|---|
+| **Camada 1: Claude Code Nativo** | Claude Code CLI | Auto Memory, CLAUDE.md, Transcripts | `~/.claude/` |
+| **Camada 2: AIOX Framework** | Scripts JS em `.aiox-core/` | Gotchas, Snapshots, Timeline, Session State | `.aiox/` |
+
+<Callout type="warning" title="Camadas independentes">
+As duas camadas **nao se comunicam entre si**. Cada uma persiste de forma independente. Isso e uma limitacao arquitetural importante de entender.
+</Callout>
+
+---
+
+## Camada 1: Claude Code Nativo
+
+### Hierarquia de Carregamento
+
+Toda nova sessao do Claude Code carrega automaticamente, nesta ordem:
+
+| Ordem | Arquivo | Descricao |
+|---|---|---|
+| 1 | `~/.claude/CLAUDE.md` | Instrucoes globais do usuario |
+| 2 | `Workspaces/.claude/CLAUDE.md` | Instrucoes do workspace |
+| 3 | `projeto/.claude/CLAUDE.md` | Instrucoes do projeto |
+| 4 | `projeto/.claude/rules/*.md` | Regras detalhadas |
+| 5 | `~/.claude/projects/.../memory/MEMORY.md` | Auto Memory (primeiras 200 linhas) |
+
+### Auto Memory — Leitura e Escrita
+
+**Leitura (automatica, toda sessao):**
+- Claude Code le o `MEMORY.md` ao iniciar
+- Se tiver mais de 200 linhas, trunca — linhas 201+ sao ignoradas
+- O conteudo e injetado no system prompt
+
+**Escrita (durante sessao, decisao do Claude):**
+- Quando Claude encontra um padrao, erro ou insight relevante, ele **decide** salvar
+- Usa Write/Edit tool para atualizar o MEMORY.md
+- Opcionalmente cria arquivos de topico em `memory/compound-analysis/`
+
+**Fim de sessao:**
+- Transcricao salva como `.jsonl`
+- **Nada mais acontece** — sem session-digest, sem memory-flush, sem sumarizacao automatica
+
+<Callout type="info" title="Limite de 200 linhas">
+O MEMORY.md tem um limite pratico de ~200 linhas. Alem disso, o conteudo e ignorado. Mantenha entradas concisas e use arquivos de topico para detalhes.
+</Callout>
+
+### Agent Memory
+
+Agentes definidos em `.claude/agents/` possuem memoria individual:
+
+```
+.claude/agent-memory/
+├── aiox-architect/MEMORY.md
+├── aiox-dev/MEMORY.md
+├── squad/MEMORY.md
+└── ...
+```
+
+Cada agente carrega apenas seu proprio `MEMORY.md` ao ser ativado. Isso permite que agentes desenvolvam especializacao e acumulem conhecimento especifico do seu dominio.
+
+---
+
+## Camada 2: AIOX Framework
+
+### 4 Modulos de Memoria
+
+| Modulo | Arquivo | Funcao |
+|---|---|---|
+| **Gotchas Memory** | `gotchas-memory.js` | Auto-captura: erro repetido 3x vira gotcha |
+| **Context Snapshot** | `context-snapshot.js` | Salva/restaura contexto completo (max 50, 7 dias) |
+| **File Evolution** | `file-evolution-tracker.js` | Historico de mudancas por arquivo, detecta drift |
+| **Timeline Manager** | `timeline-manager.js` | Facade unificada de todas as fontes, sync a cada 60s |
+
+### Gotchas — Aprendendo com Erros
+
+O sistema de gotchas captura automaticamente problemas recorrentes:
+
+```
+Erro acontece 1x → registrado no error-tracking.json
+Erro acontece 2x → marcado como pattern
+Erro acontece 3x → promovido para gotcha automaticamente
+```
+
+Gotchas ficam disponiveis para qualquer agente via `getContextForTask()`, prevenindo que o mesmo erro se repita.
+
+Comandos:
+
+```bash
+*gotcha "Descricao do problema"   # Adicionar manualmente
+*gotchas                          # Listar gotchas ativas
+```
+
+### Context Snapshots
+
+Snapshots permitem salvar e restaurar o estado completo do contexto:
+
+```javascript
+// Salvar snapshot
+const id = await snapshot.capture();
+
+// Restaurar snapshot
+await snapshot.restore(id);
+
+// Listar snapshots
+const list = await snapshot.list();
+
+// Cleanup (max 50 snapshots, 7 dias)
+await snapshot.cleanup();
+```
+
+Storage: `.aiox/snapshots/{id}.json`
+
+### Timeline Manager
+
+O Timeline Manager e uma **facade unificada** que integra todas as fontes de dados em uma unica timeline:
+
+```javascript
+// Timeline unificada
+const events = await timeline.getUnifiedTimeline();
+
+// Adicionar evento manual
+await timeline.addEvent({
+  type: "decision",
+  description: "Escolhido SQLite sobre PostgreSQL"
+});
+
+// Sync automatico a cada 60 segundos
+timeline.autoSync();
+```
+
+---
+
+## 3 Modulos de Sessao
+
+| Modulo | Funcao |
+|---|---|
+| **Context Loader** | Carrega contexto relevante ao iniciar sessao |
+| **Context Detector** | Detecta tipo de sessao (nova, continuacao, retomada) |
+| **Session State** | Persiste estado do epic/story atual |
+
+O Context Loader e o Tier 3 do Unified Activation Pipeline — ele carrega contexto baseado no tipo de sessao detectado pelo Context Detector.
+
+---
+
+## Persistencia por Local
+
+| O que | Onde | Gerenciado por |
+|---|---|---|
+| Auto Memory | `~/.claude/projects/.../memory/MEMORY.md` | Claude Code |
+| Agent Memory | `.claude/agent-memory/{agent}/MEMORY.md` | Claude Code |
+| Transcricoes | `~/.claude/projects/.../*.jsonl` | Claude Code |
+| Gotchas | `.aiox/gotchas.json` + `.aiox/gotchas.md` | AIOX Framework |
+| Erros | `.aiox/error-tracking.json` | AIOX Framework |
+| Snapshots | `.aiox/snapshots/{id}.json` | AIOX Framework |
+| Timeline | `.aiox/timeline/unified-timeline.json` | AIOX Framework |
+| File Evolution | `.aiox/file-evolution/evolution-index.json` | AIOX Framework |
+| Session State | `.aiox/session-state.json` | AIOX Framework |
+
+---
+
+## Gaps e Limitacoes Conhecidas
+
+E importante entender o que o sistema de memoria **nao faz**:
+
+| Limitacao | Impacto |
+|---|---|
+| Sem session-digest automatico | Quando sessao fecha, nenhuma sumarizacao acontece |
+| Sem memory-flush automatico | MEMORY.md so atualiza durante a sessao |
+| Camadas nao se comunicam | `.claude/` e `.aiox/` sao independentes |
+| Limite de 200 linhas no MEMORY.md | Conteudo alem disso e ignorado |
+| Hooks de sessao existem para Gemini, nao Claude | Features de end-of-session nao disponíveis |
+
+<Callout type="tip" title="Boas praticas de memoria">
+Para compensar as limitacoes: mantenha o MEMORY.md conciso (use indices para topicos), crie gotchas para erros recorrentes, e use snapshots antes de operacoes longas.
+</Callout>
+
+---
+
+## Fluxo de Ativacao de Agente (Memory Load)
+
+Quando um agente e ativado, o sistema carrega sua memoria em 3 tiers:
+
+| Tier | O que carrega | Fonte |
+|---|---|---|
+| 1 | System prompt base | CLAUDE.md + rules |
+| 2 | Persona e capabilities | Agent definition file |
+| 3 | Contexto e memoria | MEMORY.md + session context |
+
+O Tier 3 usa o Context Loader para carregar gotchas relevantes, estado da sessao anterior e snapshots se disponíveis.
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Quantas camadas o sistema de memoria do AIOX possui?",
+      options: ["1 (Claude Code)", "2 (Claude Code + AIOX Framework)", "3 (Claude Code + AIOX + External)", "4 camadas"],
+      correct: 1,
+      explanation: "O sistema opera em 2 camadas independentes: Camada 1 (Claude Code Nativo) e Camada 2 (AIOX Framework), que nao se comunicam entre si."
+    },
+    {
+      question: "O que acontece quando um erro se repete 3 vezes?",
+      options: ["O agente para de executar", "E logado e ignorado", "E promovido para gotcha automaticamente", "Dispara uma notificacao"],
+      correct: 2,
+      explanation: "O sistema Gotchas promove automaticamente erros que se repetem 3 vezes para gotchas, que ficam disponiveis para todos os agentes prevenirem o mesmo erro."
+    },
+    {
+      question: "Qual e o limite pratico do MEMORY.md?",
+      options: ["50 linhas", "100 linhas", "200 linhas", "Sem limite"],
+      correct: 2,
+      explanation: "O MEMORY.md tem limite de ~200 linhas. O Claude Code le apenas as primeiras 200 linhas ao iniciar — conteudo alem disso e ignorado."
+    }
+  ]}
+/>

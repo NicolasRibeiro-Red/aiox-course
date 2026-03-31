@@ -1,0 +1,231 @@
+# Agentes de Processo: River, Quinn e Pax
+
+Estes tres agentes garantem que o trabalho flua com qualidade: **River** facilita o processo agil e cria stories, **Quinn** protege a qualidade do codigo e **Pax** gerencia o backlog e valida artefatos. Sem eles, o pipeline de desenvolvimento perderia ritmo e consistencia.
+
+---
+
+## River -- O Facilitador (@sm)
+
+<AgentCard
+  icon="🌊"
+  name="River"
+  id="sm"
+  title="Scrum Master"
+  archetype="Facilitator"
+  zodiac="Pisces"
+  description="Scrum Master tecnico especializado em preparacao de stories e facilitacao de processos ageis. River cria stories detalhadas e acionaveis que desenvolvedores podem implementar com minima necessidade de pesquisa adicional. Sua comunicacao e empatica, colaborativa e fluida."
+  commands={["*draft", "*story-checklist", "*correct-course", "*help", "*guide", "*yolo", "*exit"]}
+  whenToUse="Quando precisa criar stories detalhadas a partir de epics, planejar sprints, fazer breakdown de requisitos ou preparar handoffs para desenvolvedores."
+  collaboratesWith={["@po (recebe backlog priorizado)", "@pm (recebe epics)", "@dev (entrega stories para implementacao)", "@qa (coordena em risk profiling)", "@devops (entrega stories completas para push/PR)"]}
+  restrictions={["NAO implementa codigo", "NAO cria PRDs ou epics (recebe do @pm)", "NAO faz deploy"]}
+/>
+
+### O Papel Central de River
+
+River e o **elo entre planejamento e execucao**. Ele transforma documentos de alto nivel (PRD, epics, arquitetura) em stories atomicas que @dev pode implementar:
+
+```
+PRD + Epic + Architecture  →  @sm  →  STORY-42.md  →  @dev implementa
+```
+
+### Anatomia de uma Story Criada por River
+
+Quando River executa `*draft`, ele gera uma story com:
+
+| Secao | Conteudo |
+|---|---|
+| **Title** | Titulo claro e descritivo |
+| **Description** | Contexto, objetivo e valor de negocio |
+| **Tasks** | Lista ordenada de subtasks com checkboxes `[ ]` |
+| **Acceptance Criteria** | Formato Given-When-Then testavel |
+| **Architecture Reference** | Links para secoes relevantes da arquitetura |
+| **Risk Profile** | Avaliacao de risco da story |
+| **Agent Assignment** | Quais agentes serao necessarios |
+| **File List** | Arquivos que serao criados/modificados |
+
+### Story Draft Checklist
+
+Antes de entregar uma story para @dev, River valida com o `story-draft-checklist.md`:
+
+- Titulo e descritivo e autoexplicativo?
+- Tasks sao atomicas e sequenciais?
+- Acceptance criteria sao testaveis (Given-When-Then)?
+- Referencias de arquitetura estao corretas?
+- Risco foi avaliado?
+- Agentes necessarios foram identificados?
+
+<Callout type="warning" title="Story = Contrato">
+A story e um contrato entre @sm e @dev. Se a story nao e clara o suficiente, @dev vai precisar pesquisar -- e isso desperica tempo e contexto precioso.
+</Callout>
+
+---
+
+## Quinn -- A Guardia (@qa)
+
+<AgentCard
+  icon="🧪"
+  name="Quinn"
+  id="qa"
+  title="Test Architect & Quality Advisor"
+  archetype="Guardian"
+  zodiac="Virgo"
+  description="Guardia implacavel da qualidade. Quinn fornece analise abrangente, decisoes de quality gates e recomendacoes acionaveis. Opera com profundidade baseada em risco, mapeia requisitos para testes (Given-When-Then), e nunca bloqueia arbitrariamente -- educa atraves de documentacao."
+  commands={["*gate {story}", "*review {story}", "*test-design {story}", "*risk-profile {story}", "*nfr-assess {story}", "*trace {story}", "*generate-tests", "*run-tests", "*backlog-add", "*create-fix-request {story}"]}
+  whenToUse="Apos implementacao de stories. Quando precisa de code review, design de testes, avaliacao de risco, validacao de NFRs, ou geracao automatica de testes."
+  collaboratesWith={["@dev (envia fix requests, recebe fixes)", "@sm (coordena risk profiling)", "@architect (escala issues arquiteturais)", "@devops (valida antes de deploy)"]}
+  restrictions={["NAO implementa codigo (cria fix-request para @dev)", "NAO faz deploy", "NAO cria stories"]}
+/>
+
+### Os 8 Principios de Quinn
+
+| # | Principio | Na pratica |
+|---|---|---|
+| 1 | Profundidade conforme necessario | Vai fundo em alto risco, rapido em baixo risco |
+| 2 | Rastreabilidade | Cada story mapeia para testes Given-When-Then |
+| 3 | Testes baseados em risco | Prioriza por probabilidade x impacto |
+| 4 | Atributos de qualidade | Valida NFRs (seguranca, performance, confiabilidade) |
+| 5 | Avaliacao de testabilidade | Controlabilidade, observabilidade, debuggabilidade |
+| 6 | Governanca de gates | Decisoes claras PASS/CONCERNS/FAIL/WAIVED |
+| 7 | Excelencia consultiva | Educa, nunca bloqueia arbitrariamente |
+| 8 | Integracao CodeRabbit | Revisao automatizada para detectar issues cedo |
+
+### Quality Gate: As 4 Decisoes
+
+Quando Quinn executa `*gate {story}`, o resultado e uma das 4 decisoes:
+
+| Decisao | Significado | Acao |
+|---|---|---|
+| **PASS** | Tudo aprovado, qualidade confirmada | Story pode seguir para deploy |
+| **CONCERNS** | Aprovado com ressalvas documentadas | Story pode seguir, mas com debt registrado |
+| **FAIL** | Issues criticos encontrados | Story volta para @dev com fix-request |
+| **WAIVED** | Gate dispensado com justificativa | Aceito conscientemente (raro) |
+
+### O Loop QA
+
+```
+@dev implementa → @qa *review {story} → FAIL?
+    ↓                                      ↓
+  PASS → deploy                    @qa *create-fix-request
+                                          ↓
+                                   @dev *apply-qa-fixes
+                                          ↓
+                                   @qa *review (re-review)
+                                          ↓
+                                   Loop ate PASS
+```
+
+### Design de Testes
+
+Quinn nao so revisa -- ele projeta testes estruturados:
+
+```markdown
+## Test Case: User Login
+
+**Given** a registered user with valid credentials
+**When** the user submits login form with email and password
+**Then** a JWT token is returned with 200 status
+
+**Given** a user with invalid password
+**When** the user submits login form
+**Then** a 401 error is returned with message "Invalid credentials"
+```
+
+---
+
+## Pax -- O Orientador (@po)
+
+<AgentCard
+  icon="🎯"
+  name="Pax"
+  id="po"
+  title="Product Owner"
+  archetype="Guide"
+  zodiac="Taurus"
+  description="Guardiao do backlog e validador de artefatos. Pax gerencia priorizacao, valida stories contra acceptance criteria, garante alinhamento entre documentos (PRD, Architecture, Stories) e executa o master checklist que conecta planejamento a execucao."
+  commands={["*backlog-prioritize", "*validate-story-draft", "*sync-story", "*execute-checklist", "*shard-doc", "*help", "*guide", "*exit"]}
+  whenToUse="Quando precisa priorizar backlog, validar stories antes de desenvolvimento, garantir alinhamento entre documentos ou fragmentar documentos grandes."
+  collaboratesWith={["@pm (recebe direcao estrategica)", "@sm (valida stories, prioriza backlog)", "@analyst (recebe insights de mercado)", "@architect (valida artefatos de arquitetura)"]}
+  restrictions={["NAO cria epics (cabe ao @pm)", "NAO implementa codigo", "NAO faz arquitetura"]}
+/>
+
+### O Master Checklist
+
+O artefato mais importante de Pax e o **PO Master Checklist** -- a validacao final que garante alinhamento entre todos os documentos antes do desenvolvimento comecar:
+
+| O que valida | Documentos envolvidos |
+|---|---|
+| PRD esta completo e claro? | `prd.md` |
+| Arquitetura reflete o PRD? | `fullstack-architecture.md` + `prd.md` |
+| UX spec esta alinhada? | `front-end-spec.md` + `prd.md` |
+| Epics cobrem todo o escopo? | Epics vs. PRD requirements |
+| Stories sao acionaveis? | Stories vs. acceptance criteria |
+
+### Document Sharding
+
+Quando documentos ficam grandes demais para o contexto de agentes Dev, Pax usa `*shard-doc` para fragmenta-los:
+
+```
+docs/prd.md (5000 palavras)
+    ↓  *shard-doc
+docs/prd/
+├── epic-1-auth.md
+├── epic-2-dashboard.md
+├── epic-3-payments.md
+└── epic-4-notifications.md
+```
+
+Cada fragmento e autocontido e pode ser carregado individualmente por @sm e @dev.
+
+<Callout type="tip" title="Sharding e obrigatorio">
+Na transicao de Web UI para IDE, Pax DEVE fragmentar documentos grandes. Agentes de desenvolvimento nao conseguem processar PRDs de 5000+ palavras sem estourar o contexto.
+</Callout>
+
+---
+
+## O Fluxo dos Tres Agentes
+
+<WorkflowVisualizer
+  title="Processo: Story Creation -> Implementation -> QA"
+  steps={[
+    { agent: "Pax", agentIcon: "🎯", title: "Priorize Backlog", description: "Ordena epics e stories por valor de negocio e dependencias", artifacts: "Backlog priorizado" },
+    { agent: "River", agentIcon: "🌊", title: "Draft Story", description: "Cria story detalhada com tasks, ACs e referencia de arquitetura", artifacts: "STORY-42.md" },
+    { agent: "Pax", agentIcon: "🎯", title: "Validate Draft", description: "Valida completude, clareza e alinhamento com PRD/Architecture", artifacts: "Story aprovada" },
+    { agent: "Dex", agentIcon: "💻", title: "Implement", description: "Implementa cada task da story sequencialmente", artifacts: "Codigo + testes" },
+    { agent: "Quinn", agentIcon: "🧪", title: "QA Review", description: "Review completo com quality gate PASS/FAIL", artifacts: "qa-report.md" },
+    { agent: "Gage", agentIcon: "⚙️", title: "Deploy", description: "Pre-push quality gate, create PR, merge", artifacts: "Pull Request merged" }
+  ]}
+/>
+
+---
+
+## Teste seus Conhecimentos
+
+<QuizBlock
+  title="Agentes de Processo"
+  questions={[
+    {
+      question: "Qual e o formato obrigatorio de acceptance criteria no AIOX?",
+      options: ["Bullet points simples", "Given-When-Then", "Checklist com checkboxes", "Texto livre"],
+      correct: 1,
+      explanation: "O AIOX usa formato Given-When-Then para acceptance criteria. Isso garante que cada criterio e testavel e nao-ambiguo."
+    },
+    {
+      question: "O que acontece quando Quinn emite FAIL no quality gate?",
+      options: ["A story e deletada", "A story volta para @dev com fix-request detalhado", "O projeto e cancelado", "Quinn implementa o fix"],
+      correct: 1,
+      explanation: "Quinn cria um fix-request detalhado e a story volta para @dev aplicar as correcoes. O loop continua ate Quinn emitir PASS."
+    },
+    {
+      question: "Para que serve o document sharding feito por Pax?",
+      options: ["Para deletar documentos antigos", "Para fragmentar documentos grandes em partes consomiveis por agentes Dev", "Para criar backups", "Para traduzir documentos"],
+      correct: 1,
+      explanation: "Sharding fragmenta documentos grandes (ex: PRD de 5000 palavras) em partes menores e autocontidas que cabem no contexto de agentes Dev."
+    }
+  ]}
+/>
+
+---
+
+## Proximo Passo
+
+Na proxima licao, vamos conhecer os **agentes de operacoes**: Gage (DevOps) e Craft (Squad Creator).

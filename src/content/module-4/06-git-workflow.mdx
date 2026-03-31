@@ -1,0 +1,208 @@
+# Auto Worktree e Git Workflow
+
+O AIOX implementa duas estrategias complementares para gerenciar codigo: **Auto Worktree** para isolamento de desenvolvimento e **Defense in Depth** para validacao em multiplas camadas. Juntas, elas garantem que stories sejam desenvolvidas em paralelo sem conflitos e que codigo ruim nunca chegue a branch principal.
+
+---
+
+## Auto Worktree — Isolamento por Story
+
+O Auto Worktree e um workflow que cria **worktrees Git isoladas** para cada story. Cada story trabalha em um diretorio e branch separados, permitindo desenvolvimento paralelo sem interferencia.
+
+### Como Funciona
+
+Quando o `@dev` inicia uma story, o workflow automaticamente:
+
+1. **Extrai o Story ID** do contexto (parametro, arquivo, task ou branch)
+2. **Verifica se ja existe** uma worktree para essa story
+3. **Limpa worktrees obsoletas** (> 30 dias sem uso, se habilitado)
+4. **Cria a worktree** em `.aiox/worktrees/{storyId}/` com branch `auto-claude/{storyId}`
+5. **Troca o contexto** para o novo diretorio
+6. **Exibe o resumo** com instrucoes
+
+### Estrutura Criada
+
+```
+.aiox/worktrees/
+├── STORY-42/          # Worktree da story 42
+│   ├── src/           # Copia isolada do codigo
+│   └── ...
+├── STORY-43/          # Worktree da story 43
+│   └── ...
+
+Branches:
+├── main
+├── auto-claude/STORY-42
+└── auto-claude/STORY-43
+```
+
+### Comandos de Worktree
+
+| Comando | Descricao |
+|---|---|
+| `*create-worktree {storyId}` | Criar worktree manualmente |
+| `*list-worktrees` | Listar worktrees ativas |
+| `*remove-worktree {storyId}` | Remover worktree |
+| `*merge-worktree {storyId}` | Fazer merge da worktree |
+| `*cleanup-worktrees` | Limpar worktrees obsoletas |
+
+<Callout type="info" title="Requisitos">
+O Auto Worktree requer Git >= 2.5. Verifique com `git --version`. O limite padrao e 10 worktrees simultaneas, configuravel em `.aiox/config.yaml`.
+</Callout>
+
+---
+
+## Defense in Depth — Validacao em 3 Camadas
+
+O AIOX implementa uma estrategia de **defesa em profundidade** com 3 camadas de validacao progressiva. Cada camada captura tipos diferentes de problemas no momento mais adequado.
+
+### As 3 Camadas
+
+| Camada | Tipo | Velocidade | Trigger | O que captura |
+|---|---|---|---|---|
+| **Layer 1** | Local | < 5s | `git commit` | Syntax, linting, type errors |
+| **Layer 2** | Local | < 2s | `git push` | Story validation, status consistency |
+| **Layer 3** | Cloud | 2-5 min | PR / CI | Full test suite, coverage, branch protection |
+
+### Layer 1: Pre-commit Hook
+
+Executado automaticamente em cada `git commit`. Usa cache para velocidade:
+
+```bash
+# .husky/pre-commit
+#!/bin/sh
+npm run lint      # ESLint com cache (.eslintcache)
+npm run typecheck # TypeScript incremental (.tsbuildinfo)
+```
+
+Performance: primeira execucao ~10-15s, subsequentes < 5s gracas ao cache.
+
+### Layer 2: Pre-push Hook
+
+Executado automaticamente em cada `git push`. Valida stories:
+
+```bash
+# .husky/pre-push
+#!/bin/sh
+node .aiox-core/utils/aiox-validator.js pre-push
+```
+
+Regras de validacao:
+
+| Regra | Descricao |
+|---|---|
+| Status Consistency | Story `completed` mas tasks `[ ]`? Erro. |
+| Required Sections | id, title, description, acceptance_criteria, status |
+| Checkbox Format | Apenas `[x]` ou `[ ]` reconhecidos |
+| Status Flow | `ready → in progress → Ready for Review → completed` |
+
+### Layer 3: CI/CD Pipeline (GitHub Actions)
+
+Executado na nuvem quando codigo e enviado ao GitHub:
+
+```yaml
+# .github/workflows/ci.yml
+jobs:
+  lint:           # ESLint sem cache (clean run)
+  typecheck:      # TypeScript completo
+  test:           # Jest com coverage (>= 80%)
+  story-validation: # Todas stories validadas
+  validation-summary: # Agrega resultados
+```
+
+---
+
+## Branch Protection
+
+O AIOX configura protecao automatica para a branch `master`:
+
+| Protecao | Configuracao |
+|---|---|
+| Status checks obrigatorios | ESLint, TypeScript, Tests, Story Validation |
+| Reviews obrigatorias | 1 aprovacao minima |
+| Dismiss stale reviews | Sim, em novos commits |
+| Historico linear | Sim (rebase only) |
+| Force push | Bloqueado |
+| Delecao da branch | Bloqueada |
+
+```bash
+# Configurar protecao automaticamente
+node scripts/setup-branch-protection.js
+
+# Verificar status
+node scripts/setup-branch-protection.js --status
+```
+
+---
+
+## Fluxo Diario Completo
+
+Um dia tipico de desenvolvimento com AIOX segue este fluxo:
+
+```bash
+# 1. Atualizar master
+git checkout master && git pull
+
+# 2. Criar branch (ou worktree)
+git checkout -b feature/minha-feature
+# ou: *create-worktree STORY-42
+
+# 3. Desenvolver e commitar
+# → Pre-commit hook roda lint + typecheck
+git add . && git commit -m "feat: add feature [Story X.X]"
+
+# 4. Push
+# → Pre-push hook valida stories
+git push origin feature/minha-feature
+
+# 5. Criar PR
+# → CI roda todos os jobs
+gh pr create --title "feat: Add feature" --body "Description"
+
+# 6. Review e merge
+# → Branch protection exige aprovacao
+gh pr merge --squash --delete-branch
+```
+
+<Callout type="warning" title="Evite --no-verify">
+Os comandos `git commit --no-verify` e `git push --no-verify` pulam os hooks de validacao. Use apenas em emergencias absolutas (hotfixes criticos). Validacoes puladas nao capturam problemas.
+</Callout>
+
+---
+
+## Resolucao de Problemas Comuns
+
+| Problema | Causa | Solucao |
+|---|---|---|
+| Hook nao executa | Husky nao instalado | `npm run prepare` |
+| Pre-commit lento (> 10s) | Cache invalido | `rm .eslintcache .tsbuildinfo` |
+| Story validation falha | Checkbox inconsistente | Verificar `[x]` vs status |
+| CI falha mas local passa | Cache local diverge | `rm -rf node_modules && npm ci` |
+| Worktree nao cria | Git < 2.5 | Atualizar Git |
+| Limite de worktrees | >= 10 ativas | `*cleanup-worktrees` |
+| Conflito no merge | Branches divergiram | `git rebase main` dentro da worktree |
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Quantas camadas de validacao o AIOX implementa no Git workflow?",
+      options: ["1 (pre-commit)", "2 (pre-commit e CI)", "3 (pre-commit, pre-push e CI)", "4 (pre-commit, pre-push, CI e deploy)"],
+      correct: 2,
+      explanation: "O AIOX implementa 3 camadas: Layer 1 (pre-commit, < 5s), Layer 2 (pre-push, < 2s) e Layer 3 (CI/CD na nuvem, 2-5 min)."
+    },
+    {
+      question: "O que o Auto Worktree cria para cada story?",
+      options: ["Um container Docker", "Um diretorio e branch isolados", "Um repositorio separado", "Uma copia completa do projeto"],
+      correct: 1,
+      explanation: "O Auto Worktree cria um diretorio em .aiox/worktrees/{storyId}/ e uma branch auto-claude/{storyId}, usando git worktree para isolamento."
+    },
+    {
+      question: "Qual e o threshold minimo de cobertura de testes no CI?",
+      options: ["60%", "70%", "80%", "90%"],
+      correct: 2,
+      explanation: "O pipeline de CI exige cobertura minima de 80% nos testes. Abaixo disso, o job falha e o PR nao pode ser mergeado."
+    }
+  ]}
+/>

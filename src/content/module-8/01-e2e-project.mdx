@@ -1,0 +1,285 @@
+# Projeto End-to-End — Do Zero ao Deploy com AIOX
+
+Nesta licao, vamos percorrer o **Greenfield Full-Stack Workflow** do AIOX — o fluxo completo para construir uma aplicacao desde o conceito ate o codigo pronto. Este e o workflow principal do framework, com 4 fases e 9 agentes coordenados.
+
+---
+
+## Visao Geral das Fases
+
+O workflow e dividido em 4 fases sequenciais:
+
+| Fase | Nome | Objetivo | Agentes |
+|------|------|----------|---------|
+| **0** | Bootstrap do Ambiente | Configurar infra e repositorio | @devops |
+| **1** | Descoberta e Planejamento | Criar todos os artefatos de projeto | @analyst, @pm, @ux-expert, @architect, @po |
+| **2** | Fragmentacao de Documentos | Dividir docs para desenvolvimento | @po |
+| **3** | Ciclo de Desenvolvimento | Implementar, testar e iterar | @sm, @dev, @qa |
+
+```
+FASE 0 → FASE 1 → FASE 2 → FASE 3
+Bootstrap  Planejamento  Fragmentacao  Desenvolvimento
+(1 agente) (5 agentes)   (1 agente)    (3 agentes)
+```
+
+---
+
+## FASE 0: Bootstrap do Ambiente
+
+O primeiro passo e garantir que todas as ferramentas estao instaladas e o repositorio esta criado.
+
+### O que Acontece
+
+```bash
+# Ativar o agente DevOps
+@devops
+
+# Executar o bootstrap
+*environment-bootstrap
+```
+
+O agente @devops (Gage) executa automaticamente:
+
+1. Detecta o sistema operacional
+2. Audita CLIs instaladas (git, gh, node, npm)
+3. Instala ferramentas faltantes interativamente
+4. Autentica servicos (GitHub, Supabase, Railway)
+5. Inicializa repositorio Git
+6. Cria estrutura de pastas do projeto
+7. Gera relatorio do ambiente
+
+### Artefatos Criados
+
+| Arquivo | Descricao |
+|---------|-----------|
+| `.aiox/config.yaml` | Configuracao do projeto AIOX |
+| `.aiox/environment-report.json` | Relatorio completo do ambiente |
+| `.gitignore` | Regras de ignore do Git |
+| `README.md` | Documentacao inicial |
+| `package.json` | Configuracao NPM |
+
+<Callout type="tip" title="Pulo Inteligente">
+Se o projeto ja tem `.aiox/environment-report.json`, a Fase 0 e pulada automaticamente. Re-execute apenas ao trocar de maquina.
+</Callout>
+
+---
+
+## FASE 1: Descoberta e Planejamento
+
+Esta e a fase mais rica do workflow. Cinco agentes colaboram para criar toda a documentacao do projeto.
+
+### Fluxo dos Agentes
+
+```
+@analyst (Atlas) → project-brief.md
+    ↓
+@pm (Morgan) → prd.md
+    ↓
+@ux-expert (Uma) → front-end-spec.md
+    ↓
+@architect (Aria) → fullstack-architecture.md
+    ↓
+@po (Pax) → Validacao de todos os artefatos
+```
+
+### Passo a Passo
+
+**1. @analyst cria o Project Brief**
+
+```bash
+@analyst
+# Usa template: project-brief-tmpl.yaml
+# Opcoes: brainstorming, pesquisa de mercado
+# Output: docs/project-brief.md
+```
+
+**2. @pm cria o PRD**
+
+```bash
+@pm
+# Usa template: prd-tmpl.yaml
+# Input: project-brief.md
+# Output: docs/prd.md
+```
+
+**3. @ux-expert cria o Front-End Spec**
+
+```bash
+@ux-expert
+# Usa template: front-end-spec-tmpl.yaml
+# Input: prd.md
+# Output: docs/front-end-spec.md
+# Opcional: gerar prompt para v0/Lovable
+```
+
+**4. @architect cria a Arquitetura**
+
+```bash
+@architect
+# Usa template: fullstack-architecture-tmpl.yaml
+# Input: prd.md + front-end-spec.md
+# Output: docs/fullstack-architecture.md
+```
+
+**5. @po valida todos os artefatos**
+
+```bash
+@po
+# Executa: po-master-checklist.md
+# Input: todos os documentos anteriores
+# Resultado: aprovacao ou retorno para correcoes
+```
+
+<Callout type="info" title="Feedback Loop">
+Se o @architect sugerir mudancas no PRD, o @pm atualiza o documento. Se o @po encontrar problemas, o agente responsavel corrige. O ciclo continua ate tudo estar validado.
+</Callout>
+
+---
+
+## FASE 2: Fragmentacao de Documentos
+
+Documentos grandes sao fragmentados em partes consumiveis pelo desenvolvimento.
+
+```bash
+@po
+*shard-doc docs/prd.md
+```
+
+### O que e Criado
+
+| Arquivo | Descricao |
+|---------|-----------|
+| `docs/prd/index.md` | Indice com links para secoes |
+| `docs/prd/*.md` | Secoes individuais do PRD |
+| `docs/architecture/source-tree.md` | Estrutura de diretorios |
+| `docs/architecture/tech-stack.md` | Stack tecnologica |
+| `docs/architecture/coding-standards.md` | Padroes de codigo |
+
+A fragmentacao pode ser automatica (usando `md-tree explode`) ou manual (dividindo por secoes `##`).
+
+---
+
+## FASE 3: Ciclo de Desenvolvimento
+
+Aqui o codigo e efetivamente escrito, testado e revisado em um ciclo iterativo de stories.
+
+### O Loop de Stories
+
+```
+@sm cria story → @dev implementa → @qa revisa → repete
+```
+
+**1. @sm (River) cria a story**
+
+```bash
+@sm
+*draft
+# Input: docs fragmentados
+# Output: {epic}.{story}.story.md
+```
+
+**2. @dev (Dex) implementa**
+
+```bash
+@dev
+*develop
+# Input: story aprovada
+# Output: codigo + testes
+```
+
+**3. @qa (Quinn) revisa**
+
+```bash
+@qa
+*review
+# Input: implementacao
+# Output: feedback (aprovar ou solicitar mudancas)
+```
+
+**4. @dev corrige (se necessario)**
+
+```bash
+@dev
+*apply-qa-fixes
+# Input: feedback do QA
+# Output: correcoes aplicadas
+```
+
+### Status de uma Story
+
+| Status | Descricao | Proximo Passo |
+|--------|-----------|---------------|
+| Draft | Criada pelo SM | Revisao ou desenvolvimento |
+| Approved | Revisada e aprovada | Desenvolvimento |
+| In Progress | Em desenvolvimento | Revisao de QA |
+| Review | Aguardando revisao | QA ou correcoes |
+| Done | Completa e aprovada | Proxima story |
+
+---
+
+## Os 9 Agentes do Workflow
+
+| Agente | ID | Arquetipo | Responsabilidade |
+|--------|------|-----------|-----------------|
+| Gage | @devops | Operator | Bootstrap, Git, CI/CD |
+| Atlas | @analyst | Decoder | Pesquisa, project brief |
+| Morgan | @pm | Strategist | PRD, estrategia |
+| Uma | @ux-expert | Empathizer | Specs de frontend, UX |
+| Aria | @architect | Visionary | Arquitetura tecnica |
+| Pax | @po | Balancer | Validacao, backlog |
+| River | @sm | Facilitator | Stories, sprint planning |
+| Dex | @dev | Builder | Implementacao de codigo |
+| Quinn | @qa | Guardian | Revisao de qualidade |
+
+---
+
+## Handoffs entre Fases
+
+A transicao entre fases usa prompts de handoff padronizados:
+
+| De | Para | O que Fazer |
+|----|------|-------------|
+| Fase 0 → 1 | Bootstrap → Planejamento | "Novo chat com @analyst para project brief" |
+| Fase 1 → 2 | Planejamento → Fragmentacao | "@po → *shard-doc docs/prd.md" |
+| Fase 2 → 3 | Fragmentacao → Desenvolvimento | "@sm → *draft para primeira story" |
+
+<Callout type="warning" title="Salve entre Fases">
+Sempre salve e commite os artefatos ao final de cada fase. Cada fase pode ser executada em uma sessao diferente.
+</Callout>
+
+---
+
+## Tipos de Projeto Suportados
+
+| Tipo | Descricao |
+|------|-----------|
+| `web-app` | Aplicacoes web modernas |
+| `saas` | Software as a Service |
+| `enterprise-app` | Aplicacoes corporativas |
+| `prototype` | Prototipos e POCs |
+| `mvp` | Minimum Viable Products |
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Quantas fases tem o Greenfield Full-Stack Workflow?",
+      options: ["2", "3", "4", "5"],
+      correct: 2,
+      explanation: "O workflow tem 4 fases: Fase 0 (Bootstrap), Fase 1 (Descoberta e Planejamento), Fase 2 (Fragmentacao) e Fase 3 (Desenvolvimento)."
+    },
+    {
+      question: "Qual agente valida todos os artefatos de planejamento antes do desenvolvimento?",
+      options: ["@qa (Quinn)", "@pm (Morgan)", "@po (Pax)", "@architect (Aria)"],
+      correct: 2,
+      explanation: "O @po (Pax) executa o po-master-checklist para validar todos os artefatos da Fase 1 antes de seguir para fragmentacao e desenvolvimento."
+    },
+    {
+      question: "O que o comando *shard-doc faz?",
+      options: ["Deleta documentos", "Fragmenta documentos grandes em partes menores", "Comprime documentos", "Envia para o repositorio"],
+      correct: 1,
+      explanation: "O *shard-doc fragmenta documentos grandes (como o PRD) em secoes individuais, criando um indice e arquivos separados prontos para consumo pelo desenvolvimento."
+    }
+  ]}
+/>

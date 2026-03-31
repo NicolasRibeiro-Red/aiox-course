@@ -1,0 +1,265 @@
+# Os 5 Building Blocks do AIOX
+
+Todo o framework AIOX e construido sobre cinco componentes fundamentais: **Agents, Tasks, Templates, Workflows e Checklists**. Entender como cada um funciona -- e como se conectam entre si -- e essencial para usar o framework com eficacia. Nesta licao, vamos dissecar cada building block.
+
+---
+
+## Visao Geral da Arquitetura
+
+```
+aiox-core/
+├── agents/         # 1. Quem faz o trabalho
+├── tasks/          # 2. O que fazer (instrucoes)
+├── templates/      # 3. Como documentar (estruturas)
+├── workflows/      # 4. Em que ordem (sequencias)
+├── checklists/     # 5. Esta bom? (validacao)
+├── agent-teams/    # Agrupamentos de agentes
+└── data/           # Knowledge base e preferencias
+```
+
+<Callout type="info" title="Tudo e linguagem natural">
+Nenhum desses componentes e codigo executavel. Sao arquivos Markdown e YAML que LLMs leem e interpretam diretamente. Isso significa que voce pode inspecionar, editar e entender qualquer componente sem ferramentas especiais.
+</Callout>
+
+---
+
+## 1. Agents (Agentes)
+
+**Localizado em:** `aiox-core/agents/`
+
+Agentes sao os **atores** do sistema. Cada agente e definido em um arquivo Markdown com frontmatter YAML que especifica:
+
+| Atributo | Descricao | Exemplo |
+|---|---|---|
+| **Persona** | Nome e personalidade | Dex (The Builder) |
+| **Archetype** | Papel arquetipico | Builder, Strategist, Guardian |
+| **Capabilities** | O que sabe fazer | Implementar stories, criar PRDs |
+| **Dependencies** | Tasks, templates e checklists que usa | `dev-develop-story.md`, `story-dod-checklist.md` |
+| **Startup Instructions** | O que carregar ao ativar | Documentos do projeto, preferencias tecnicas |
+| **Restrictions** | O que NAO pode fazer | @architect nao faz git push |
+
+### Exemplo de Estrutura de Agente
+
+```yaml
+---
+id: dev
+name: Dex
+title: Full Stack Developer
+archetype: Builder
+zodiac: Aquarius
+icon: 💻
+dependencies:
+  tasks:
+    - dev-develop-story.md
+    - apply-qa-fixes.md
+  checklists:
+    - story-dod-checklist.md
+  data:
+    - technical-preferences.md
+restrictions:
+  - "NO git push -- delegate to @devops"
+---
+
+# Agent: Dex (@dev)
+
+Dex is a pragmatic, solution-oriented full-stack developer...
+```
+
+### Agent Teams
+
+**Localizado em:** `aiox-core/agent-teams/`
+
+Times pre-configurados agrupam agentes para cenarios especificos:
+
+| Time | Agentes | Uso |
+|---|---|---|
+| `team-all` | Todos os agentes | Bundle completo para web UI |
+| `team-qa-focused` | @dev, @qa, @devops | Foco em qualidade e entrega |
+
+---
+
+## 2. Tasks (Tarefas)
+
+**Localizado em:** `aiox-core/tasks/`
+
+Tasks sao **instrucoes executaveis** -- procedimentos passo-a-passo que agentes seguem para completar uma acao especifica.
+
+| Aspecto | Descricao |
+|---|---|
+| **Formato** | Markdown com passos numerados |
+| **Escopo** | Uma acao atomica e reutilizavel |
+| **Invocacao** | Via comandos `*` (ex: `*develop`, `*brainstorm`) |
+| **Modos** | YOLO (autonomo), Interactive (padrao), Pre-Flight (planejamento completo) |
+
+### Tasks Principais por Tipo
+
+| Tipo | Exemplos | Agente Tipico |
+|---|---|---|
+| **Criacao** | `create-doc.md`, `create-next-story.md` | @pm, @sm |
+| **Desenvolvimento** | `dev-develop-story.md`, `apply-qa-fixes.md` | @dev |
+| **Analise** | `analyze-framework.md`, `spec-assess-complexity.md` | @architect, @analyst |
+| **Validacao** | `execute-checklist.md`, `qa-review-story.md` | @qa, @po |
+| **Operacoes** | `github-devops-pre-push-quality-gate.md` | @devops |
+
+<Callout type="tip" title="Design de Tasks">
+Prefira **multiplas tasks pequenas** a uma task grande com muitos branches. Tasks atomicas sao mais reutilizaveis e mais faceis de manter. A task `create-doc.md`, por exemplo, e usada por @pm, @architect e @analyst -- cada um com templates diferentes.
+</Callout>
+
+---
+
+## 3. Templates
+
+**Localizado em:** `aiox-core/templates/`
+
+Templates sao **estruturas YAML** que definem o formato e conteudo de documentos gerados pelo framework.
+
+### Tipos de Templates
+
+| Template | Arquivo | Quem usa |
+|---|---|---|
+| **PRD** | `prd-tmpl.yaml` | @pm |
+| **Architecture** | `fullstack-architecture-tmpl.yaml` | @architect |
+| **User Story** | `story-tmpl.yaml` | @sm |
+| **Project Brief** | `project-brief-tmpl.yaml` | @analyst |
+| **Market Research** | `market-research-tmpl.yaml` | @analyst |
+| **Competitor Analysis** | `competitor-analysis-tmpl.yaml` | @analyst |
+| **Brownfield PRD** | `brownfield-prd-tmpl.yaml` | @pm |
+
+### Anatomia de um Template
+
+Templates AIOX sao **auto-contidos** -- embutem tanto a estrutura do documento quanto instrucoes para a LLM:
+
+```yaml
+template:
+  id: prd-template-v2
+  name: Product Requirements Document
+  version: 2.0
+  output:
+    format: markdown
+    filename: docs/prd.md
+
+sections:
+  - id: goals-context
+    title: "Goals and Background"
+    elicit: false
+    instructions: "[[LLM: Extract goals from project brief...]]"
+
+  - id: requirements
+    title: "Requirements"
+    elicit: true
+    instructions: "[[LLM: Present elicitation options 1-9...]]"
+```
+
+A flag `elicit: true` indica que aquela secao requer interacao com o usuario -- o agente apresenta opcoes e aguarda resposta antes de prosseguir.
+
+---
+
+## 4. Workflows
+
+**Localizado em:** `aiox-core/workflows/`
+
+Workflows sao **sequencias prescritas** de steps e interacoes entre agentes para tipos especificos de projeto.
+
+### Workflows Disponiveis
+
+| Workflow | Tipo de Projeto | Agentes Envolvidos |
+|---|---|---|
+| `greenfield-fullstack` | Novo projeto full-stack | Todos |
+| `greenfield-service` | Novo servico backend | @analyst -> @pm -> @architect -> @sm -> @dev |
+| `greenfield-ui` | Nova interface frontend | @analyst -> @pm -> @ux -> @architect -> @sm -> @dev |
+| `brownfield-fullstack` | Projeto existente full-stack | @analyst -> @architect -> @pm -> @sm -> @dev |
+| `brownfield-service` | Servico existente | @architect -> @pm -> @sm -> @dev |
+| `brownfield-ui` | Interface existente | @ux -> @architect -> @pm -> @sm -> @dev |
+
+### Greenfield vs. Brownfield
+
+<ComparisonTable
+  title="Greenfield vs. Brownfield"
+  headers={["Aspecto", "Greenfield (Projeto Novo)", "Brownfield (Projeto Existente)"]}
+  rows={[
+    ["Inicio", "Research e brainstorming do zero", "Discovery e analise do projeto existente"],
+    ["Documentacao", "Criada do zero (brief, PRD, arch)", "Gerada a partir do codigo existente"],
+    ["Arquitetura", "Design livre de restricoes", "Respeita padroes e tech debt existentes"],
+    ["Risk", "Menor -- sem legacy", "Maior -- integracao com codigo existente"],
+    ["Agente chave", "@analyst (discovery)", "@architect (document-project)"]
+  ]}
+/>
+
+---
+
+## 5. Checklists
+
+**Localizado em:** `aiox-core/checklists/`
+
+Checklists sao os **quality gates** do framework -- listas de validacao que garantem que artefatos estao completos e corretos antes de avancarem.
+
+| Checklist | Quem usa | O que valida |
+|---|---|---|
+| `pm-checklist.md` | @pm, @po | 9 categorias de validacao de PRD |
+| `architect-checklist.md` | @architect | Decisoes de arquitetura e trade-offs |
+| `story-draft-checklist.md` | @sm | Completude e clareza de stories |
+| `story-dod-checklist.md` | @dev | Definition of Done para implementacao |
+| `po-master-checklist.md` | @po | Alinhamento geral entre documentos |
+| `change-checklist.md` | @pm | Navegacao de mudancas mid-sprint |
+
+### Status de Checklist
+
+Cada categoria de um checklist resulta em um status:
+
+| Status | Significado | Acao |
+|---|---|---|
+| **PASS** | 90%+ completo | Prosseguir para proxima fase |
+| **PARTIAL** | 60-89% completo | Revisar itens pendentes |
+| **FAIL** | Menos de 60% | Refazer secao antes de prosseguir |
+
+---
+
+## Como os 5 Blocos se Conectam
+
+```
+Agent ──usa──> Task ──processa──> Template ──gera──> Documento
+  |                                                     |
+  └──segue──> Workflow ──valida com──> Checklist ──────┘
+```
+
+Exemplo concreto:
+
+1. `@pm` (Agent) executa `*create-prd` (Task)
+2. A task processa `prd-tmpl.yaml` (Template) secao por secao
+3. O resultado e `docs/prd.md` (Documento gerado)
+4. `@po` valida com `pm-checklist.md` (Checklist)
+5. Se PASS, o Workflow avanca para `@architect`
+
+---
+
+## Teste seus Conhecimentos
+
+<QuizBlock
+  title="Core Components"
+  questions={[
+    {
+      question: "Qual componente define QUEM faz o trabalho no AIOX?",
+      options: ["Tasks", "Templates", "Agents", "Workflows"],
+      correct: 2,
+      explanation: "Agents sao os atores do sistema. Cada agente tem persona, capabilities e dependencias definidas em arquivo Markdown."
+    },
+    {
+      question: "Para que serve a flag 'elicit: true' em um template YAML?",
+      options: ["Para pular a secao automaticamente", "Para indicar que a secao requer interacao com o usuario", "Para marcar a secao como opcional", "Para gerar codigo automaticamente"],
+      correct: 1,
+      explanation: "Quando elicit e true, o agente apresenta opcoes de elicitacao (1-9) e aguarda a resposta do usuario antes de prosseguir com a secao."
+    },
+    {
+      question: "Qual e a diferenca entre workflow Greenfield e Brownfield?",
+      options: ["Greenfield e mais rapido", "Greenfield cria do zero, Brownfield trabalha com projeto existente", "Brownfield so funciona no terminal", "Nao ha diferenca pratica"],
+      correct: 1,
+      explanation: "Greenfield e para projetos novos (research, PRD, architecture do zero). Brownfield e para projetos existentes (discovery, analise de tech debt, integracao com codigo existente)."
+    }
+  ]}
+/>
+
+---
+
+## Proximo Passo
+
+Na proxima licao, vamos mergulhar fundo no **Sistema de Templates** -- a engine que processa YAML, gerencia variaveis e habilita elicitacao interativa.

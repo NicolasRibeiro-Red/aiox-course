@@ -1,0 +1,263 @@
+# Quality Gates — Arquitetura de 3 Camadas
+
+O sistema de Quality Gates do AIOX fornece **garantia de qualidade automatizada** atraves de tres camadas progressivas de validacao. Cada camada captura tipos diferentes de problemas no estagio apropriado do desenvolvimento.
+
+---
+
+## A Arquitetura de 3 Camadas
+
+| Camada | Tipo | Velocidade | Proposito |
+|---|---|---|---|
+| **Layer 1** | Automatizado (local) | ~30s | Capturar erros de sintaxe, linting e tipos |
+| **Layer 2** | Assistido por IA | ~5 min | Capturar logica, seguranca e padroes |
+| **Layer 3** | Humano | Variavel | Review estrategico e sign-off final |
+
+O principio e simples: **quanto mais cedo voce captura um problema, mais barato e corrigi-lo**. Layer 1 captura ~30% dos issues, Layer 2 adiciona ~50% (80% total), e Layer 3 pega os ultimos ~20%.
+
+---
+
+## Layer 1: Pre-commit Checks
+
+Checks rapidos e locais que rodam antes do codigo ser commitado. Capturam problemas obvios imediatamente.
+
+### Checks Incluidos
+
+| Check | Ferramenta | Timeout | Descricao |
+|---|---|---|---|
+| **Lint** | ESLint | 60s | Estilo de codigo e boas praticas |
+| **Test** | Jest | 5 min | Testes unitarios com cobertura |
+| **TypeCheck** | TypeScript | 2 min | Validacao de tipos estatica |
+
+### Configuracao
+
+```yaml
+# quality-gate-config.yaml
+layer1:
+  enabled: true
+  failFast: true  # Para no primeiro erro
+  checks:
+    lint:
+      enabled: true
+      command: "npm run lint"
+      failOn: "error"
+      timeout: 60000
+    test:
+      enabled: true
+      command: "npm test"
+      timeout: 300000
+      coverage:
+        enabled: true
+        minimum: 80
+    typecheck:
+      enabled: true
+      command: "npm run typecheck"
+      timeout: 120000
+```
+
+### Executando
+
+```bash
+# Todos os checks da Layer 1
+aiox qa run --layer=1
+
+# Check especifico
+aiox qa run --layer=1 --check=lint
+aiox qa run --layer=1 --check=test
+```
+
+---
+
+## Layer 2: PR Automation
+
+Review assistido por IA que roda em pull requests. Captura problemas mais profundos como erros de logica, vulnerabilidades de seguranca e problemas arquiteturais.
+
+### Ferramentas Integradas
+
+| Ferramenta | Proposito | Severidade Bloqueante |
+|---|---|---|
+| **CodeRabbit** | Review de codigo por IA | CRITICAL |
+| **Quinn (@qa)** | Review automatizado de QA | CRITICAL |
+
+### Niveis de Severidade
+
+| Severidade | Acao | Descricao |
+|---|---|---|
+| **CRITICAL** | Bloqueia | Vulnerabilidade, risco de perda de dados, breaking change |
+| **HIGH** | Warn + Documenta | Performance, validacao faltando, anti-pattern |
+| **MEDIUM** | Documenta | Code smell, sugestao de melhoria, risco menor |
+| **LOW** | Ignora | Preferencia de estilo, otimizacao menor |
+
+<Callout type="danger" title="CRITICAL sempre bloqueia">
+Issues de severidade CRITICAL sempre bloqueiam o merge. Eles tipicamente indicam vulnerabilidades de seguranca, credenciais hardcoded, riscos de SQL injection ou XSS.
+</Callout>
+
+### Configuracao
+
+```yaml
+layer2:
+  enabled: true
+  coderabbit:
+    enabled: true
+    command: "coderabbit --prompt-only -t uncommitted"
+    timeout: 900000  # 15 minutos
+    blockOn: [CRITICAL]
+    warnOn: [HIGH]
+    documentOn: [MEDIUM]
+    ignoreOn: [LOW]
+  quinn:
+    enabled: true
+    autoReview: true
+    severity:
+      block: [CRITICAL]
+      warn: [HIGH, MEDIUM]
+```
+
+---
+
+## Layer 3: Human Review
+
+Review estrategico humano para sign-off final. Garante que requisitos de negocio foram atendidos e decisoes arquiteturais sao solidas.
+
+### Checklist de Review Estrategico
+
+```markdown
+### Arquitetura
+- [ ] Mudancas alinhadas com arquitetura do sistema
+- [ ] Sem dependencias nao-autorizadas
+- [ ] Compatibilidade retroativa mantida
+
+### Seguranca
+- [ ] Sem dados sensiveis expostos
+- [ ] Validacao de input presente
+- [ ] Autenticacao/autorizacao corretas
+
+### Qualidade
+- [ ] Codigo mantenivel e legivel
+- [ ] Testes abrangentes
+- [ ] Documentacao atualizada
+
+### Negocio
+- [ ] Acceptance criteria atendidos
+- [ ] Experiencia do usuario considerada
+- [ ] Performance aceitavel
+```
+
+### Estrategias de Atribuicao
+
+| Estrategia | Descricao |
+|---|---|
+| **auto** | Atribui baseado em ownership de arquivos e expertise |
+| **manual** | Atribuicao manual do reviewer |
+| **round-robin** | Rotacao entre membros da equipe |
+
+---
+
+## CLI Completo
+
+O AIOX fornece um CLI dedicado para quality gates:
+
+```bash
+# Rodar checks
+aiox qa run                    # Todas as camadas
+aiox qa run --layer=1          # Apenas Layer 1
+aiox qa run --verbose          # Output detalhado
+aiox qa run --fail-fast        # Para no primeiro erro
+
+# Verificar status
+aiox qa status                 # Status geral
+aiox qa status --layer=2       # Status da Layer 2
+aiox qa status --pr=123        # Status de um PR
+
+# Gerar relatorios
+aiox qa report                 # Relatorio padrao
+aiox qa report --format=markdown --output=qa-report.md
+
+# Configurar
+aiox qa configure              # Configuracao interativa
+aiox qa configure --layer1.coverage.minimum=90
+```
+
+---
+
+## Integracao com CI/CD
+
+### GitHub Actions
+
+```yaml
+name: Quality Gate
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  layer1:
+    name: Layer 1 - Pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - run: npm ci
+      - run: aiox qa run --layer=1
+
+  layer2:
+    name: Layer 2 - PR Automation
+    needs: layer1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: aiox qa run --layer=2
+        env:
+          CODERABBIT_API_KEY: ${{ secrets.CODERABBIT_API_KEY }}
+```
+
+### Pre-commit Hook (Husky)
+
+```bash
+# .husky/pre-commit
+#!/bin/sh
+aiox qa run --layer=1 --fail-fast
+```
+
+---
+
+## Resolucao de Problemas
+
+| Camada | Problema | Solucao |
+|---|---|---|
+| Layer 1 | Lint errors | `npm run lint -- --fix` para auto-fix |
+| Layer 1 | Testes falhando | Verificar output, atualizar testes |
+| Layer 1 | Timeout | Aumentar timeout na config |
+| Layer 2 | CodeRabbit CRITICAL | Corrigir vulnerabilidade/breaking change |
+| Layer 2 | CodeRabbit timeout | Verificar rede, tentar run manual |
+| Layer 3 | Sem reviewer | Configurar `defaultReviewer` |
+| Layer 3 | Sign-off expirado | Solicitar novo review |
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Qual porcentagem total de issues as Layers 1 e 2 capturam juntas?",
+      options: ["50%", "60%", "80%", "100%"],
+      correct: 2,
+      explanation: "Layer 1 captura ~30% dos issues e Layer 2 adiciona ~50%, totalizando ~80%. A Layer 3 (humana) pega os ultimos ~20%."
+    },
+    {
+      question: "Qual severidade SEMPRE bloqueia o merge na Layer 2?",
+      options: ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+      correct: 3,
+      explanation: "Issues CRITICAL sempre bloqueiam — vulnerabilidades de seguranca, risco de perda de dados e breaking changes nao podem passar."
+    },
+    {
+      question: "Qual ferramenta o AIOX usa para review de codigo assistido por IA na Layer 2?",
+      options: ["ESLint", "Jest", "CodeRabbit", "TypeScript"],
+      correct: 2,
+      explanation: "CodeRabbit e a ferramenta de review por IA integrada na Layer 2, junto com o @qa (Quinn) para review automatizado de QA."
+    }
+  ]}
+/>

@@ -1,0 +1,214 @@
+# Greenfield Workflows — Criando Projetos do Zero
+
+O **Greenfield Fullstack Workflow** e o fluxo principal do AIOX para construir aplicacoes completas desde o conceito ate a entrega. Ele orquestra 9 agentes em 4 fases progressivas — do bootstrap do ambiente ate o ciclo de desenvolvimento iterativo.
+
+---
+
+## Quando Usar Greenfield
+
+Use workflows greenfield quando:
+
+- Voce esta construindo uma aplicacao nova, do zero
+- O projeto precisa de documentacao abrangente (PRD, arquitetura, specs)
+- Ha expectativa de manutencao de longo prazo
+- Multiplos membros vao colaborar no projeto
+
+| Tipo de Projeto | Suportado |
+|---|---|
+| Web App | Sim |
+| SaaS | Sim |
+| Enterprise App | Sim |
+| Prototype / POC | Sim |
+| MVP | Sim |
+
+---
+
+## As 4 Fases
+
+<WorkflowVisualizer
+  title="Greenfield Fullstack — Do Conceito ao Codigo"
+  steps={[
+    {
+      agent: "@devops",
+      agentIcon: "⚡",
+      title: "Fase 0: Bootstrap do Ambiente",
+      description: "Gage detecta o SO, audita CLIs instaladas (git, gh, node), autentica servicos (GitHub, Supabase), inicializa repositorio Git e cria a estrutura do projeto.",
+      artifacts: [".aiox/config.yaml", ".aiox/environment-report.json", "package.json"]
+    },
+    {
+      agent: "@analyst → @pm → @ux → @architect → @po",
+      agentIcon: "📋",
+      title: "Fase 1: Descoberta e Planejamento",
+      description: "Atlas cria o project brief, Morgan escreve o PRD, Uma especifica o frontend, Aria desenha a arquitetura fullstack, e Pax valida todos os artefatos.",
+      artifacts: ["project-brief.md", "prd.md", "front-end-spec.md", "fullstack-architecture.md"]
+    },
+    {
+      agent: "@po",
+      agentIcon: "🎯",
+      title: "Fase 2: Fragmentacao de Documentos",
+      description: "Pax fragmenta o PRD e a arquitetura em documentos menores prontos para desenvolvimento: source-tree, tech-stack e coding-standards.",
+      artifacts: ["docs/prd/*.md", "source-tree.md", "tech-stack.md", "coding-standards.md"]
+    },
+    {
+      agent: "@sm → @dev → @qa",
+      agentIcon: "💻",
+      title: "Fase 3: Ciclo de Desenvolvimento",
+      description: "River cria stories, Dex implementa com testes, Quinn faz review de QA. O ciclo repete para cada story ate completar o epic.",
+      artifacts: ["stories/*.md", "codigo fonte", "testes automatizados"]
+    }
+  ]}
+/>
+
+---
+
+## Fase 0: Bootstrap — Preparando o Terreno
+
+Antes de qualquer planejamento, o `@devops` (Gage) garante que o ambiente esta pronto. Ele verifica e instala automaticamente as ferramentas necessarias:
+
+| Categoria | Ferramenta | Obrigatoria |
+|---|---|---|
+| Essencial | git, gh (GitHub CLI), node, npm | Sim |
+| Infraestrutura | supabase, docker | Recomendada |
+| Qualidade | coderabbit | Recomendada |
+| Opcional | pnpm, bun | Opcional |
+
+<Callout type="tip" title="Pular o Bootstrap">
+Se o projeto ja tem um `.aiox/environment-report.json`, a Fase 0 e automaticamente pulada. Re-execute ao trocar de maquina ou quando novos membros entrarem.
+</Callout>
+
+---
+
+## Fase 1: Descoberta — O Pipeline de Planejamento
+
+A Fase 1 e um pipeline sequencial de 5 agentes, onde cada um consome o artefato do anterior:
+
+```
+@analyst → project-brief.md
+    ↓
+@pm → prd.md
+    ↓
+@ux-expert → front-end-spec.md
+    ↓
+@architect → fullstack-architecture.md
+    ↓
+@po → validacao final (po-master-checklist)
+```
+
+### Pontos de Decisao na Fase 1
+
+| Decisao | Opcoes | Criterio |
+|---|---|---|
+| Gerar prompt v0? | Sim / Nao | Usuario quer gerar UI com IA (v0, Lovable) |
+| Arquitetura sugere mudancas no PRD? | Atualizar / Continuar | Recomendacao do @architect |
+| PO encontrou problemas? | Corrigir / Aprovar | Resultado do checklist |
+
+Se o `@architect` detecta que a arquitetura exige mudancas nos requisitos, o PRD e atualizado pelo `@pm` antes de prosseguir. Se o `@po` encontra problemas, o artefato retorna ao agente responsavel.
+
+---
+
+## Fase 2: Fragmentacao — Documentos Prontos para Dev
+
+O `@po` pega o PRD monolitico e o fragmenta em partes menores usando a task `shard-doc`:
+
+```
+docs/prd/
+├── index.md          # Indice com links
+├── overview.md       # Secao 1
+├── features.md       # Secao 2
+├── requirements.md   # Secao 3
+└── ...
+
+docs/architecture/
+├── source-tree.md    # Estrutura de diretorios
+├── tech-stack.md     # Stack tecnologica
+└── coding-standards.md  # Padroes de codigo
+```
+
+Essa fragmentacao permite que agentes na Fase 3 trabalhem com documentos focados em vez de ler o PRD inteiro.
+
+---
+
+## Fase 3: Desenvolvimento Iterativo
+
+O ciclo de desenvolvimento segue um loop:
+
+1. **@sm cria** a proxima story baseada nos documentos fragmentados
+2. **Revisao opcional** — @analyst ou @pm revisam se a story esta clara
+3. **@dev implementa** — codigo, testes, CodeRabbit self-healing
+4. **@qa revisa** — quality gate com checklist de 7 pontos
+5. **@dev corrige** — se QA encontrar problemas
+6. **Repete** — ate completar todas as stories do epic
+
+O status de cada story segue o fluxo: `Draft → Approved → In Progress → Review → Done`.
+
+---
+
+## Os 9 Agentes Participantes
+
+| Agente | Nome | Arquetipo | Responsabilidade |
+|---|---|---|---|
+| `@devops` | Gage | Operator | Bootstrap, push, releases, CI/CD |
+| `@analyst` | Atlas | Decoder | Pesquisa, brainstorming, project brief |
+| `@pm` | Morgan | Strategist | PRD, estrategia de produto, epics |
+| `@ux-expert` | Uma | Empathizer | Specs de frontend, UX, design systems |
+| `@architect` | Aria | Visionary | Arquitetura fullstack, decisoes tecnicas |
+| `@po` | Pax | Balancer | Validacao, backlog, fragmentacao |
+| `@sm` | River | Facilitator | Criacao de stories, sprint planning |
+| `@dev` | Dex | Builder | Implementacao de codigo, testes |
+| `@qa` | Quinn | Guardian | Revisao de qualidade, gates |
+
+---
+
+## Handoff entre Fases
+
+O AIOX fornece **prompts de handoff** padronizados para transicoes entre agentes e fases. Isso garante que o contexto nao se perde:
+
+| De | Para | Handoff |
+|---|---|---|
+| Fase 0 → 1 | @devops → @analyst | "Bootstrap completo. Inicie com @analyst para criar o project brief." |
+| @analyst → @pm | Atlas → Morgan | "Brief completo. Salve como `docs/project-brief.md`, depois crie o PRD." |
+| @pm → @ux | Morgan → Uma | "PRD pronto. Salve como `docs/prd.md`, depois crie a spec de UI/UX." |
+| Fase 1 → 2 | @po | "Artefatos validados. Fragmente documentos: @po *shard-doc docs/prd.md" |
+| Fase 2 → 3 | @sm | "Documentos fragmentados. Inicie desenvolvimento: @sm *draft" |
+
+<Callout type="warning" title="Contexto entre sessoes">
+Se voce precisa trocar de sessao entre fases, sempre salve os artefatos gerados em disco antes. O handoff prompt so funciona se os arquivos existirem.
+</Callout>
+
+---
+
+## Variantes de Greenfield
+
+Alem do fullstack, o AIOX oferece workflows greenfield especializados:
+
+| Workflow | Uso | Diferenca |
+|---|---|---|
+| `greenfield-fullstack` | Apps completas (frontend + backend + DB) | Pipeline completo com 9 agentes |
+| `greenfield-service` | APIs e microsservicos | Sem @ux-expert, foco em arquitetura de APIs |
+| `greenfield-ui` | Interfaces e SPAs | Sem @data-engineer, foco em componentes UI |
+
+---
+
+<QuizBlock
+  title="Teste seus conhecimentos"
+  questions={[
+    {
+      question: "Qual agente e responsavel pelo Bootstrap do ambiente na Fase 0?",
+      options: ["@dev (Dex)", "@devops (Gage)", "@architect (Aria)", "@pm (Morgan)"],
+      correct: 1,
+      explanation: "O @devops (Gage) e o Operator responsavel por configurar o ambiente: verificar CLIs, autenticar servicos e criar a estrutura do projeto."
+    },
+    {
+      question: "O que acontece na Fase 2: Fragmentacao?",
+      options: ["O codigo e dividido em microsservicos", "O PRD e fragmentado em documentos menores prontos para dev", "As stories sao criadas", "Os testes sao separados por modulo"],
+      correct: 1,
+      explanation: "Na Fase 2, o @po fragmenta o PRD monolitico e a arquitetura em documentos focados (source-tree, tech-stack, coding-standards) para facilitar o trabalho dos agentes de desenvolvimento."
+    },
+    {
+      question: "Se o @architect detecta que a arquitetura exige mudancas nos requisitos, o que acontece?",
+      options: ["O pipeline e cancelado", "O @pm atualiza o PRD antes de prosseguir", "O @qa bloqueia o workflow", "O @po cria um novo epic"],
+      correct: 1,
+      explanation: "O PRD e atualizado pelo @pm (Morgan) com base nas recomendacoes do @architect antes de continuar a validacao pelo @po."
+    }
+  ]}
+/>

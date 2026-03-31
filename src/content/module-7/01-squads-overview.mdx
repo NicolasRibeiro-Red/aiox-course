@@ -1,0 +1,267 @@
+# O que sao Squads?
+
+Squads sao **equipes modulares de agentes de IA** que estendem a funcionalidade do AIOX para dominios ou casos de uso especificos. Em vez de agentes isolados, squads coordenam times completos — com agentes, tarefas, workflows e configuracoes — tudo empacotado e reutilizavel.
+
+---
+
+## De Agentes Individuais para Times
+
+A evolucao natural do uso de agentes e perceber que **um agente sozinho raramente resolve tudo**. Um projeto real precisa de planejamento, desenvolvimento, testes, review e deploy. Squads formalizam essa colaboracao.
+
+<ComparisonTable
+  title="Agentes Tradicionais vs AIOX Squads"
+  headers={["Agentes Tradicionais", "AIOX Squads"]}
+  rows={[
+    ["Agentes individuais", "Time coordenado de agentes"],
+    ["Proposito unico", "Workflows focados em dominio"],
+    ["Configuracao manual", "Empacotado com config"],
+    ["Reuso via copy-paste", "Instale e use"],
+    ["Sem padronizacao", "TASK-FORMAT-SPEC-V1"],
+  ]}
+/>
+
+---
+
+## Caracteristicas Fundamentais
+
+| Caracteristica | Descricao |
+|----------------|-----------|
+| **Modular** | Pacotes auto-contidos com todas as dependencias |
+| **Composavel** | Multiplas squads podem trabalhar juntas |
+| **Compartilhavel** | Publique em repositorio ou marketplace |
+| **Extensivel** | Construa em cima de squads existentes |
+| **Versionavel** | Versionamento semantico para compatibilidade |
+
+---
+
+## Estrutura de uma Squad
+
+Cada squad contem todos os componentes necessarios para um dominio especifico:
+
+```
+./squads/my-squad/
+├── squad.yaml              # Manifesto (obrigatorio)
+├── README.md               # Documentacao
+├── LICENSE                  # Licenca
+├── config/
+│   ├── coding-standards.md # Regras de estilo
+│   ├── tech-stack.md       # Tecnologias
+│   └── source-tree.md      # Estrutura de diretorios
+├── agents/
+│   └── my-agent.md         # Definicoes de agentes
+├── tasks/
+│   └── my-task.md          # Definicoes de tarefas
+├── workflows/
+│   └── my-workflow.yaml    # Workflows multi-step
+├── checklists/
+│   └── review-checklist.md # Checklists de validacao
+├── templates/
+│   └── report-template.md  # Templates de documentos
+├── tools/
+│   └── custom-tool.js      # Integracoes customizadas
+└── scripts/
+    └── setup.js            # Scripts utilitarios
+```
+
+<Callout type="info" title="Arquitetura Task-First">
+Squads seguem a arquitetura task-first: tarefas sao o ponto de entrada primario, nao agentes. O fluxo e: Pedido do Usuario → Task → Execucao do Agente → Output.
+</Callout>
+
+---
+
+## O Manifesto (squad.yaml)
+
+Todo squad requer um arquivo de manifesto na raiz:
+
+```yaml
+# Campos obrigatorios
+name: my-squad
+version: 1.0.0
+description: O que este squad faz
+
+# Metadados
+author: Seu Nome <email@example.com>
+license: MIT
+slashPrefix: my  # Prefixo de comando para IDE
+
+# Compatibilidade AIOX
+aiox:
+  minVersion: "2.1.0"
+  type: squad
+
+# Declaracao de componentes
+components:
+  agents:
+    - my-agent.md
+  tasks:
+    - my-task.md
+  workflows: []
+  checklists: []
+  templates: []
+
+# Heranca de configuracao
+config:
+  extends: extend  # extend | override | none
+
+# Dependencias
+dependencies:
+  node: []
+  python: []
+  squads: []  # Outras squads!
+
+# Tags de descoberta
+tags:
+  - domain-specific
+  - automation
+```
+
+---
+
+## Niveis de Distribuicao
+
+Squads podem ser distribuidos em tres niveis:
+
+```
+┌─────────────────────────────────────────────────────┐
+│              DISTRIBUICAO DE SQUADS                   │
+├─────────────────────────────────────────────────────┤
+│  Level 1: LOCAL       → ./squads/         (Privado) │
+│  Level 2: AIOX-SQUADS → github.com/SynkraAI (Open) │
+│  Level 3: SYNKRA API  → api.synkra.dev  (Market)   │
+└─────────────────────────────────────────────────────┘
+```
+
+| Nivel | Fonte | Visibilidade |
+|-------|-------|-------------|
+| **Local** | `./squads/` no seu projeto | Apenas voce |
+| **AIOX-Squads** | Repositorio GitHub SynkraAI | Publico e gratuito |
+| **Synkra API** | Marketplace oficial | Marketplace |
+
+---
+
+## Squads Oficiais
+
+| Squad | Versao | Descricao |
+|-------|--------|-----------|
+| **etl-squad** | 2.0.0 | Coleta e transformacao de dados |
+| **creator-squad** | 1.0.0 | Utilitarios de geracao de conteudo |
+
+### Instalando Squads
+
+```bash
+# Listar squads disponiveis
+aiox squads list
+
+# Baixar do repositorio oficial
+*download-squad etl-squad
+
+# Baixar versao especifica
+*download-squad etl-squad@2.0.0
+
+# Listar squads locais
+*list-squads
+```
+
+---
+
+## Criando uma Squad
+
+A forma mais rapida de criar uma squad e usando o agente `@squad-creator`:
+
+```bash
+# Ativar o agente criador de squads
+@squad-creator
+
+# Opcao 1: Design guiado (recomendado)
+*design-squad --docs ./docs/prd/my-project.md
+
+# Opcao 2: Criacao direta
+*create-squad my-squad
+
+# Opcao 3: A partir de template
+*create-squad my-squad --template etl
+```
+
+### Templates Disponiveis
+
+| Template | Caso de Uso |
+|----------|------------|
+| `basic` | Squad simples com um agente e uma task |
+| `etl` | Extracao, transformacao e carga de dados |
+| `agent-only` | Squad somente com agentes, sem tasks |
+
+---
+
+## Boas Praticas
+
+### 1. Siga a Arquitetura Task-First
+
+```
+Pedido do Usuario → Task → Execucao do Agente → Output
+                      │
+                 Workflow (se multi-step)
+```
+
+### 2. Escolha o Modo de Heranca Correto
+
+| Modo | Comportamento |
+|------|---------------|
+| `extend` | Adiciona regras do squad as regras core do AIOX |
+| `override` | Substitui regras core pelas regras do squad |
+| `none` | Configuracao standalone |
+
+### 3. Valide Antes de Publicar
+
+```bash
+*validate-squad my-squad
+*validate-squad my-squad --strict  # Para CI/CD
+```
+
+### 4. Versione Corretamente
+
+- **Major (X.0.0)**: Breaking changes
+- **Minor (0.X.0)**: Novas features, backward compatible
+- **Patch (0.0.X)**: Bug fixes
+
+---
+
+## Comandos de Referencia
+
+| Comando | Descricao |
+|---------|-----------|
+| `*create-squad {name}` | Criar nova squad com prompts |
+| `*create-squad {name} --template {type}` | Criar a partir de template |
+| `*create-squad {name} --from-design` | Criar a partir de blueprint |
+| `*validate-squad {name}` | Validar estrutura |
+| `*list-squads` | Listar squads locais |
+| `*download-squad {name}` | Baixar do repositorio |
+| `*design-squad` | Design a partir de documentacao |
+| `*analyze-squad {name}` | Analisar estrutura |
+| `*extend-squad {name}` | Adicionar componentes |
+| `*publish-squad {path}` | Publicar no repositorio |
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Qual e a arquitetura fundamental das Squads AIOX?",
+      options: ["Agent-first", "Task-first", "Workflow-first", "Config-first"],
+      correct: 1,
+      explanation: "Squads seguem a arquitetura task-first: tarefas sao o ponto de entrada primario, e os agentes executam as tarefas."
+    },
+    {
+      question: "Qual arquivo e obrigatorio em toda squad?",
+      options: ["config.yaml", "manifest.json", "squad.yaml", "package.json"],
+      correct: 2,
+      explanation: "O arquivo squad.yaml e o manifesto obrigatorio que define metadados, componentes, dependencias e configuracao da squad."
+    },
+    {
+      question: "Squads podem depender de outras squads?",
+      options: ["Nao, sao independentes", "Sim, via dependencies.squads", "Somente na versao Pro", "Somente squads oficiais"],
+      correct: 1,
+      explanation: "Sim! Declare dependencias de outras squads no campo dependencies.squads do manifesto: dependencies.squads: [etl-squad@^2.0.0]"
+    }
+  ]}
+/>

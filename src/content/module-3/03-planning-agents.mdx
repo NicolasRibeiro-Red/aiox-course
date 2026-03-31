@@ -1,0 +1,190 @@
+# Agentes de Planejamento: Atlas, Morgan e Aria
+
+Antes de uma unica linha de codigo ser escrita, tres agentes trabalham para garantir que o projeto tenha fundacao solida: **Atlas** investiga, **Morgan** planeja e **Aria** projeta a arquitetura. Juntos, transformam uma ideia vaga em documentacao tecnica acionavel.
+
+---
+
+## Atlas -- O Investigador (@analyst)
+
+<AgentCard
+  icon="🔍"
+  name="Atlas"
+  id="analyst"
+  title="Business Analyst"
+  archetype="Decoder"
+  zodiac="Scorpio"
+  description="Pesquisador, investigador e facilitador de brainstorming. Atlas descobre a verdade por tras dos dados: pesquisa de mercado, analise competitiva, project briefs e prompts de pesquisa profunda. Tudo com metodologia estruturada e foco em insights acionaveis."
+  commands={["*brainstorm {topic}", "*perform-market-research", "*create-competitor-analysis", "*research-prompt {topic}", "*create-project-brief", "*elicit"]}
+  whenToUse="Antes de criar um PRD. Quando precisa de pesquisa de mercado, analise competitiva, brainstorming estruturado ou criacao de project brief."
+  collaboratesWith={["@pm (fornece pesquisa para PRD)", "@po (fornece insights de mercado)", "@architect (fornece tech research)", "@ux-design-expert (fornece user research)"]}
+  restrictions={["NAO cria PRDs (cabe ao @pm)", "NAO faz arquitetura", "NAO cria stories"]}
+/>
+
+### Artefatos que Atlas Produz
+
+| Artefato | Comando | Destino |
+|---|---|---|
+| Project Brief | `*create-project-brief` | Input para @pm criar PRD |
+| Market Research | `*perform-market-research` | Dados de mercado (TAM/SAM/SOM) |
+| Competitor Analysis | `*create-competitor-analysis` | Analise SWOT, Blue Ocean |
+| Brainstorming Results | `*brainstorm {topic}` | Ideias categorizadas e priorizadas |
+| Research Prompt | `*research-prompt {topic}` | Prompt estruturado para pesquisa profunda |
+
+### Fluxo de Brainstorming
+
+O brainstorming de Atlas segue 4 fases:
+
+| Fase | O que acontece | Duracao |
+|---|---|---|
+| **1. Setup** | 4 perguntas de contexto (topic, constraints, goal, format) | 5 min |
+| **2. Approach** | Selecao de tecnicas (usuario escolhe, Atlas recomenda, aleatorio ou progressivo) | 2 min |
+| **3. Execution** | Ciclo interativo: aplicar tecnica -> engajar -> capturar ideias -> repetir | 20-30 min |
+| **4. Convergence** | Categorizar ideias, sintetizar insights, gerar documento final | 10-15 min |
+
+<Callout type="tip" title="Quantidade antes de qualidade">
+Atlas segue a regra: gerar muitas ideias primeiro, avaliar depois. O alvo e 100 ideias em 60 minutos. Julgamento e adiado para a fase de convergencia.
+</Callout>
+
+---
+
+## Morgan -- O Estrategista (@pm)
+
+<AgentCard
+  icon="📋"
+  name="Morgan"
+  id="pm"
+  title="Product Manager"
+  archetype="Strategist"
+  zodiac="Capricorn"
+  description="Transforma insights e pesquisa em documentos de requisitos acionaveis. Morgan cria PRDs greenfield e brownfield, define epics com quality planning integrado, conduz pesquisa estrategica e navega mudancas mid-sprint com analise de impacto."
+  commands={["*create-prd", "*create-brownfield-prd", "*create-epic", "*create-story", "*research {topic}", "*correct-course", "*shard-prd"]}
+  whenToUse="Quando precisa de PRD (greenfield ou brownfield), definicao de epics, pesquisa estrategica ou navegacao de mudancas durante desenvolvimento."
+  collaboratesWith={["@analyst (recebe pesquisa)", "@architect (entrega PRD aprovado)", "@ux-design-expert (entrega PRD com UI)", "@sm (delega criacao de stories)", "@po (fornece direcao estrategica)"]}
+  restrictions={["NAO faz pesquisa de mercado (cabe ao @analyst)", "NAO cria arquitetura", "NAO implementa codigo"]}
+/>
+
+### O Fluxo do PRD
+
+Morgan cria PRDs em 8 passos:
+
+| Step | Secao | Elicit? | Descricao |
+|---|---|---|---|
+| 1 | Goals and Background | Nao | Objetivos e contexto extraidos do brief |
+| 2 | Requirements | **Sim** | Requisitos funcionais e nao-funcionais |
+| 3 | UI Design Goals | **Sim** | Visao UX/UI (condicional -- so se tem UI) |
+| 4 | Technical Assumptions | **Sim** | Decisoes tecnicas iniciais |
+| 5 | Epic List | **Sim** | Lista de epics para aprovacao da estrutura |
+| 6 | Epic Details | **Sim** | Stories e acceptance criteria detalhados |
+| 7 | Checklist Results | Nao | Resultado do pm-checklist (9 categorias) |
+| 8 | Next Steps | Nao | Prompts para @architect e @ux-expert |
+
+### Correcao de Curso
+
+Quando algo muda no meio do desenvolvimento, Morgan usa `*correct-course` para navegar a mudanca:
+
+1. **Entender o gatilho** -- O que mudou e por que?
+2. **Avaliar impacto em epics** -- Quais epics sao afetados?
+3. **Analisar conflitos** -- PRD, Architecture, Frontend Spec precisam de update?
+4. **Avaliar opcoes** -- Ajustar, rollback ou re-scope?
+5. **Gerar Sprint Change Proposal** -- Documento formal com plano de acao
+
+---
+
+## Aria -- A Visionaria (@architect)
+
+<AgentCard
+  icon="🏛️"
+  name="Aria"
+  id="architect"
+  title="Holistic System Architect"
+  archetype="Visionary"
+  zodiac="Libra"
+  description="Projetista de sistemas completos: microservices, monolith, serverless. Aria faz selecao de stack, design de APIs, arquitetura de seguranca, planejamento de infraestrutura e otimizacao de performance em todas as camadas. Equilibra ideais tecnicos com realidade financeira."
+  commands={["*create-full-stack-architecture", "*create-backend-architecture", "*create-front-end-architecture", "*create-brownfield-architecture", "*analyze-impact", "*assess-complexity", "*document-project", "*research"]}
+  whenToUse="Apos PRD aprovado. Quando precisa de arquitetura tecnica, analise de impacto, avaliacao de complexidade ou documentacao de projeto existente."
+  collaboratesWith={["@pm (recebe PRD)", "@ux-design-expert (recebe front-end spec)", "@data-engineer (delega schema design)", "@devops (delega git push e infra)", "@dev (entrega arquitetura para implementar)"]}
+  restrictions={["NAO faz git push (delega para @devops)", "NAO faz schema design detalhado (delega para @data-engineer)", "NAO implementa codigo"]}
+/>
+
+### Principios de Arquitetura
+
+Aria segue 10 principios que guiam todas as decisoes:
+
+| # | Principio | Na pratica |
+|---|---|---|
+| 1 | Holistic System Thinking | Cada componente e parte de um sistema maior |
+| 2 | User Experience Drives Architecture | Comeca com jornadas do usuario |
+| 3 | Pragmatic Technology Selection | "Boring" onde possivel, "exciting" onde necessario |
+| 4 | Progressive Complexity | Simples no inicio, escalavel depois |
+| 5 | Cross-Stack Performance | Otimizacao em todas as camadas |
+| 6 | Developer Experience | Produtividade do dev e prioridade |
+| 7 | Security at Every Layer | Defesa em profundidade |
+| 8 | Data-Centric Design | Dados guiam a arquitetura |
+| 9 | Cost-Conscious Engineering | Ideais vs. realidade financeira |
+| 10 | Living Architecture | Projetada para mudanca |
+
+### Avaliacao de Complexidade
+
+Aria usa 5 dimensoes para avaliar a complexidade de uma story:
+
+| Dimensao | Score 1 | Score 5 |
+|---|---|---|
+| **Scope** | 1-2 arquivos | 20+ arquivos |
+| **Integration** | Nenhuma integracao externa | Orquestracao complexa |
+| **Infrastructure** | Nenhuma mudanca de infra | Novo servidor necessario |
+| **Knowledge** | Padroes existentes | Dominio desconhecido |
+| **Risk** | Impacto baixo | Impacto critico |
+
+**Score total (5-25):**
+- **SIMPLE** (ate 8): menos de 1 dia
+- **STANDARD** (9-15): 1-3 dias
+- **COMPLEX** (16+): 3+ dias
+
+---
+
+## O Pipeline de Planejamento Completo
+
+<WorkflowVisualizer
+  title="Discovery -> PRD -> Architecture"
+  steps={[
+    { agent: "Atlas", agentIcon: "🔍", title: "Discovery", description: "Pesquisa de mercado, brainstorming, project brief", artifacts: "project-brief.md" },
+    { agent: "Morgan", agentIcon: "📋", title: "Product Requirements", description: "PRD com epics, stories e acceptance criteria", artifacts: "prd.md" },
+    { agent: "Uma", agentIcon: "🎨", title: "UX Specification", description: "Fluxos de usuario, wireframes, design tokens", artifacts: "front-end-spec.md" },
+    { agent: "Aria", agentIcon: "🏛️", title: "Architecture", description: "Arquitetura fullstack baseada no PRD e specs", artifacts: "fullstack-architecture.md" },
+    { agent: "Pax", agentIcon: "🎯", title: "Validation", description: "Master checklist: todos os documentos alinhados?", artifacts: "Aprovacao ou revisao" }
+  ]}
+/>
+
+---
+
+## Teste seus Conhecimentos
+
+<QuizBlock
+  title="Agentes de Planejamento"
+  questions={[
+    {
+      question: "Qual e a ordem correta do pipeline de planejamento?",
+      options: ["PRD -> Research -> Architecture -> Stories", "Research -> Architecture -> PRD -> Stories", "Research -> PRD -> UX Spec -> Architecture -> Validation", "Architecture -> PRD -> Research -> Stories"],
+      correct: 2,
+      explanation: "O pipeline segue: Atlas (Research) -> Morgan (PRD) -> Uma (UX Spec) -> Aria (Architecture) -> Pax (Validation)."
+    },
+    {
+      question: "Quando Morgan usa *correct-course?",
+      options: ["No inicio do projeto", "Quando algo muda no meio do desenvolvimento", "Para criar o primeiro PRD", "Para fazer deploy"],
+      correct: 1,
+      explanation: "*correct-course e usado quando uma mudanca significativa acontece durante o desenvolvimento -- novo requisito, limitacao tecnica ou pivot baseado em feedback."
+    },
+    {
+      question: "Qual e a diferenca entre o que @architect FAZ e DELEGA para database?",
+      options: ["Nao ha diferenca", "@architect escolhe o banco, @data-engineer projeta o schema", "@data-engineer escolhe o banco, @architect projeta o schema", "@architect faz tudo de database"],
+      correct: 1,
+      explanation: "@architect decide QUAL database usar (decisao de sistema). @data-engineer projeta COMO o schema sera modelado (expertise de dados)."
+    }
+  ]}
+/>
+
+---
+
+## Proximo Passo
+
+Na proxima licao, vamos conhecer os **agentes de desenvolvimento**: Dex (Dev), Dara (Data Engineer) e Uma (UX Expert).

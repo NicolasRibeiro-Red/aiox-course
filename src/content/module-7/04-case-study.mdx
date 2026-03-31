@@ -1,0 +1,262 @@
+# Case Study — Claude Code Mastery Squad
+
+Nesta licao, vamos analisar uma squad real de producao: a **Claude Code Mastery Squad**. Ela demonstra como squads podem escalar para dominios complexos com multiplos agentes coordenados em tiers.
+
+---
+
+## Visao Geral
+
+A Claude Code Mastery Squad e especialista em **todas as dimensoes do Claude Code**: hooks, skills, subagentes, MCP, plugins, agent teams, customizacao e integracao com projetos.
+
+```yaml
+squad:
+  name: claude-code-mastery
+  display_name: "Claude Code Mastery Squad"
+  version: "1.0.0"
+  domain: "Claude Code - Full Spectrum Expertise"
+  philosophy: >
+    "Master the tool to master the craft."
+```
+
+### Numeros
+
+| Metrica | Valor |
+|---------|-------|
+| Total de agentes | 8 |
+| Tiers de arquitetura | 3 |
+| Dominio | Claude Code - Espectro Completo |
+| Agente de entrada | claude-mastery-chief |
+
+---
+
+## Arquitetura de Tiers
+
+Diferente de squads simples com agentes "planos", esta squad usa uma **arquitetura em 3 tiers** que separa responsabilidades por nivel:
+
+```
+┌─────────────────────────────────────────────────┐
+│  TIER 0: Diagnosis & Routing                     │
+│  claude-mastery-chief                            │
+│  Triage, routing, coerencia do squad             │
+├─────────────────────────────────────────────────┤
+│  TIER 1: Core Mastery                            │
+│  hooks-architect | mcp-integrator                │
+│  swarm-orchestrator | config-engineer            │
+│  Expertise profunda em features do Claude Code   │
+├─────────────────────────────────────────────────┤
+│  TIER 2: Strategic & Context                     │
+│  skill-craftsman | project-integrator            │
+│  roadmap-sentinel                                │
+│  Expertise cross-cutting e estrategica           │
+└─────────────────────────────────────────────────┘
+```
+
+<Callout type="info" title="Por que Tiers?">
+Tiers evitam que o usuario precise saber qual agente chamar. O chief (Tier 0) analisa o pedido e roteia para o especialista correto. Isso escala muito melhor do que expor 8 agentes diretamente.
+</Callout>
+
+---
+
+## Os Agentes
+
+### Tier 0 — Diagnosis & Routing
+
+| Agente | Foco | Baseado em |
+|--------|------|-----------|
+| **claude-mastery-chief** | Triage, routing, AIOX-core awareness | Original (Orchestrator) |
+
+O chief e o ponto de entrada. Ele recebe qualquer pergunta sobre Claude Code e roteia para o especialista mais adequado.
+
+### Tier 1 — Core Mastery
+
+| Agente | Foco | Baseado em |
+|--------|------|-----------|
+| **hooks-architect** | 17 hook events, automacao, meta-agent patterns | disler (Hooks Mastery) |
+| **mcp-integrator** | MCP servers, tool discovery, agent-as-MCP | Peter Steinberger (@steipete) |
+| **swarm-orchestrator** | Agent Teams, subagentes, multi-session | Kieran Klaassen + Reuven Cohen |
+| **config-engineer** | Settings, permissoes, CLAUDE.md, managed policies | SuperClaude-Org |
+
+Cada agente do Tier 1 domina um dominio especifico do Claude Code. Eles sao os especialistas profundos.
+
+### Tier 2 — Strategic & Context
+
+| Agente | Foco | Baseado em |
+|--------|------|-----------|
+| **skill-craftsman** | Skills, commands, plugins, context engineering | BMAD-CODE-ORG + community |
+| **project-integrator** | Project integration, AIOX-core awareness | Daniel Miessler (PAI) |
+| **roadmap-sentinel** | Roadmap tracking, changelog, feature adoption | Boris Cherny + Official sources |
+
+Agentes do Tier 2 lidam com preocupacoes transversais — coisas que afetam multiplos dominios do Tier 1.
+
+---
+
+## Handoff Matrix
+
+A matriz de handoff define como os agentes colaboram entre si:
+
+```yaml
+handoffs:
+  claude-mastery-chief:
+    routes_to: [todos os outros agentes]
+
+  hooks-architect:
+    collaborates_with: [config-engineer, skill-craftsman]
+    escalates_to: [claude-mastery-chief]
+
+  mcp-integrator:
+    collaborates_with: [hooks-architect, project-integrator]
+    escalates_to: [claude-mastery-chief]
+
+  swarm-orchestrator:
+    collaborates_with: [hooks-architect, config-engineer]
+    escalates_to: [claude-mastery-chief]
+```
+
+### Fluxo Tipico
+
+```
+Usuario pergunta: "Como configuro hooks com MCP?"
+    ↓
+claude-mastery-chief analisa → envolve 2 dominios
+    ↓
+Roteia para hooks-architect (primario)
+    ↓
+hooks-architect colabora com mcp-integrator
+    ↓
+Resposta integrada retorna ao usuario
+```
+
+---
+
+## Cross-Cutting Concerns
+
+A squad define preocupacoes que todos os agentes compartilham:
+
+### AIOX Awareness
+
+Todos os agentes entendem a arquitetura do AIOX-core e acessam os mesmos arquivos de contexto:
+
+```yaml
+cross_cutting:
+  aiox_awareness:
+    context_files:
+      - ".claude/CLAUDE.md"
+      - ".aiox-core/core-config.yaml"
+      - ".aiox-core/data/entity-registry.yaml"
+```
+
+### Update Knowledge
+
+Um comando permite atualizar o conhecimento do squad com as ultimas mudancas:
+
+```yaml
+update_knowledge:
+  command: "*update-knowledge"
+  sources:
+    - "github.com/anthropics/claude-code/CHANGELOG.md"
+    - "code.claude.com/docs/en/overview"
+    - "github.com/anthropics/claude-code/releases"
+```
+
+### Quality Standards
+
+```yaml
+quality_standards:
+  min_score: 7.0
+  smoke_tests: 3
+  voice_dna_required: true
+  thinking_dna_required: true
+```
+
+---
+
+## Licoes Aprendidas
+
+### 1. Tiers > Flat
+
+Uma squad com 8+ agentes precisa de hierarquia. O tier system evita confusao do usuario e melhora o routing.
+
+### 2. Baseado em Especialistas Reais
+
+Cada agente e baseado em um especialista real ou organizacao reconhecida. Isso da profundidade e consistencia ao conhecimento do agente.
+
+### 3. Handoffs Explicitos
+
+Definir explicitamente quem colabora com quem e quem escala para quem evita loops infinitos e respostas genericas.
+
+### 4. Cross-Cutting e Essencial
+
+Sem o `aiox_awareness` compartilhado, cada agente teria uma visao parcial e desconectada do ecossistema.
+
+<Callout type="tip" title="Aplicando no Seu Projeto">
+Use a arquitetura de tiers quando sua squad tiver 5+ agentes. Para squads menores, uma estrutura plana funciona bem.
+</Callout>
+
+---
+
+## Comparativo de Complexidade
+
+<ComparisonTable
+  title="Squad Simples vs Squad de Producao"
+  headers={["Squad Simples", "Claude Code Mastery"]}
+  rows={[
+    ["1-3 agentes", "8 agentes em 3 tiers"],
+    ["Sem hierarquia", "Chief → Specialists → Strategic"],
+    ["Tasks independentes", "Handoff matrix definido"],
+    ["Config minima", "Cross-cutting concerns"],
+    ["squad.yaml basico", "config.yaml com tiers e routing"],
+    ["Ideal para dominios simples", "Ideal para dominios complexos"],
+  ]}
+/>
+
+---
+
+## Como Reproduzir esta Arquitetura
+
+Se voce quer criar uma squad com complexidade similar:
+
+```bash
+@squad-creator
+
+# 1. Design a partir de docs do dominio
+*design-squad --docs ./docs/domain-expertise.md
+
+# 2. Criar com template e depois estender
+*create-squad my-expert-squad --template basic
+
+# 3. Adicionar agentes especializados
+*extend-squad my-expert-squad
+
+# 4. Definir tiers manualmente no config.yaml
+
+# 5. Validar
+*validate-squad my-expert-squad --strict
+```
+
+A chave e comecar simples e ir adicionando complexidade conforme necessario — nao tente replicar 8 agentes em 3 tiers no primeiro dia.
+
+---
+
+<QuizBlock
+  title="Teste seus Conhecimentos"
+  questions={[
+    {
+      question: "Qual e a funcao do Tier 0 na arquitetura da Claude Code Mastery Squad?",
+      options: ["Executar tasks", "Diagnosis e routing de requests", "Gerar relatorios", "Gerenciar configuracoes"],
+      correct: 1,
+      explanation: "O Tier 0 (claude-mastery-chief) faz triage dos pedidos e roteia para o especialista correto, sem que o usuario precise saber qual agente chamar."
+    },
+    {
+      question: "O que sao Cross-Cutting Concerns em uma squad?",
+      options: ["Bugs compartilhados", "Preocupacoes que todos os agentes compartilham", "Tasks que rodam em paralelo", "Testes de integracao"],
+      correct: 1,
+      explanation: "Cross-cutting concerns sao preocupacoes transversais compartilhadas por todos os agentes — como AIOX awareness, quality standards e update knowledge."
+    },
+    {
+      question: "Quando e recomendado usar arquitetura de tiers em uma squad?",
+      options: ["Sempre", "Quando tiver 5+ agentes", "Apenas em squads oficiais", "Quando o dominio for simples"],
+      correct: 1,
+      explanation: "Tiers sao recomendados quando a squad tem 5+ agentes. Para squads menores, uma estrutura plana e suficiente."
+    }
+  ]}
+/>
