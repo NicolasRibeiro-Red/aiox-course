@@ -232,6 +232,158 @@ Exemplo concreto:
 
 ---
 
+## Na Pratica: Artefatos Reais
+
+Ate agora voce viu a teoria dos 5 building blocks. Agora vamos olhar artefatos **reais** extraidos diretamente do repositorio AIOX. Esses sao os arquivos que os agentes leem e executam.
+
+### 1. Task: `create-doc.md` (definicao YAML)
+
+Esta e a task que agentes como @pm e @architect usam para criar documentos a partir de templates. Note os tres modos de execucao (YOLO, Interactive, Pre-Flight) e como a task referencia ferramentas e utils:
+
+```yaml
+---
+# Template selection determined dynamically during task execution
+# User selects from available templates in .aiox-core/product/templates/
+tools:
+  - github-cli        # For file operations
+utils:
+  - template-engine
+  - template-validator
+---
+
+# Create Document from Template (YAML Driven)
+
+## Execution Modes
+
+**Choose your execution mode:**
+
+### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+- Autonomous decision making with logging
+- Minimal user interaction
+- **Best for:** Simple, deterministic tasks
+
+### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+- Explicit decision checkpoints
+- Educational explanations
+- **Best for:** Learning, complex decisions
+
+### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+- Task analysis phase (identify all ambiguities)
+- Zero ambiguity execution
+- **Best for:** Ambiguous requirements, critical work
+
+**Parameter:** `mode` (optional, default: `interactive`)
+```
+
+### 2. Template: `agent-handoff-tmpl.yaml` (completo)
+
+Quando um agente passa o bastao para outro (ex: @dev → @qa), ele preenche este template de handoff. O artefato e compacto (max 500 tokens) e carrega apenas o essencial: story em andamento, decisoes tomadas, arquivos modificados e proxima acao:
+
+```yaml
+# Agent Handoff Artifact Template
+# Purpose: Compact summary of previous agent's work for context-efficient agent switches.
+# Constraint: Filled artifact MUST be < 500 tokens.
+#
+# Usage: On agent switch (@agent command), the outgoing agent populates this template.
+#        The incoming agent receives: own full profile + this artifact (not previous agent's full persona).
+#
+# Reference: OpenAI Swarm handoff pattern
+
+handoff:
+  version: "1.0"
+  timestamp: ""           # ISO 8601 (e.g., 2026-02-23T17:00:00Z)
+  from_agent: ""          # Agent ID of outgoing agent (e.g., dev, qa, sm)
+  to_agent: ""            # Agent ID of incoming agent (e.g., qa, devops)
+
+  # What story/task is being worked on
+  story_context:
+    story_id: ""          # e.g., TOK-4A
+    story_path: ""        # e.g., docs/stories/epics/epic-token-optimization/story-TOK-4A-...md
+    story_status: ""      # e.g., In Progress, Ready for Review
+    current_task: ""      # e.g., Task 3: Integration point & limits
+    branch: ""            # e.g., feat/epic-token-optimization
+
+  # Key decisions made by outgoing agent (max 5)
+  decisions:
+    - ""                  # e.g., "Used CLAUDE.md instructions for compaction (not code module)"
+
+  # Files created or modified by outgoing agent (max 10)
+  files_modified:
+    - ""                  # e.g., ".aiox-core/development/templates/agent-handoff-tmpl.yaml"
+
+  # Active blockers or issues (max 3)
+  blockers:
+    - ""                  # e.g., "NOG-18 not Done — Phase 2 SYNAPSE integration deferred"
+
+  # What the incoming agent should do next (max 2 sentences)
+  next_action: ""         # e.g., "Run QA gate on TOK-4A. Verify handoff preserves story context."
+
+# --- Compaction Limits ---
+# Max artifact size: 500 tokens (~375 words)
+# Max retained summaries: 3 (oldest discarded on 4th switch)
+# Max decisions: 5
+# Max files_modified: 10
+# Max blockers: 3
+```
+
+### 3. Checklist: `story-dod-checklist.md` (Definition of Done)
+
+Este e o checklist que o @dev usa para validar se uma story esta realmente pronta antes de marcar como "Review". Note as instrucoes `[[LLM: ...]]` -- sao diretivas que a LLM interpreta durante a execucao:
+
+```markdown
+# Story Definition of Done (DoD) Checklist
+
+## Instructions for Developer Agent
+
+Before marking a story as 'Review', please go through each item in this checklist.
+Report the status of each item (e.g., [x] Done, [ ] Not Done, [N/A] Not Applicable)
+and provide brief comments if necessary.
+
+[[LLM: INITIALIZATION INSTRUCTIONS - STORY DOD VALIDATION
+
+This checklist is for DEVELOPER AGENTS to self-validate their work before marking
+a story complete.
+
+IMPORTANT: This is a self-assessment. Be honest about what's actually done vs what
+should be done. It's better to identify issues now than have them found in review.
+
+EXECUTION APPROACH:
+
+1. Go through each section systematically
+2. Mark items as [x] Done, [ ] Not Done, or [N/A] Not Applicable
+3. Add brief comments explaining any [ ] or [N/A] items
+4. Be specific about what was actually implemented
+5. Flag any concerns or technical debt created
+
+The goal is quality delivery, not just checking boxes.]]
+
+## Checklist Items
+
+1. **Requirements Met:**
+   - [ ] All functional requirements specified in the story are implemented.
+   - [ ] All acceptance criteria defined in the story are met.
+
+2. **Coding Standards & Project Structure:**
+   - [ ] All new/modified code strictly adheres to Operational Guidelines.
+   - [ ] All new/modified code aligns with Project Structure.
+   - [ ] Adherence to Tech Stack for technologies/versions used.
+   - [ ] Adherence to Api Reference and Data Models.
+   - [ ] Basic security best practices applied for new/modified code.
+   - [ ] No new linter errors or warnings introduced.
+   - [ ] Code is well-commented where necessary.
+
+3. **Testing:**
+   - [ ] All required unit tests are implemented.
+   - [ ] All required integration tests (if applicable) are implemented.
+   - [ ] All tests (unit, integration, E2E if applicable) pass successfully.
+```
+
+<Callout type="info" title="Artefatos vivos">
+Esses nao sao exemplos inventados -- sao arquivos reais do repositorio `.aiox-core/`. Voce pode inspeciona-los, edita-los e personaliza-los para o seu contexto.
+</Callout>
+
+---
+
 ## Teste seus Conhecimentos
 
 <QuizBlock

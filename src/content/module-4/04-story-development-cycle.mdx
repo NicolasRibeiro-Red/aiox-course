@@ -184,6 +184,82 @@ O workflow HALT e solicita intervencao humana quando:
 
 ---
 
+## Na Pratica: Uma Story Real do AIOX
+
+Para ilustrar como uma story se parece na vida real, veja abaixo um trecho da **Story 6.1.4** do proprio framework AIOX — uma story de complexidade alta que unifica o sistema de greetings dos agentes:
+
+```markdown
+# Story 6.1.4: Unified Greeting System Integration (v4 - Expanded)
+
+**Story ID:** 6.1.4
+**Epic:** Epic-6.1 - Agent Identity System
+**Wave:** Wave 1 (Foundation)
+**Status:** Ready to Start
+**Priority:** Critical
+**Owner:** Dev (Dex)
+**Duration:** 2.5 days (20 hours)
+**Investment:** $250.00
+
+---
+
+## Objective
+
+Implement a unified greeting system that integrates all greeting
+components (session context, project status, agent personalization,
+user preferences) into a single, optimized, and maintainable solution.
+This story unifies Stories 6.1.1 through 6.1.6 into a cohesive system.
+
+## Story
+
+**As a** AIOX framework user,
+**I want** agents to use a unified greeting system that integrates
+session context, project status, agent personalization, and user
+preferences,
+**So that** I have a consistent, fast, and contextually relevant
+experience when activating any agent.
+
+## Business Value
+
+- Unifies all previous greeting-related work (Stories 6.1.1-6.1.6)
+- Fixes integration issues preventing components from working together
+- Provides optimal performance (<150ms with timeout protection)
+- Maintains backward compatibility with fallbacks
+- Simplifies architecture by consolidating duplicate scripts
+
+## Task Breakdown
+
+### Already Implemented (But Not Integrated):
+- Story 6.1.1: Agent Persona Definitions (greeting_levels)
+- Story 6.1.2.4: Project Status Context (60s cache)
+- Story 6.1.2.5: Contextual Agent Load Integration
+- Story 6.1.2.6: Framework Configuration System
+- Story 6.1.4 (Original): Greeting Preferences
+- Story 6.1.6: Output Formatter
+
+### New Scope (This Story):
+- Expand agent-config-loader.js to load complete agent definitions
+- Create unified generate-greeting.js wrapper
+- Modify greeting-builder.js to accept pre-loaded context
+- Update all 11 agents to use unified system
+- Implement session state updates after commands
+- Consolidate duplicate scripts
+- Fix integration issues identified in technical review
+```
+
+### O que Observar Nesta Story
+
+| Elemento | O que Faz Bem |
+|----------|---------------|
+| **Formato "As a... I want... So that..."** | Conecta implementacao tecnica ao valor para o usuario |
+| **Escopo expandido documentado** | Mostra o que ja existe vs o que falta — evita retrabalho |
+| **Investment estimado ($250)** | Facilita decisao de prioridade com custo explicito |
+| **Task breakdown granular** | O @dev sabe exatamente quais arquivos tocar e por que |
+| **Business Value explicito** | Justifica por que essa story existe (unifica 6 stories anteriores) |
+
+Esta story e um exemplo de complexidade **real** — ela nao cria algo do zero, mas unifica trabalho anterior que nunca foi integrado. Esse tipo de story "de integracao" e extremamente comum em projetos de verdade e exige um escopo muito bem definido para nao virar bola de neve.
+
+---
+
 <QuizBlock
   title="Teste seus conhecimentos"
   questions={[
@@ -207,3 +283,64 @@ O workflow HALT e solicita intervencao humana quando:
     }
   ]}
 />
+
+---
+
+## Na Pratica: Uma Story Real do AIOX
+
+Este e um trecho de uma story real do repositorio AIOX — a Story 6.1.4 que unificou o sistema de greetings dos agentes. Observe a profundidade: header com metadata, formato "As a... I want... So that...", business value, contexto tecnico e task breakdown.
+
+```markdown
+# Story 6.1.4: Unified Greeting System Integration (v4 - Expanded)
+
+**Story ID:** 6.1.4
+**Epic:** Epic-6.1 - Agent Identity System
+**Wave:** Wave 1 (Foundation)
+**Status:** Ready to Start
+**Priority:** Critical
+**Owner:** Dev (Dex)
+**Duration:** 2.5 days (20 hours)
+**Investment:** $250.00
+
+---
+
+## Objective
+
+Implement a unified greeting system that integrates all greeting
+components (session context, project status, agent personalization,
+user preferences) into a single, optimized, and maintainable solution.
+
+## Story
+
+**As a** AIOX framework user,
+**I want** agents to use a unified greeting system that integrates
+session context, project status, agent personalization, and user
+preferences,
+**So that** I have a consistent, fast, and contextually relevant
+experience when activating any agent.
+
+## Business Value
+- Unifies all previous greeting-related work (Stories 6.1.1-6.1.6)
+- Fixes integration issues preventing components from working together
+- Provides optimal performance (<150ms with timeout protection)
+- Maintains backward compatibility with fallbacks
+
+## Context: Integration of Previous Stories
+
+Story 6.1.1: Agent Persona Definitions — Implemented, but agents don't use it
+Story 6.1.2.4: Project Status Context — Implemented, but agents don't use it
+Story 6.1.2.5: Contextual Agent Load — Implemented, but agents don't use it
+
+Current Problem: Agents use inline logic in STEP 3 instead of the
+developed scripts. Claude Code doesn't have access to conversationHistory,
+session detection always returns "new", commands always show "full" visibility.
+
+Solution: Unified greeting generator called via Node.js:
+  1. Execute: node .aiox-core/scripts/generate-greeting.js {agent-id}
+  2. Capture the complete output
+  3. Display the greeting exactly as returned
+```
+
+<Callout type="info" title="O que isso mostra">
+Uma story real do AIOX tem 1400+ linhas. Inclui objetivo, business value, contexto tecnico completo, analise de problemas atuais, solucao proposta, task breakdown com checkboxes, e acceptance criteria formais. Nao e um ticket de 3 linhas — e uma especificacao executavel.
+</Callout>

@@ -56,6 +56,7 @@ const lessonComponents: Record<
   "qsm-security": () => import("@/content/module-5/03-security-hardening.mdx"),
   "qsm-memory": () => import("@/content/module-5/04-memory-system.mdx"),
   "qsm-performance": () => import("@/content/module-5/05-performance.mdx"),
+  "qsm-failure-cases": () => import("@/content/module-5/06-when-things-fail.mdx"),
 
   // Module 6: IDE Integration
   "ide-claude-code": () => import("@/content/module-6/01-claude-code.mdx"),

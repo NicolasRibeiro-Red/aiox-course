@@ -6,13 +6,17 @@ import { FileTree } from "@/components/content/FileTree";
 import { ComparisonTable } from "@/components/content/ComparisonTable";
 import { WorkflowVisualizer } from "@/components/content/WorkflowVisualizer";
 import { QuizBlock } from "@/components/content/QuizBlock";
+import { InteractionTranscript } from "@/components/content/InteractionTranscript";
+import { AgentDecisionTree } from "@/components/interactive/AgentDecisionTree";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     AgentCard,
+    AgentDecisionTree,
     Callout,
     CommandReference,
     FileTree,
+    InteractionTranscript,
     ComparisonTable,
     WorkflowVisualizer,
     QuizBlock,

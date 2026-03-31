@@ -339,7 +339,7 @@ export const modules: Module[] = [
     description:
       "Quality gates, CodeRabbit, security hardening e o sistema de memoria.",
     icon: "🛡️",
-    lessonCount: 5,
+    lessonCount: 6,
     lessons: [
       {
         id: "qsm-quality-gates",
@@ -388,6 +388,16 @@ export const modules: Module[] = [
         description: "Otimizando velocidade e uso de recursos.",
         sourceDocs: ["docs/framework/performance-tips.md"],
         estimatedMinutes: 8,
+      },
+      {
+        id: "qsm-failure-cases",
+        moduleId: "quality-security-memory",
+        number: 6,
+        title: "Quando da Errado",
+        description:
+          "Failure cases, gate violations, QA rejection loops e course corrections.",
+        sourceDocs: ["docs/aiox-workflows/qa-loop-workflow.md"],
+        estimatedMinutes: 12,
       },
     ],
   },

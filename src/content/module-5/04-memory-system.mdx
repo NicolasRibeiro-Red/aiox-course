@@ -197,6 +197,55 @@ O Tier 3 usa o Context Loader para carregar gotchas relevantes, estado da sessao
 
 ---
 
+## Na Pratica: Context Detection em Codigo
+
+Abaixo esta o trecho real do `greeting-builder.js` -- o script que constroi saudacoes inteligentes para cada agente. Ele mostra como o sistema carrega contexto (sessao, git, workflow, handoff) e combina tudo em menos de 200ms:
+
+```javascript
+/**
+ * Greeting Builder - Context-Aware Agent Greeting System (Core Logic)
+ *
+ * Builds intelligent greetings based on:
+ * - Session type (new/existing/workflow)
+ * - Git configuration status
+ * - Project status (natural language narrative)
+ * - Command visibility metadata
+ * - Previous agent handoff context
+ * - Current story and branch references
+ *
+ * Performance: <200ms total (hard limit with timeout protection)
+ * Fallback: Simple greeting on any error
+ */
+
+const ContextDetector = require('../../core/session/context-detector');
+const GitConfigDetector = require('../../infrastructure/scripts/git-config-detector');
+const WorkflowNavigator = require('./workflow-navigator');
+const GreetingPreferenceManager = require('./greeting-preference-manager');
+const { loadProjectStatus } = require('../../infrastructure/scripts/project-status-loader');
+const { PermissionMode } = require('../../core/permissions');
+const { resolveConfig } = require('../../core/config/config-resolver');
+const { validateUserProfile } = require('../../infrastructure/scripts/validate-user-profile');
+// SessionState integration for cross-terminal workflow continuity
+const { SessionState } = require('../../core/orchestration/session-state');
+// SurfaceChecker integration for proactive suggestions
+const { SurfaceChecker } = require('../../core/orchestration/surface-checker');
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
+
+const GREETING_TIMEOUT = 150; // 150ms hard limit per-section
+const TOTAL_GREETING_TIMEOUT = 200; // 200ms total pipeline budget
+const SECTION_TIMEOUT = 150; // 150ms per section builder
+
+const DEFAULT_USER_PROFILE = 'advanced';
+```
+
+<Callout type="info" title="Imports revelam a arquitetura">
+Os imports deste arquivo sao um mapa da Camada 2 do sistema de memoria. `ContextDetector` identifica o tipo de sessao, `GitConfigDetector` le o estado do repositorio, `WorkflowNavigator` sabe em que fase do workflow o agente esta, e `SessionState` mantem continuidade entre terminais. Tudo isso alimenta o greeting em menos de 200ms.
+</Callout>
+
+---
+
 <QuizBlock
   title="Teste seus conhecimentos"
   questions={[

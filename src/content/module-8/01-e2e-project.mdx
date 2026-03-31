@@ -1,262 +1,485 @@
-# Projeto End-to-End — Do Zero ao Deploy com AIOX
+# Construindo um Task Tracker com AIOX — Walkthrough Completo
 
-Nesta licao, vamos percorrer o **Greenfield Full-Stack Workflow** do AIOX — o fluxo completo para construir uma aplicacao desde o conceito ate o codigo pronto. Este e o workflow principal do framework, com 4 fases e 9 agentes coordenados.
+Nesta licao, voce vai acompanhar a construcao de uma aplicacao **do zero ao deploy** usando o AIOX. Em vez de explicar conceitos abstratos, vamos simular as interacoes reais entre voce e os agentes — exatamente como acontece no terminal.
 
----
+O projeto: um **Task Tracker** — uma aplicacao web para gerenciar tarefas com autenticacao, boards e colaboracao em tempo real. Simples o bastante para caber em um walkthrough, complexo o bastante para exercitar todos os agentes.
 
-## Visao Geral das Fases
-
-O workflow e dividido em 4 fases sequenciais:
-
-| Fase | Nome | Objetivo | Agentes |
-|------|------|----------|---------|
-| **0** | Bootstrap do Ambiente | Configurar infra e repositorio | @devops |
-| **1** | Descoberta e Planejamento | Criar todos os artefatos de projeto | @analyst, @pm, @ux-expert, @architect, @po |
-| **2** | Fragmentacao de Documentos | Dividir docs para desenvolvimento | @po |
-| **3** | Ciclo de Desenvolvimento | Implementar, testar e iterar | @sm, @dev, @qa |
-
-```
-FASE 0 → FASE 1 → FASE 2 → FASE 3
-Bootstrap  Planejamento  Fragmentacao  Desenvolvimento
-(1 agente) (5 agentes)   (1 agente)    (3 agentes)
-```
+<Callout type="info" title="Como Ler Este Walkthrough">
+Cada bloco de terminal abaixo simula uma interacao real com um agente AIOX. As mensagens "voce" sao o que voce digitaria. As respostas dos agentes sao baseadas no comportamento documentado de cada um. Artefatos mostram trechos reais dos documentos gerados.
+</Callout>
 
 ---
 
-## FASE 0: Bootstrap do Ambiente
+## Fase 0: Bootstrap do Ambiente
 
-O primeiro passo e garantir que todas as ferramentas estao instaladas e o repositorio esta criado.
+Antes de qualquer planejamento, precisamos garantir que a maquina esta pronta. O agente `@devops` (Gage) cuida de tudo: detecta o SO, audita CLIs, autentica servicos e cria a estrutura do projeto.
 
-### O que Acontece
-
-```bash
-# Ativar o agente DevOps
-@devops
-
-# Executar o bootstrap
-*environment-bootstrap
-```
-
-O agente @devops (Gage) executa automaticamente:
-
-1. Detecta o sistema operacional
-2. Audita CLIs instaladas (git, gh, node, npm)
-3. Instala ferramentas faltantes interativamente
-4. Autentica servicos (GitHub, Supabase, Railway)
-5. Inicializa repositorio Git
-6. Cria estrutura de pastas do projeto
-7. Gera relatorio do ambiente
-
-### Artefatos Criados
-
-| Arquivo | Descricao |
-|---------|-----------|
-| `.aiox/config.yaml` | Configuracao do projeto AIOX |
-| `.aiox/environment-report.json` | Relatorio completo do ambiente |
-| `.gitignore` | Regras de ignore do Git |
-| `README.md` | Documentacao inicial |
-| `package.json` | Configuracao NPM |
+<InteractionTranscript
+  title="Fase 0 — @devops *environment-bootstrap"
+  messages={[
+    {
+      role: "user",
+      content: "@devops"
+    },
+    {
+      role: "agent",
+      agent: "Gage (@devops)",
+      agentIcon: "⚙️",
+      content: "⚙️ Gage online. Operator mode.\n\nDetectei o projeto: task-tracker (diretorio vazio).\nAmbiente: Windows 11 / bash\n\nDigite *help para ver comandos disponiveis ou informe o que precisa.\n\n-- Gage, automatizando o inevitavel ⚙️"
+    },
+    {
+      role: "user",
+      content: "*environment-bootstrap"
+    },
+    {
+      role: "system",
+      content: "Executando Environment Bootstrap Pipeline"
+    },
+    {
+      role: "agent",
+      agent: "Gage (@devops)",
+      agentIcon: "⚙️",
+      content: "Iniciando bootstrap do ambiente...\n\n📋 STEP 1: Detectando sistema operacional\n   OS: Windows 11 (win32 x64)\n   Shell: bash (Git Bash)\n   Home: C:\\Users\\dev\n\n📋 STEP 2: Auditando CLIs instaladas\n   ✅ git     2.44.0\n   ✅ gh      2.67.0 (autenticado: dev-user)\n   ✅ node    22.12.0\n   ✅ npm     10.9.2\n   ⚠️  supabase CLI nao encontrado\n\n   → Instalando supabase CLI via npm...\n   ✅ supabase 1.225.0 instalado\n\n📋 STEP 3: Autenticando servicos\n   ✅ GitHub: autenticado como dev-user\n   ✅ Supabase: projeto vinculado\n\n📋 STEP 4: Inicializando repositorio\n   ✅ git init\n   ✅ .gitignore criado (node_modules, .env, dist)\n   ✅ Branch main criada\n\n📋 STEP 5: Criando estrutura do projeto\n   ✅ .aiox/config.yaml\n   ✅ docs/\n   ✅ src/\n   ✅ tests/\n   ✅ package.json inicializado\n\n📋 STEP 6: Gerando relatorio do ambiente"
+    },
+    {
+      role: "artifact",
+      label: ".aiox/environment-report.json",
+      content: "{\n  \"timestamp\": \"2026-03-15T10:32:00Z\",\n  \"os\": \"Windows 11 (win32 x64)\",\n  \"shell\": \"bash\",\n  \"tools\": {\n    \"git\": \"2.44.0\",\n    \"gh\": \"2.67.0\",\n    \"node\": \"22.12.0\",\n    \"npm\": \"10.9.2\",\n    \"supabase\": \"1.225.0\"\n  },\n  \"services\": {\n    \"github\": { \"authenticated\": true, \"user\": \"dev-user\" },\n    \"supabase\": { \"authenticated\": true }\n  },\n  \"status\": \"READY\"\n}"
+    },
+    {
+      role: "agent",
+      agent: "Gage (@devops)",
+      agentIcon: "⚙️",
+      content: "✅ Bootstrap completo. Ambiente pronto.\n\nResumo:\n  • 5/5 CLIs operacionais\n  • 2/2 servicos autenticados\n  • Repositorio inicializado com estrutura AIOX\n  • Relatorio salvo em .aiox/environment-report.json\n\nProximo passo: abrir novo chat com @analyst para criar o project brief.\n\n-- Gage, automatizando o inevitavel ⚙️"
+    }
+  ]}
+/>
 
 <Callout type="tip" title="Pulo Inteligente">
-Se o projeto ja tem `.aiox/environment-report.json`, a Fase 0 e pulada automaticamente. Re-execute apenas ao trocar de maquina.
+Se o projeto ja tem `.aiox/environment-report.json`, a Fase 0 e pulada automaticamente. Re-execute apenas ao trocar de maquina ou adicionar novos servicos.
 </Callout>
 
 ---
 
-## FASE 1: Descoberta e Planejamento
+## Fase 1: Discovery — Entendendo o Projeto
 
-Esta e a fase mais rica do workflow. Cinco agentes colaboram para criar toda a documentacao do projeto.
+Agora o `@analyst` (Atlas) entra em cena. Ele conduz uma sessao de discovery estruturada, fazendo perguntas para entender o problema, o publico e os diferenciais. O output e o **Project Brief** — o DNA do projeto.
 
-### Fluxo dos Agentes
+<InteractionTranscript
+  title="Fase 1a — @analyst *create-project-brief"
+  messages={[
+    {
+      role: "user",
+      content: "@analyst"
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "🔍 Atlas online. Decoder mode.\n\nVejo que o ambiente ja esta bootstrapped. Pronto para investigar.\nDigite *help para ver comandos ou me diga o que precisa.\n\n-- Atlas, investigando a verdade 🔎"
+    },
+    {
+      role: "user",
+      content: "*create-project-brief"
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "Iniciando criacao do Project Brief. Vou fazer algumas perguntas para entender o projeto a fundo.\n\n📋 Pergunta 1/6: Qual e o nome do projeto e uma descricao curta (1-2 frases) do que ele faz?"
+    },
+    {
+      role: "user",
+      content: "TaskFlow — um app web para gerenciar tarefas pessoais e em equipe, com boards tipo Kanban, tags e deadlines."
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "Anotado. TaskFlow — gestao de tarefas com Kanban.\n\n📋 Pergunta 2/6: Quem e o publico-alvo principal? (ex: devs solo, equipes pequenas, empresas)"
+    },
+    {
+      role: "user",
+      content: "Freelancers e equipes pequenas de ate 10 pessoas. Gente que acha Jira pesado demais e Trello limitado."
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "Perfeito — nicho claro entre Trello e Jira.\n\n📋 Pergunta 3/6: Quais sao as funcionalidades CORE do MVP? (liste as 3-5 mais importantes)"
+    },
+    {
+      role: "user",
+      content: "1. Auth com email/Google\n2. Boards Kanban com drag-and-drop\n3. Tarefas com titulo, descricao, tags, deadline, assignee\n4. Convite de membros por email\n5. Filtros e busca"
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "5 features core bem definidas.\n\n📋 Pergunta 4/6: Tem preferencia de stack tecnica? (ex: React, Next.js, Supabase, etc.)"
+    },
+    {
+      role: "user",
+      content: "Next.js 15 + Supabase + Tailwind. Quero deploy na Vercel."
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "Stack moderna e pragmatica. Boa escolha.\n\n📋 Pergunta 5/6: Qual o tipo de projeto? (web-app, saas, mvp, prototype, enterprise-app)"
+    },
+    {
+      role: "user",
+      content: "MVP"
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "Entendido — MVP com foco em validacao rapida.\n\n📋 Pergunta 6/6: Algum requisito nao-funcional critico? (ex: performance, acessibilidade, i18n)"
+    },
+    {
+      role: "user",
+      content: "Responsivo mobile-first. Loading inicial < 2s. Dados em real-time quando possivel."
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "Todas as respostas coletadas. Gerando o Project Brief...\n\nAnalisando:\n  • Mercado: task management (competidores: Trello, Asana, Linear, Jira)\n  • Diferencial: simplicidade + real-time + nicho freelancer/equipe pequena\n  • Risco principal: feature creep — manter escopo MVP\n  • Stack validada: Next.js + Supabase e production-ready pra esse caso"
+    },
+    {
+      role: "artifact",
+      label: "docs/project-brief.md (trecho)",
+      content: "# Project Brief: TaskFlow\n\n## Visao Geral\nTaskFlow e uma aplicacao web de gestao de tarefas focada em\nfreelancers e equipes pequenas (ate 10 pessoas). Posiciona-se\nentre a simplicidade do Trello e a robustez do Jira.\n\n## Problema\nEquipes pequenas precisam de uma ferramenta de gestao que seja\nrapida de configurar, visualmente intuitiva e que suporte\ncolaboracao em real-time sem overhead de enterprise.\n\n## Publico-Alvo\n- Freelancers gerenciando multiplos projetos\n- Startups e equipes de 2-10 pessoas\n- Profissionais que migram de Trello por limitacoes\n\n## Features Core (MVP)\n1. Autenticacao (email + OAuth Google)\n2. Boards Kanban com drag-and-drop\n3. Tarefas (titulo, descricao, tags, deadline, assignee)\n4. Convite de membros por email\n5. Filtros e busca global\n\n## Stack Tecnica\n- Frontend: Next.js 15 + React 19 + Tailwind CSS\n- Backend: Supabase (Auth, Database, Realtime)\n- Deploy: Vercel\n- Tipo: MVP\n\n## Requisitos Nao-Funcionais\n- Mobile-first responsive design\n- Loading inicial < 2s (LCP)\n- Real-time updates via Supabase Realtime\n- Acessibilidade basica (WCAG 2.1 AA)"
+    },
+    {
+      role: "agent",
+      agent: "Atlas (@analyst)",
+      agentIcon: "🔍",
+      content: "✅ Project Brief criado: docs/project-brief.md\n\nO documento cobre:\n  • Visao geral e problema\n  • Publico-alvo e personas\n  • 5 features core do MVP\n  • Stack tecnica\n  • Requisitos nao-funcionais\n  • Analise competitiva (Trello vs Asana vs Linear)\n  • Riscos e mitigacoes\n\nProximo passo: @pm para criar o PRD a partir deste brief.\n\n-- Atlas, investigando a verdade 🔎"
+    }
+  ]}
+/>
+
+Repare como o Atlas faz perguntas estruturadas (6 perguntas padrao do template `project-brief-tmpl.yaml`) e gera um documento completo com analise competitiva inclusa. Voce responde, ele sintetiza.
+
+---
+
+## Fase 2: PRD — Definindo o Produto
+
+O `@pm` (Morgan) recebe o Project Brief e o transforma em um **Product Requirements Document** — o documento mais detalhado do planejamento, com epics, features, user stories de alto nivel e metricas de sucesso.
+
+<InteractionTranscript
+  title="Fase 2 — @pm *create-prd"
+  messages={[
+    {
+      role: "user",
+      content: "@pm"
+    },
+    {
+      role: "agent",
+      agent: "Morgan (@pm)",
+      agentIcon: "📋",
+      content: "📋 Morgan online. Strategist mode.\n\nDetectei docs/project-brief.md no projeto. Pronto para transformar\nem estrategia de produto.\n\n-- Morgan, planejando o futuro 📊"
+    },
+    {
+      role: "user",
+      content: "*create-prd"
+    },
+    {
+      role: "agent",
+      agent: "Morgan (@pm)",
+      agentIcon: "📋",
+      content: "Lendo project-brief.md...\n\nEntendido: TaskFlow — MVP de task management para freelancers e equipes pequenas.\n\nVou gerar o PRD completo usando o template prd-tmpl.yaml.\nIsso inclui:\n  • Epics e features detalhadas\n  • User stories de alto nivel\n  • Metricas de sucesso\n  • Plano de releases\n  • Requisitos tecnicos\n\nProcessando..."
+    },
+    {
+      role: "system",
+      content: "Gerando PRD a partir do template prd-tmpl.yaml"
+    },
+    {
+      role: "artifact",
+      label: "docs/prd.md (trecho — Epics)",
+      content: "# Product Requirements Document: TaskFlow\n\n## Epics\n\n### Epic 1: Authentication & User Management\nSistema de autenticacao completo com email/password e OAuth.\n- 1.1 Sign up com email\n- 1.2 Login com email\n- 1.3 OAuth Google\n- 1.4 Password reset flow\n- 1.5 User profile (avatar, nome, email)\n\n### Epic 2: Board Management\nCRUD de boards com visualizacao Kanban.\n- 2.1 Criar/editar/deletar boards\n- 2.2 Colunas customizaveis (drag-and-drop)\n- 2.3 Board settings (nome, cor, descricao)\n- 2.4 Board templates (To Do / In Progress / Done)\n\n### Epic 3: Task Management\nGerenciamento completo de tarefas dentro de boards.\n- 3.1 Criar/editar/deletar tarefas\n- 3.2 Drag-and-drop entre colunas\n- 3.3 Tags com cores\n- 3.4 Deadlines com notificacao\n- 3.5 Assignees (atribuir membros)\n- 3.6 Descricao rica (markdown)\n\n### Epic 4: Team Collaboration\nConvites e colaboracao em real-time.\n- 4.1 Convite por email\n- 4.2 Roles (owner, editor, viewer)\n- 4.3 Real-time sync (Supabase Realtime)\n- 4.4 Activity feed\n\n### Epic 5: Search & Filters\nBusca global e filtros avancados.\n- 5.1 Busca por titulo/descricao\n- 5.2 Filtro por tag\n- 5.3 Filtro por assignee\n- 5.4 Filtro por deadline\n- 5.5 Filtro por status (coluna)"
+    },
+    {
+      role: "artifact",
+      label: "docs/prd.md (trecho — Metricas de Sucesso)",
+      content: "## Metricas de Sucesso (MVP)\n\n| Metrica | Target | Como Medir |\n|---------|--------|------------|\n| Time to first board | < 2 min | Analytics |\n| Task creation rate | 5+ tasks/dia/user | Database |\n| Team adoption | 60% convites aceitos | Supabase |\n| Page load (LCP) | < 2s | Vercel Analytics |\n| Retencao 7 dias | > 30% | Cohort analysis |"
+    },
+    {
+      role: "agent",
+      agent: "Morgan (@pm)",
+      agentIcon: "📋",
+      content: "✅ PRD criado: docs/prd.md\n\nResumo:\n  • 5 epics, 24 features totais\n  • User stories de alto nivel para cada epic\n  • Plano de release em 2 fases (Core → Collaboration)\n  • Metricas de sucesso com targets mensuráveis\n  • Requisitos tecnicos alinhados com o brief\n  • Riscos e dependencias mapeados\n\nProximo passo: @architect para definir a arquitetura fullstack.\n\n-- Morgan, planejando o futuro 📊"
+    }
+  ]}
+/>
+
+O Morgan nao pergunta nada — ele ja tem tudo que precisa no Project Brief. Ele aplica o template `prd-tmpl.yaml` e gera o PRD completo com epics, metricas e plano de releases.
+
+---
+
+## Fase 3: Arquitetura — Decisoes Tecnicas
+
+O `@architect` (Aria) recebe o PRD e projeta toda a arquitetura tecnica: estrutura de pastas, schema do banco, APIs, padroes de codigo e decisoes de infraestrutura.
+
+<InteractionTranscript
+  title="Fase 3 — @architect *create-full-stack-architecture"
+  messages={[
+    {
+      role: "user",
+      content: "@architect"
+    },
+    {
+      role: "agent",
+      agent: "Aria (@architect)",
+      agentIcon: "🏗️",
+      content: "🏗️ Aria online. Visionary mode.\n\nProjeto: TaskFlow\nDocumentos detectados:\n  • docs/project-brief.md ✅\n  • docs/prd.md ✅\n\nPronta para projetar a arquitetura.\n\n-- Aria, visionando o sistema 🏗️"
+    },
+    {
+      role: "user",
+      content: "*create-full-stack-architecture"
+    },
+    {
+      role: "agent",
+      agent: "Aria (@architect)",
+      agentIcon: "🏗️",
+      content: "Analisando PRD e brief...\n\nDecisoes de arquitetura em andamento:\n  • Avaliando: App Router vs Pages Router → App Router (RSC + layouts)\n  • Avaliando: Prisma vs Drizzle vs raw Supabase → Supabase JS Client (menos overhead pro MVP)\n  • Avaliando: Zustand vs Jotai vs Context → Zustand (drag-and-drop state)\n  • Avaliando: dnd-kit vs react-beautiful-dnd → dnd-kit (mantido, performante)\n\nGerando documento de arquitetura fullstack..."
+    },
+    {
+      role: "artifact",
+      label: "docs/fullstack-architecture.md (trecho — Source Tree)",
+      content: "## Source Tree\n\ntask-tracker/\n├── src/\n│   ├── app/\n│   │   ├── (auth)/\n│   │   │   ├── login/page.tsx\n│   │   │   ├── signup/page.tsx\n│   │   │   └── layout.tsx\n│   │   ├── (dashboard)/\n│   │   │   ├── boards/\n│   │   │   │   ├── [boardId]/page.tsx\n│   │   │   │   └── page.tsx\n│   │   │   ├── settings/page.tsx\n│   │   │   └── layout.tsx\n│   │   ├── api/\n│   │   │   ├── boards/route.ts\n│   │   │   ├── tasks/route.ts\n│   │   │   └── invites/route.ts\n│   │   ├── layout.tsx\n│   │   └── page.tsx\n│   ├── components/\n│   │   ├── board/\n│   │   │   ├── BoardView.tsx\n│   │   │   ├── Column.tsx\n│   │   │   ├── TaskCard.tsx\n│   │   │   └── TaskModal.tsx\n│   │   ├── ui/\n│   │   └── layout/\n│   ├── lib/\n│   │   ├── supabase/\n│   │   │   ├── client.ts\n│   │   │   ├── server.ts\n│   │   │   └── middleware.ts\n│   │   ├── store/\n│   │   │   └── board-store.ts\n│   │   └── utils/\n│   ├── types/\n│   └── styles/\n├── supabase/\n│   └── migrations/\n├── tests/\n├── public/\n└── package.json"
+    },
+    {
+      role: "artifact",
+      label: "docs/fullstack-architecture.md (trecho — Database Schema)",
+      content: "## Database Schema (Supabase/PostgreSQL)\n\nprofiles\n  id          uuid PK (references auth.users)\n  full_name   text\n  avatar_url  text\n  created_at  timestamptz\n\nboards\n  id          uuid PK\n  name        text NOT NULL\n  description text\n  color       text DEFAULT '#6366f1'\n  owner_id    uuid FK → profiles.id\n  created_at  timestamptz\n\ncolumns\n  id          uuid PK\n  board_id    uuid FK → boards.id\n  name        text NOT NULL\n  position    integer NOT NULL\n  created_at  timestamptz\n\ntasks\n  id          uuid PK\n  column_id   uuid FK → columns.id\n  title       text NOT NULL\n  description text\n  position    integer NOT NULL\n  deadline    timestamptz\n  assignee_id uuid FK → profiles.id\n  created_at  timestamptz\n\ntags\n  id          uuid PK\n  board_id    uuid FK → boards.id\n  name        text NOT NULL\n  color       text NOT NULL\n\ntask_tags\n  task_id     uuid FK → tasks.id\n  tag_id      uuid FK → tags.id\n  PK (task_id, tag_id)\n\nboard_members\n  board_id    uuid FK → boards.id\n  user_id     uuid FK → profiles.id\n  role        text CHECK (owner, editor, viewer)\n  invited_at  timestamptz\n  PK (board_id, user_id)"
+    },
+    {
+      role: "agent",
+      agent: "Aria (@architect)",
+      agentIcon: "🏗️",
+      content: "✅ Arquitetura criada: docs/fullstack-architecture.md\n\nDecisoes chave documentadas:\n  • Next.js 15 App Router com RSC para performance\n  • Supabase JS Client direto (sem ORM — MVP pragmatico)\n  • Zustand para state management do Kanban\n  • dnd-kit para drag-and-drop\n  • RLS (Row Level Security) em todas as tabelas\n  • Supabase Realtime para sync entre usuarios\n  • Middleware de auth com refresh automatico\n\nO documento cobre:\n  • Source tree completo\n  • Database schema com 7 tabelas\n  • API routes e patterns\n  • Coding standards\n  • Security architecture (RLS policies)\n  • Performance budget\n\nProximo passo: @sm para criar as stories de desenvolvimento.\n\n-- Aria, visionando o sistema 🏗️"
+    }
+  ]}
+/>
+
+A Aria toma decisoes tecnicas pragmaticas — preferindo stack "boring" onde possivel e justificando cada escolha. O documento de arquitetura e o mapa que o `@dev` vai seguir.
+
+---
+
+## Fase 4: Stories — Quebrando em Tarefas
+
+O `@sm` (River) pega os epics do PRD e a arquitetura, e cria **stories** — unidades de trabalho implementaveis com acceptance criteria claros e escopo definido.
+
+<InteractionTranscript
+  title="Fase 4 — @sm *draft"
+  messages={[
+    {
+      role: "user",
+      content: "@sm"
+    },
+    {
+      role: "agent",
+      agent: "River (@sm)",
+      agentIcon: "🌊",
+      content: "🌊 River online. Facilitator mode.\n\nProjeto: TaskFlow\nDocumentos detectados:\n  • docs/project-brief.md ✅\n  • docs/prd.md ✅\n  • docs/fullstack-architecture.md ✅\n\nBacklog vazio — pronto para criar a primeira story.\n\n-- River, facilitando o fluxo 🌊"
+    },
+    {
+      role: "user",
+      content: "*draft"
+    },
+    {
+      role: "agent",
+      agent: "River (@sm)",
+      agentIcon: "🌊",
+      content: "Analisando backlog e dependencias...\n\nEpic 1 (Auth) e a fundacao — nenhuma outra feature funciona sem auth.\nDentro do Epic 1, a story de setup do Supabase + signup e o ponto de partida logico.\n\nCriando: STORY-001 — Epic 1, Story 1\nTitulo: Setup Supabase Auth + Sign Up Flow"
+    },
+    {
+      role: "artifact",
+      label: "docs/stories/1.1.story.md",
+      content: "# Story 1.1: Setup Supabase Auth + Sign Up Flow\n\n**Epic:** Epic 1 - Authentication & User Management\n**Status:** Draft\n**Priority:** Critical\n**Complexity:** M (Medium)\n**Estimated:** 4-6 hours\n\n## Story\nAs a new user,\nI want to create an account with email and password,\nSo that I can access my personal task boards.\n\n## Acceptance Criteria\n\n### AC1: Supabase Project Setup\n- Given the project has no Supabase config\n- When the developer runs the setup\n- Then supabase/ directory exists with initial migration\n- And .env.local has SUPABASE_URL and SUPABASE_ANON_KEY\n- And lib/supabase/client.ts exports createBrowserClient()\n- And lib/supabase/server.ts exports createServerClient()\n\n### AC2: Sign Up Page\n- Given I am on /signup\n- When I enter valid email and password (8+ chars)\n- Then my account is created in Supabase Auth\n- And a profile row is created in profiles table\n- And I am redirected to /boards\n\n### AC3: Validation & Errors\n- Given I am on /signup\n- When I submit with invalid email or short password\n- Then inline error messages are shown\n- And the form is NOT submitted\n\n### AC4: Auth Middleware\n- Given I am not authenticated\n- When I try to access /boards\n- Then I am redirected to /login\n\n## Scope\n**IN:** Supabase setup, signup page, profiles table,\n       auth middleware, basic validation\n**OUT:** Login, OAuth, password reset, profile editing\n\n## Dependencies\n- None (first story)\n\n## Technical Notes\n- Use Supabase SSR package (@supabase/ssr)\n- Middleware in src/middleware.ts\n- Create profiles table via Supabase migration\n- Trigger: auto-create profile on auth.users insert"
+    },
+    {
+      role: "agent",
+      agent: "River (@sm)",
+      agentIcon: "🌊",
+      content: "✅ Story criada: docs/stories/1.1.story.md\n\nResumo:\n  • Titulo: Setup Supabase Auth + Sign Up Flow\n  • 4 acceptance criteria no formato Given/When/Then\n  • Escopo IN/OUT claramente definido\n  • Estimativa: M (4-6 horas)\n  • Zero dependencias (story inicial)\n  • Technical notes para o @dev\n\nA story esta pronta para validacao pelo @po ou implementacao direta.\n\nProximo passo: @dev *develop 1.1 para implementar.\n\n-- River, facilitando o fluxo 🌊"
+    }
+  ]}
+/>
+
+O River analisa o grafo de dependencias e escolhe automaticamente qual story criar primeiro. Cada story tem acceptance criteria testáveis no formato **Given/When/Then** — exatamente o que o `@qa` precisa para validar depois.
+
+---
+
+## Fase 5: Implementacao — Codigo na Pratica
+
+O `@dev` (Dex) recebe a story e implementa. Ele opera no modo **Interactive** por padrao — faz perguntas em pontos de decisao e mostra progresso em checkpoints.
+
+<InteractionTranscript
+  title="Fase 5 — @dev *develop 1.1"
+  messages={[
+    {
+      role: "user",
+      content: "@dev"
+    },
+    {
+      role: "agent",
+      agent: "Dex (@dev)",
+      agentIcon: "💻",
+      content: "💻 Dex online. Builder mode.\n\nProjeto: TaskFlow (Next.js 15 + Supabase)\nStories disponiveis:\n  • 1.1 — Setup Supabase Auth + Sign Up Flow [Draft]\n\n-- Dex, sempre construindo 💻"
+    },
+    {
+      role: "user",
+      content: "*develop 1.1"
+    },
+    {
+      role: "agent",
+      agent: "Dex (@dev)",
+      agentIcon: "💻",
+      content: "Lendo story 1.1...\n\n📋 Story: Setup Supabase Auth + Sign Up Flow\n   Complexidade: M | ACs: 4 | Modo: Interactive\n\n🔧 CHECKPOINT 1/4: Supabase Setup (AC1)\n\nInstalando dependencias...\n  npm install @supabase/supabase-js @supabase/ssr\n\nCriando clients:\n  ✅ src/lib/supabase/client.ts — Browser client\n  ✅ src/lib/supabase/server.ts — Server client\n  ✅ src/middleware.ts — Auth middleware com refresh\n\nCriando migration:\n  ✅ supabase/migrations/001_profiles.sql\n     → Tabela profiles + trigger auto-create on signup\n\n🔧 CHECKPOINT 2/4: Sign Up Page (AC2)\n\n  ✅ src/app/(auth)/layout.tsx — Layout minimalista\n  ✅ src/app/(auth)/signup/page.tsx — Form com email + password\n  ✅ src/app/(auth)/signup/actions.ts — Server Action para signup\n\n  Decisao: usar Server Actions em vez de API route para signup.\n  Justificativa: menos boilerplate, validacao server-side nativa."
+    },
+    {
+      role: "agent",
+      agent: "Dex (@dev)",
+      agentIcon: "💻",
+      content: "🔧 CHECKPOINT 3/4: Validacao (AC3)\n\n  ✅ Validacao client-side com HTML5 constraints\n  ✅ Validacao server-side no Server Action\n  ✅ Mensagens de erro inline:\n     • \"Email invalido\"\n     • \"Senha deve ter no minimo 8 caracteres\"\n     • \"Este email ja esta cadastrado\"\n\n🔧 CHECKPOINT 4/4: Middleware + Redirect (AC4)\n\n  ✅ src/middleware.ts protege rotas /boards/*\n  ✅ Redirect para /login se nao autenticado\n  ✅ Refresh automatico de tokens expirados\n\n📋 Executando CodeRabbit Self-Healing...\n  Scan: 0 CRITICAL, 1 HIGH, 2 MEDIUM\n  HIGH: Missing CSRF protection on signup form\n  → Auto-fix: adicionado token CSRF via Server Action (nativo Next.js)\n  Re-scan: 0 CRITICAL, 0 HIGH, 2 MEDIUM\n  MEDIUM issues documentados como tech debt."
+    },
+    {
+      role: "agent",
+      agent: "Dex (@dev)",
+      agentIcon: "💻",
+      content: "📋 Definition of Done Check:\n  ✅ AC1: Supabase setup completo (clients, migration, .env.local.example)\n  ✅ AC2: Signup funcional com redirect\n  ✅ AC3: Validacao client + server side\n  ✅ AC4: Middleware protegendo rotas\n  ✅ Testes: 6 testes unitarios passando\n  ✅ CodeRabbit: 0 CRITICAL, 0 HIGH\n  ✅ Lint: npm run lint — sem erros\n  ✅ Types: npm run typecheck — sem erros\n\nArquivos criados/modificados:\n  + src/lib/supabase/client.ts\n  + src/lib/supabase/server.ts\n  + src/middleware.ts\n  + src/app/(auth)/layout.tsx\n  + src/app/(auth)/signup/page.tsx\n  + src/app/(auth)/signup/actions.ts\n  + supabase/migrations/001_profiles.sql\n  + tests/auth/signup.test.ts\n  ~ package.json (dependencias)\n  ~ .env.local.example\n\nStory 1.1 status: Draft → In Review\n\nProximo passo: @qa *review 1.1\n\n-- Dex, sempre construindo 💻"
+    }
+  ]}
+/>
+
+O Dex trabalha de forma sistematica: um checkpoint por acceptance criteria, CodeRabbit Self-Healing automatico no final, e um DoD (Definition of Done) check antes de marcar como "In Review". Note que ele tomou uma decisao tecnica (Server Actions vs API route) e justificou inline.
+
+---
+
+## Fase 6: QA — Quality Gate
+
+O `@qa` (Quinn) faz a revisao final. Ele executa 7 checks e emite um veredito: **PASS**, **CONCERNS**, **FAIL** ou **WAIVED**.
+
+<InteractionTranscript
+  title="Fase 6 — @qa *review 1.1"
+  messages={[
+    {
+      role: "user",
+      content: "@qa"
+    },
+    {
+      role: "agent",
+      agent: "Quinn (@qa)",
+      agentIcon: "✅",
+      content: "✅ Quinn online. Guardian mode.\n\nProjeto: TaskFlow\nStories em review:\n  • 1.1 — Setup Supabase Auth + Sign Up Flow [In Review]\n\n-- Quinn, protegendo a qualidade ✅"
+    },
+    {
+      role: "user",
+      content: "*review 1.1"
+    },
+    {
+      role: "agent",
+      agent: "Quinn (@qa)",
+      agentIcon: "✅",
+      content: "Iniciando review da Story 1.1...\n\n📋 CHECK 1/7: Code Review\n  ✅ Padroes seguidos (App Router conventions)\n  ✅ Naming consistente\n  ✅ Sem codigo morto ou comentarios TODO\n  ✅ Server Actions bem tipados\n  Resultado: PASS\n\n📋 CHECK 2/7: Testes Unitarios\n  ✅ 6 testes encontrados em tests/auth/signup.test.ts\n  ✅ Todos passando (6/6)\n  ✅ Cobertura dos 4 ACs\n  ⚠️  Falta teste para email duplicado (edge case)\n  Resultado: PASS (com observacao)\n\n📋 CHECK 3/7: Acceptance Criteria\n  ✅ AC1: Supabase setup — clients, migration, env vars ✓\n  ✅ AC2: Signup flow — form, action, redirect ✓\n  ✅ AC3: Validacao — client + server + mensagens ✓\n  ✅ AC4: Middleware — redirect + token refresh ✓\n  Resultado: PASS"
+    },
+    {
+      role: "agent",
+      agent: "Quinn (@qa)",
+      agentIcon: "✅",
+      content: "📋 CHECK 4/7: Regressoes\n  ✅ Nenhuma funcionalidade anterior afetada (primeira story)\n  Resultado: PASS\n\n📋 CHECK 5/7: Performance\n  ✅ Server Components usados onde possivel\n  ✅ Client Components apenas no form interativo\n  ✅ Sem bundle JavaScript desnecessario\n  Resultado: PASS\n\n📋 CHECK 6/7: Seguranca\n  ✅ CSRF protegido via Server Actions\n  ✅ Passwords nunca expostos em client\n  ✅ RLS policies na tabela profiles\n  ✅ .env.local no .gitignore\n  ⚠️  Rate limiting no signup nao implementado\n  Resultado: PASS (rate limiting → tech debt)\n\n📋 CHECK 7/7: Documentacao\n  ✅ Story file atualizado com arquivos criados\n  ✅ .env.local.example com variaveis necessarias\n  Resultado: PASS"
+    },
+    {
+      role: "artifact",
+      label: "qa/gates/1.1-supabase-auth-signup.yml",
+      content: "story: 1.1\ntitle: Setup Supabase Auth + Sign Up Flow\nreviewer: Quinn (@qa)\ndate: 2026-03-15\n\ndecision: PASS\n\nchecks:\n  code_review: PASS\n  unit_tests: PASS\n  acceptance_criteria: PASS\n  regressions: PASS\n  performance: PASS\n  security: PASS\n  documentation: PASS\n\nobservations:\n  - Adicionar teste para email duplicado (edge case)\n  - Rate limiting no signup (tech debt backlog)\n\nnext_action: Story approved → Done"
+    },
+    {
+      role: "agent",
+      agent: "Quinn (@qa)",
+      agentIcon: "✅",
+      content: "╔══════════════════════════════════════════╗\n║  QUALITY GATE: PASS                      ║\n║  Story 1.1 — APROVADA                    ║\n║  7/7 checks passaram                     ║\n║  2 observacoes (nao-bloqueantes)         ║\n╚══════════════════════════════════════════╝\n\nObservacoes registradas:\n  1. Teste de email duplicado (edge case) → proximo sprint\n  2. Rate limiting no signup → tech debt backlog\n\nGate file salvo: qa/gates/1.1-supabase-auth-signup.yml\n\nStory 1.1 status: In Review → Done ✅\n\n-- Quinn, protegendo a qualidade ✅"
+    }
+  ]}
+/>
+
+O Quinn nao aprova no automatico — ele identifica 2 observacoes reais (teste de edge case e rate limiting) mas classifica como nao-bloqueantes. Se houvesse um issue HIGH ou CRITICAL, a decisao seria **FAIL** e a story voltaria para o `@dev` com um fix request detalhado.
+
+---
+
+## Fase 7: Deploy — Publicando
+
+Com a story aprovada, o `@devops` (Gage) retorna para executar o **Pre-Push Quality Gate** e enviar o codigo para o repositorio remoto.
+
+<InteractionTranscript
+  title="Fase 7 — @devops *push"
+  messages={[
+    {
+      role: "user",
+      content: "@devops"
+    },
+    {
+      role: "agent",
+      agent: "Gage (@devops)",
+      agentIcon: "⚙️",
+      content: "⚙️ Gage online. Operator mode.\n\nProjeto: TaskFlow\nBranch: main\nStories Done: 1.1 ✅\n\n-- Gage, automatizando o inevitavel ⚙️"
+    },
+    {
+      role: "user",
+      content: "*push"
+    },
+    {
+      role: "agent",
+      agent: "Gage (@devops)",
+      agentIcon: "⚙️",
+      content: "Executando Pre-Push Quality Gate...\n\n📋 STEP 1: Verificando status do repositorio\n  Branch: main\n  Commits ahead: 3\n  Arquivos modificados: 10 (staged)\n  Nenhum arquivo sensivel detectado (.env, keys)\n\n📋 STEP 2: Executando validacoes\n  ✅ npm run lint — sem erros\n  ✅ npm run typecheck — sem erros\n  ✅ npm test — 6/6 passando\n  ✅ QA gate: 1.1 PASS\n  ✅ Nenhum secret detectado (scan completo)\n\n📋 STEP 3: Push para remote\n  ✅ git push origin main\n  Remote: https://github.com/dev-user/taskflow\n\n📋 STEP 4: Verificando CI/CD\n  ✅ Vercel deploy triggered automaticamente\n  Preview URL: https://taskflow-abc123.vercel.app"
+    },
+    {
+      role: "agent",
+      agent: "Gage (@devops)",
+      agentIcon: "⚙️",
+      content: "✅ Push completo.\n\nResumo:\n  • 3 commits pushed para main\n  • Todas as validacoes passaram\n  • Deploy automatico na Vercel em andamento\n  • Preview disponivel em ~60s\n\nO ciclo da Story 1.1 esta completo:\n  @analyst → @pm → @architect → @sm → @dev → @qa → @devops\n  Brief → PRD → Arquitetura → Story → Codigo → QA → Deploy\n\nProxima story: @sm *draft para Story 1.2 (Login flow).\n\n-- Gage, automatizando o inevitavel ⚙️"
+    }
+  ]}
+/>
+
+---
+
+## O Ciclo Completo
+
+Vamos recapitular o que aconteceu — 7 fases, 7 agentes, um fluxo continuo:
 
 ```
-@analyst (Atlas) → project-brief.md
-    ↓
-@pm (Morgan) → prd.md
-    ↓
-@ux-expert (Uma) → front-end-spec.md
-    ↓
-@architect (Aria) → fullstack-architecture.md
-    ↓
-@po (Pax) → Validacao de todos os artefatos
+Fase 0: @devops    → Bootstrap do ambiente        → environment-report.json
+Fase 1: @analyst   → Discovery e project brief    → project-brief.md
+Fase 2: @pm        → Product Requirements         → prd.md
+Fase 3: @architect → Arquitetura tecnica          → fullstack-architecture.md
+Fase 4: @sm        → Stories do backlog           → 1.1.story.md
+Fase 5: @dev       → Implementacao + testes       → codigo + testes
+Fase 6: @qa        → Quality gate                 → gate-file.yml (PASS)
+Fase 7: @devops    → Push + deploy                → live na Vercel
 ```
 
-### Passo a Passo
+### Pontos-chave do Walkthrough
 
-**1. @analyst cria o Project Brief**
+1. **Cada agente tem um papel claro** — nenhum faz o trabalho do outro. Atlas pesquisa, Morgan planeja, Aria projeta, River fragmenta, Dex constroi, Quinn valida, Gage opera.
 
-```bash
-@analyst
-# Usa template: project-brief-tmpl.yaml
-# Opcoes: brainstorming, pesquisa de mercado
-# Output: docs/project-brief.md
-```
+2. **Documentos fluem entre agentes** — o output de um e o input do proximo. Project Brief → PRD → Arquitetura → Stories → Codigo → Gate.
 
-**2. @pm cria o PRD**
+3. **Quality gates sao reais** — o Quinn nao e rubber stamp. Ele identifica issues, classifica severidade e decide se bloqueia ou documenta.
 
-```bash
-@pm
-# Usa template: prd-tmpl.yaml
-# Input: project-brief.md
-# Output: docs/prd.md
-```
+4. **Decisoes tecnicas sao documentadas** — quando o Dex escolhe Server Actions em vez de API routes, ele registra o porquê. Quando a Aria escolhe Zustand, ela justifica.
 
-**3. @ux-expert cria o Front-End Spec**
+5. **O ciclo repete** — apos a Story 1.1, o `@sm` cria a 1.2, o `@dev` implementa, o `@qa` revisa. O loop continua ate o MVP estar completo.
 
-```bash
-@ux-expert
-# Usa template: front-end-spec-tmpl.yaml
-# Input: prd.md
-# Output: docs/front-end-spec.md
-# Opcional: gerar prompt para v0/Lovable
-```
-
-**4. @architect cria a Arquitetura**
-
-```bash
-@architect
-# Usa template: fullstack-architecture-tmpl.yaml
-# Input: prd.md + front-end-spec.md
-# Output: docs/fullstack-architecture.md
-```
-
-**5. @po valida todos os artefatos**
-
-```bash
-@po
-# Executa: po-master-checklist.md
-# Input: todos os documentos anteriores
-# Resultado: aprovacao ou retorno para correcoes
-```
-
-<Callout type="info" title="Feedback Loop">
-Se o @architect sugerir mudancas no PRD, o @pm atualiza o documento. Se o @po encontrar problemas, o agente responsavel corrige. O ciclo continua ate tudo estar validado.
+<Callout type="tip" title="Na Pratica">
+Em um projeto real, cada fase pode acontecer em sessoes separadas. O AIOX persiste tudo em arquivos — voce pode fechar o terminal, abrir outro dia, e continuar de onde parou. Sempre commite ao final de cada fase.
 </Callout>
-
----
-
-## FASE 2: Fragmentacao de Documentos
-
-Documentos grandes sao fragmentados em partes consumiveis pelo desenvolvimento.
-
-```bash
-@po
-*shard-doc docs/prd.md
-```
-
-### O que e Criado
-
-| Arquivo | Descricao |
-|---------|-----------|
-| `docs/prd/index.md` | Indice com links para secoes |
-| `docs/prd/*.md` | Secoes individuais do PRD |
-| `docs/architecture/source-tree.md` | Estrutura de diretorios |
-| `docs/architecture/tech-stack.md` | Stack tecnologica |
-| `docs/architecture/coding-standards.md` | Padroes de codigo |
-
-A fragmentacao pode ser automatica (usando `md-tree explode`) ou manual (dividindo por secoes `##`).
-
----
-
-## FASE 3: Ciclo de Desenvolvimento
-
-Aqui o codigo e efetivamente escrito, testado e revisado em um ciclo iterativo de stories.
-
-### O Loop de Stories
-
-```
-@sm cria story → @dev implementa → @qa revisa → repete
-```
-
-**1. @sm (River) cria a story**
-
-```bash
-@sm
-*draft
-# Input: docs fragmentados
-# Output: {epic}.{story}.story.md
-```
-
-**2. @dev (Dex) implementa**
-
-```bash
-@dev
-*develop
-# Input: story aprovada
-# Output: codigo + testes
-```
-
-**3. @qa (Quinn) revisa**
-
-```bash
-@qa
-*review
-# Input: implementacao
-# Output: feedback (aprovar ou solicitar mudancas)
-```
-
-**4. @dev corrige (se necessario)**
-
-```bash
-@dev
-*apply-qa-fixes
-# Input: feedback do QA
-# Output: correcoes aplicadas
-```
-
-### Status de uma Story
-
-| Status | Descricao | Proximo Passo |
-|--------|-----------|---------------|
-| Draft | Criada pelo SM | Revisao ou desenvolvimento |
-| Approved | Revisada e aprovada | Desenvolvimento |
-| In Progress | Em desenvolvimento | Revisao de QA |
-| Review | Aguardando revisao | QA ou correcoes |
-| Done | Completa e aprovada | Proxima story |
-
----
-
-## Os 9 Agentes do Workflow
-
-| Agente | ID | Arquetipo | Responsabilidade |
-|--------|------|-----------|-----------------|
-| Gage | @devops | Operator | Bootstrap, Git, CI/CD |
-| Atlas | @analyst | Decoder | Pesquisa, project brief |
-| Morgan | @pm | Strategist | PRD, estrategia |
-| Uma | @ux-expert | Empathizer | Specs de frontend, UX |
-| Aria | @architect | Visionary | Arquitetura tecnica |
-| Pax | @po | Balancer | Validacao, backlog |
-| River | @sm | Facilitator | Stories, sprint planning |
-| Dex | @dev | Builder | Implementacao de codigo |
-| Quinn | @qa | Guardian | Revisao de qualidade |
-
----
-
-## Handoffs entre Fases
-
-A transicao entre fases usa prompts de handoff padronizados:
-
-| De | Para | O que Fazer |
-|----|------|-------------|
-| Fase 0 → 1 | Bootstrap → Planejamento | "Novo chat com @analyst para project brief" |
-| Fase 1 → 2 | Planejamento → Fragmentacao | "@po → *shard-doc docs/prd.md" |
-| Fase 2 → 3 | Fragmentacao → Desenvolvimento | "@sm → *draft para primeira story" |
-
-<Callout type="warning" title="Salve entre Fases">
-Sempre salve e commite os artefatos ao final de cada fase. Cada fase pode ser executada em uma sessao diferente.
-</Callout>
-
----
-
-## Tipos de Projeto Suportados
-
-| Tipo | Descricao |
-|------|-----------|
-| `web-app` | Aplicacoes web modernas |
-| `saas` | Software as a Service |
-| `enterprise-app` | Aplicacoes corporativas |
-| `prototype` | Prototipos e POCs |
-| `mvp` | Minimum Viable Products |
 
 ---
 
@@ -264,22 +487,27 @@ Sempre salve e commite os artefatos ao final de cada fase. Cada fase pode ser ex
   title="Teste seus Conhecimentos"
   questions={[
     {
-      question: "Quantas fases tem o Greenfield Full-Stack Workflow?",
-      options: ["2", "3", "4", "5"],
-      correct: 2,
-      explanation: "O workflow tem 4 fases: Fase 0 (Bootstrap), Fase 1 (Descoberta e Planejamento), Fase 2 (Fragmentacao) e Fase 3 (Desenvolvimento)."
-    },
-    {
-      question: "Qual agente valida todos os artefatos de planejamento antes do desenvolvimento?",
-      options: ["@qa (Quinn)", "@pm (Morgan)", "@po (Pax)", "@architect (Aria)"],
-      correct: 2,
-      explanation: "O @po (Pax) executa o po-master-checklist para validar todos os artefatos da Fase 1 antes de seguir para fragmentacao e desenvolvimento."
-    },
-    {
-      question: "O que o comando *shard-doc faz?",
-      options: ["Deleta documentos", "Fragmenta documentos grandes em partes menores", "Comprime documentos", "Envia para o repositorio"],
+      question: "Qual agente e responsavel por criar o Project Brief a partir das respostas do usuario?",
+      options: ["@pm (Morgan)", "@analyst (Atlas)", "@po (Pax)", "@architect (Aria)"],
       correct: 1,
-      explanation: "O *shard-doc fragmenta documentos grandes (como o PRD) em secoes individuais, criando um indice e arquivos separados prontos para consumo pelo desenvolvimento."
+      explanation: "O @analyst (Atlas) conduz a sessao de discovery com perguntas estruturadas e gera o project-brief.md — o DNA do projeto que alimenta todas as fases seguintes."
+    },
+    {
+      question: "O que acontece quando o @qa emite um veredito FAIL?",
+      options: ["O projeto e cancelado", "A story volta para o @dev com um fix request detalhado", "O @qa corrige os problemas sozinho", "A story e aprovada com ressalvas"],
+      correct: 1,
+      explanation: "Quando o quality gate resulta em FAIL (issues HIGH/CRITICAL), a story retorna para o @dev que executa *apply-qa-fixes para corrigir os problemas identificados. O ciclo @dev → @qa repete ate PASS."
+    },
+    {
+      question: "Qual e a ordem correta dos documentos gerados no fluxo?",
+      options: [
+        "PRD → Brief → Arquitetura → Stories",
+        "Brief → Arquitetura → PRD → Stories",
+        "Brief → PRD → Arquitetura → Stories",
+        "Arquitetura → Brief → PRD → Stories"
+      ],
+      correct: 2,
+      explanation: "A sequencia e: Project Brief (analyst) → PRD (pm) → Arquitetura (architect) → Stories (sm). Cada documento depende do anterior para manter consistencia."
     }
   ]}
 />
