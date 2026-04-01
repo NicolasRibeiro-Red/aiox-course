@@ -26,12 +26,6 @@ export default function GlossaryLayout({
               Curso
             </Link>
             <Link
-              href="/playground"
-              className="hover:text-foreground transition-colors"
-            >
-              Playground
-            </Link>
-            <Link
               href="/glossary"
               className="text-foreground"
             >

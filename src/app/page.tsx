@@ -43,12 +43,6 @@ export default function Home() {
               Curso
             </Link>
             <Link
-              href="/playground"
-              className="hover:text-foreground transition-colors"
-            >
-              Playground
-            </Link>
-            <Link
               href="/glossary"
               className="hover:text-foreground transition-colors"
             >
