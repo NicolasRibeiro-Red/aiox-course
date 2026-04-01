@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 import type { ComponentType } from "react";
 import { useProgressStore } from "@/stores/progress";
+import { AudioPlayer } from "@/components/content/AudioPlayer";
+import { audioMap } from "@/lib/audio-map";
 
 interface LessonContentProps {
   lessonId: string;
   moduleId: string;
+  lessonTitle?: string;
 }
 
 // Dynamic MDX imports mapped by lesson ID
@@ -79,7 +82,7 @@ const lessonComponents: Record<
   "adv-roadmap": () => import("@/content/module-8/05-roadmap-community.mdx"),
 };
 
-export function LessonContent({ lessonId, moduleId }: LessonContentProps) {
+export function LessonContent({ lessonId, moduleId, lessonTitle }: LessonContentProps) {
   const [Content, setContent] = useState<ComponentType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -107,8 +110,15 @@ export function LessonContent({ lessonId, moduleId }: LessonContentProps) {
     }
   }, [lessonId]);
 
+  const audioSrc = audioMap[lessonId];
+
   return (
     <div>
+      {/* Audio Player */}
+      {audioSrc && (
+        <AudioPlayer src={audioSrc} lessonTitle={lessonTitle || lessonId} />
+      )}
+
       {/* Lesson Body */}
       <article className="max-w-none [&>h1]:text-4xl [&>h1]:font-bold [&>h1]:tracking-tight [&>h1]:text-foreground [&>h1]:mb-6 [&>h1]:mt-10 [&>h1:first-child]:mt-0 [&>h2]:text-2xl [&>h2]:font-semibold [&>h2]:tracking-tight [&>h2]:text-foreground [&>h2]:mb-4 [&>h2]:mt-8 [&>h2]:border-b [&>h2]:border-border [&>h2]:pb-2 [&>h3]:text-xl [&>h3]:font-semibold [&>h3]:text-foreground [&>h3]:mb-3 [&>h3]:mt-6 [&>p]:text-base [&>p]:leading-7 [&>p]:text-zinc-300 [&>p]:mb-4 [&>ul]:list-disc [&>ul]:list-inside [&>ul]:space-y-2 [&>ul]:text-zinc-300 [&>ul]:mb-4 [&>ul]:ml-4 [&>ol]:list-decimal [&>ol]:list-inside [&>ol]:space-y-2 [&>ol]:text-zinc-300 [&>ol]:mb-4 [&>ol]:ml-4 [&>pre]:bg-card [&>pre]:border [&>pre]:border-border [&>pre]:rounded-lg [&>pre]:p-4 [&>pre]:overflow-x-auto [&>pre]:mb-4 [&>pre]:text-sm [&>blockquote]:border-l-4 [&>blockquote]:border-accent [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-muted [&>blockquote]:mb-4 [&>hr]:border-border [&>hr]:my-8 [&>table]:w-full [&>table]:text-sm [&>table]:border-collapse [&>table]:mb-4 [&_th]:border [&_th]:border-border [&_th]:bg-card [&_th]:px-4 [&_th]:py-2 [&_th]:text-left [&_th]:font-semibold [&_td]:border [&_td]:border-border [&_td]:px-4 [&_td]:py-2 [&_td]:text-zinc-300 [&_code]:bg-card [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_code]:text-accent [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-4 [&_strong]:font-semibold [&_strong]:text-foreground">
         {loading ? (

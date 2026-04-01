@@ -77,7 +77,7 @@ export default async function LessonPage({
       </div>
 
       {/* Lesson Content */}
-      <LessonContent lessonId={lesson.id} moduleId={mod.id} />
+      <LessonContent lessonId={lesson.id} moduleId={mod.id} lessonTitle={lesson.title} />
 
       {/* Navigation */}
       <div className="flex items-center justify-between mt-16 pt-8 border-t border-border">
