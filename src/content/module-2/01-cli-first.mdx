@@ -1,39 +1,39 @@
 # CLI First: A Hierarquia de Prioridades
 
-No mundo do desenvolvimento de software, a escolha da interface primaria nao e uma questao estetica -- e uma **decisao arquitetural** que define a velocidade, portabilidade e reprodutibilidade de todo o sistema. O AIOX adota uma hierarquia clara e intencional: **CLI > Observability > UI**.
+No mundo do desenvolvimento de software, a escolha da interface primária não é uma questão estética -- é uma **decisão arquitetural** que define a velocidade, portabilidade e reprodutibilidade de todo o sistema. O AIOX adota uma hierarquia clara e intencional: **CLI > Observability > UI**.
 
-Nesta licao, voce vai entender por que essa decisao foi tomada e como ela impacta cada aspecto do framework.
+Nesta lição, você vai entender por que essa decisão foi tomada e como ela impacta cada aspecto do framework.
 
 ---
 
 ## A Hierarquia: CLI > Observability > UI
 
-O AIOX opera com uma piramide de prioridades que inverte a logica da maioria dos frameworks modernos:
+O AIOX opera com uma pirâmide de prioridades que inverte a lógica da maioria dos frameworks modernos:
 
-| Nivel | Prioridade | O que significa |
+| Nível | Prioridade | O que significa |
 |---|---|---|
-| **CLI** | Maxima | O terminal e a interface primaria. Tudo que o framework faz, faz via linha de comando |
-| **Observability** | Media | Metricas, logs e dashboards existem para monitorar, nao para operar |
-| **UI** | Minima | Interfaces graficas sao opcionais e complementares, nunca obrigatorias |
+| **CLI** | Máxima | O terminal é a interface primária. Tudo que o framework faz, faz via linha de comando |
+| **Observability** | Média | Métricas, logs e dashboards existem para monitorar, não para operar |
+| **UI** | Mínima | Interfaces gráficas são opcionais e complementares, nunca obrigatórias |
 
-<Callout type="info" title="Por que nao UI First?">
-Frameworks que dependem de UI criam fricao. Cada clique e tempo perdido. No AIOX, voce ativa um agente com um comando e comeca a trabalhar em segundos. O terminal e a interface mais rapida que existe para quem sabe o que quer fazer.
+<Callout type="info" title="Por que não UI First?">
+Frameworks que dependem de UI criam fricção. Cada clique é tempo perdido. No AIOX, você ativa um agente com um comando e começa a trabalhar em segundos. O terminal é a interface mais rápida que existe para quem sabe o que quer fazer.
 </Callout>
 
 ### Zero Overhead Visual
 
-O AIOX nao precisa de:
+O AIOX não precisa de:
 - Servidores web rodando localmente
-- Dashboards obrigatorios consumindo recursos
-- Interfaces graficas pesadas para funcionar
+- Dashboards obrigatórios consumindo recursos
+- Interfaces gráficas pesadas para funcionar
 
-O framework inteiro roda em **linguagem natural** -- Markdown e YAML. Sem binarios, sem compilacao, sem build steps obrigatorios para comecar a trabalhar.
+O framework inteiro roda em **linguagem natural** -- Markdown e YAML. Sem binários, sem compilação, sem build steps obrigatórios para começar a trabalhar.
 
 ---
 
-## O Diretorio `aiox-core` como Cerebro
+## O Diretório `aiox-core` como Cérebro
 
-Toda a arquitetura do AIOX gira em torno do diretorio `aiox-core`, que funciona como o cerebro central do sistema:
+Toda a arquitetura do AIOX gira em torno do diretório `aiox-core`, que funciona como o cérebro central do sistema:
 
 ```
 aiox-core/
@@ -46,7 +46,7 @@ aiox-core/
 └── data/           # Knowledge base e preferencias tecnicas
 ```
 
-Essa estrutura e **lida diretamente por LLMs** -- nao precisa de parser, compilador ou runtime especial. Qualquer agente de IA que consiga ler texto pode consumir esses arquivos.
+Essa estrutura é **lida diretamente por LLMs** -- não precisa de parser, compilador ou runtime especial. Qualquer agente de IA que consiga ler texto pode consumir esses arquivos.
 
 ---
 
@@ -58,10 +58,10 @@ O AIOX foi projetado para funcionar em dois ambientes distintos:
   title="IDE Local vs. Web UI"
   headers={["Aspecto", "IDE Local (Claude Code, Cursor)", "Web UI (Gemini, ChatGPT)"]}
   rows={[
-    ["Como ativa", "Referencia direta ao arquivo .md do agente", "Upload de bundle .txt pre-compilado"],
-    ["Contexto", "Filesystem completo do projeto disponivel", "Apenas o conteudo do bundle"],
-    ["Ideal para", "Desenvolvimento (codigo, testes, debug)", "Planejamento (PRD, arquitetura, research)"],
-    ["Performance", "Contexto lean -- so o necessario", "Bundle completo com todas as dependencias"],
+    ["Como ativa", "Referência direta ao arquivo .md do agente", "Upload de bundle .txt pré-compilado"],
+    ["Contexto", "Filesystem completo do projeto disponível", "Apenas o conteúdo do bundle"],
+    ["Ideal para", "Desenvolvimento (código, testes, debug)", "Planejamento (PRD, arquitetura, research)"],
+    ["Performance", "Contexto lean -- só o necessário", "Bundle completo com todas as dependências"],
     ["Ferramentas", "CLI nativo, git, npm", "Interface de chat do provedor"]
   ]}
 />
@@ -70,9 +70,9 @@ O AIOX foi projetado para funcionar em dois ambientes distintos:
 
 Para ambientes web, o AIOX inclui um builder (`tools/builders/web-builder.js`) que:
 
-1. **Resolve dependencias** -- le a definicao do agente ou time
+1. **Resolve dependências** -- lê a definição do agente ou time
 2. **Encontra recursos** -- localiza tasks, templates e checklists referenciados
-3. **Concatena tudo** -- gera um unico arquivo `.txt` com separadores claros
+3. **Concatena tudo** -- gera um único arquivo `.txt` com separadores claros
 4. **Salva em `dist/`** -- pronto para upload em qualquer interface web
 
 ```bash
@@ -87,33 +87,33 @@ node tools/builders/web-builder.js --agent dev
 
 ## Agentes Dev vs. Agentes de Planejamento
 
-Uma consequencia direta do CLI First e a **separacao clara** entre dois tipos de agentes:
+Uma consequência direta do CLI First é a **separação clara** entre dois tipos de agentes:
 
-| Caracteristica | Agentes Dev (IDE) | Agentes de Planejamento (Web) |
+| Característica | Agentes Dev (IDE) | Agentes de Planejamento (Web) |
 |---|---|---|
-| **Contexto** | Minimo -- foco no codigo | Rico -- documentacao completa |
-| **Dependencias** | Poucas tasks, lean | Multiplas tasks e templates |
-| **Objetivo** | Gerar codigo de qualidade | Criar PRDs, arquitetura, stories |
+| **Contexto** | Mínimo -- foco no código | Rico -- documentação completa |
+| **Dependências** | Poucas tasks, lean | Múltiplas tasks e templates |
+| **Objetivo** | Gerar código de qualidade | Criar PRDs, arquitetura, stories |
 | **Exemplos** | `@dev`, `@qa`, `@devops` | `@pm`, `@architect`, `@analyst` |
 
 <Callout type="tip" title="Regra de ouro do contexto">
-Cada byte de contexto enviado a um agente Dev e um byte a menos disponivel para entender seu codigo. Por isso agentes Dev sao lean: carregam apenas o essencial para implementar a story atual.
+Cada byte de contexto enviado a um agente Dev é um byte a menos disponível para entender seu código. Por isso agentes Dev são lean: carregam apenas o essencial para implementar a story atual.
 </Callout>
 
-### Contexto e Precioso
+### Contexto é Precioso
 
-Em IDEs com agentes de IA, o tamanho da janela de contexto e limitado. O AIOX respeita isso:
+Em IDEs com agentes de IA, o tamanho da janela de contexto é limitado. O AIOX respeita isso:
 
-- **Agentes Dev** carregam apenas a story atual, checklists de DoD e preferencias tecnicas
-- **Agentes de planejamento** podem carregar PRDs completos, research, templates com elicitacao
+- **Agentes Dev** carregam apenas a story atual, checklists de DoD e preferências técnicas
+- **Agentes de planejamento** podem carregar PRDs completos, research, templates com elicitação
 
-Essa economia de contexto e o que permite ao `@dev` ter espaco suficiente para "ver" o codigo do projeto inteiro em vez de desperdicar tokens com documentacao de planejamento.
+Essa economia de contexto é o que permite ao `@dev` ter espaço suficiente para "ver" o código do projeto inteiro em vez de desperdiçar tokens com documentação de planejamento.
 
 ---
 
-## Integravel com Qualquer IDE
+## Integrável com Qualquer IDE
 
-O CLI First significa que o AIOX nao e preso a nenhum fornecedor:
+O CLI First significa que o AIOX não é preso a nenhum fornecedor:
 
 | IDE / Plataforma | Como usar |
 |---|---|
@@ -121,20 +121,20 @@ O CLI First significa que o AIOX nao e preso a nenhum fornecedor:
 | **Cursor** | Regras em `.cursor/rules/` |
 | **Gemini CLI** | Agentes via `.codex/skills/` |
 | **VS Code + Copilot** | Bundles `.txt` como contexto |
-| **ChatGPT / Web** | Upload de bundles pre-compilados |
+| **ChatGPT / Web** | Upload de bundles pré-compilados |
 
-O framework se adapta ao ambiente -- nao o contrario.
+O framework se adapta ao ambiente -- não o contrário.
 
 ---
 
 ## Reprodutibilidade
 
-Comandos no terminal sao:
+Comandos no terminal são:
 
-- **Deterministicos** -- o mesmo comando produz o mesmo resultado
-- **Documentaveis** -- `*create-prd` e mais claro que "clique no botao azul, depois no menu..."
-- **Automatizaveis** -- workflows inteiros podem ser scriptados
-- **Versionaveis** -- toda a configuracao vive em arquivos de texto no repositorio
+- **Determinísticos** -- o mesmo comando produz o mesmo resultado
+- **Documentáveis** -- `*create-prd` é mais claro que "clique no botão azul, depois no menu..."
+- **Automatizáveis** -- workflows inteiros podem ser scriptados
+- **Versionáveis** -- toda a configuração vive em arquivos de texto no repositório
 
 ```bash
 # Ativar agente e executar task -- reprodutivel, documentavel, automatizavel
@@ -150,28 +150,28 @@ Comandos no terminal sao:
   title="CLI First"
   questions={[
     {
-      question: "Qual e a hierarquia de prioridades do AIOX?",
+      question: "Qual é a hierarquia de prioridades do AIOX?",
       options: ["UI > CLI > Observability", "CLI > Observability > UI", "Observability > CLI > UI", "UI > Observability > CLI"],
       correct: 1,
-      explanation: "O AIOX segue CLI > Observability > UI. O terminal e a interface primaria, observabilidade e para monitoramento, e UI e opcional."
+      explanation: "O AIOX segue CLI > Observability > UI. O terminal é a interface primária, observabilidade é para monitoramento, e UI é opcional."
     },
     {
-      question: "Por que agentes Dev sao 'lean' (leves)?",
-      options: ["Porque sao menos importantes", "Para economizar contexto e deixar espaco para o codigo do projeto", "Porque nao usam templates", "Para rodar mais rapido no terminal"],
+      question: "Por que agentes Dev são 'lean' (leves)?",
+      options: ["Porque são menos importantes", "Para economizar contexto e deixar espaço para o código do projeto", "Porque não usam templates", "Para rodar mais rápido no terminal"],
       correct: 1,
-      explanation: "Agentes Dev carregam dependencias minimas para maximizar o espaco de contexto disponivel para o codigo do projeto. Cada byte de contexto importa."
+      explanation: "Agentes Dev carregam dependências mínimas para maximizar o espaço de contexto disponível para o código do projeto. Cada byte de contexto importa."
     },
     {
       question: "Como o AIOX funciona em interfaces web (ChatGPT, Gemini)?",
-      options: ["Nao funciona -- e so CLI", "Via bundles .txt pre-compilados pelo web-builder", "Via API REST", "Via extensao de browser"],
+      options: ["Não funciona -- é só CLI", "Via bundles .txt pré-compilados pelo web-builder", "Via API REST", "Via extensão de browser"],
       correct: 1,
-      explanation: "O web-builder concatena agentes e suas dependencias em um unico arquivo .txt que pode ser uploadado em qualquer interface web."
+      explanation: "O web-builder concatena agentes e suas dependências em um único arquivo .txt que pode ser uploadado em qualquer interface web."
     }
   ]}
 />
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Agora que voce entende a filosofia CLI First, vamos explorar as **duas inovacoes centrais** do AIOX: Agentic Planning e Engineering-Contextualized Development.
+Agora que você entende a filosofia CLI First, vamos explorar as **duas inovações centrais** do AIOX: Agentic Planning e Engineering-Contextualized Development.

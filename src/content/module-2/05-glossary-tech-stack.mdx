@@ -1,22 +1,22 @@
-# Glossario e Tech Stack
+# Glossário e Tech Stack
 
-Para usar o AIOX com fluencia, voce precisa dominar sua terminologia oficial e entender o stack tecnologico que sustenta o framework. Nesta licao, consolidamos os termos-chave e exploramos cada camada da stack.
+Para usar o AIOX com fluência, você precisa dominar sua terminologia oficial e entender o stack tecnológico que sustenta o framework. Nesta lição, consolidamos os termos-chave e exploramos cada camada da stack.
 
 ---
 
-## Glossario Oficial AIOX 4.x
+## Glossário Oficial AIOX 4.x
 
 ### Termos Oficiais
 
-| Termo | Definicao | Quando Usar |
+| Termo | Definição | Quando Usar |
 |---|---|---|
-| **Squad** | Grupo de agentes AI especializados para um dominio/workstream | Descrevendo bundles de dominio e conjuntos reutilizaveis de agentes |
-| **Flow-State** | Estado de progressao de workflow determinado em runtime | Referindo-se a orquestracao baseada em estado |
-| **Confidence Gate** | Gate de decisao baseado em score/threshold de confianca | Discutindo decisoes de merge/block baseadas em confidence score |
+| **Squad** | Grupo de agentes AI especializados para um domínio/workstream | Descrevendo bundles de domínio e conjuntos reutilizáveis de agentes |
+| **Flow-State** | Estado de progressão de workflow determinado em runtime | Referindo-se à orquestração baseada em estado |
+| **Confidence Gate** | Gate de decisão baseado em score/threshold de confiança | Discutindo decisões de merge/block baseadas em confidence score |
 | **Execution Profile** | Perfil de autonomia baseado em risco (`safe`, `balanced`, `aggressive`) | Controlando autonomia de agentes por contexto/risco |
 
 <Callout type="warning" title="Termos depreciados">
-Os seguintes termos foram depreciados e nao devem ser usados em documentacao nova:
+Os seguintes termos foram depreciados e não devem ser usados em documentação nova:
 - **expansion pack** → Use **squad**
 - **permission mode** → Use **execution profile**
 - **workflow state** → Use **flow-state**
@@ -24,31 +24,31 @@ Os seguintes termos foram depreciados e nao devem ser usados em documentacao nov
 
 ### Termos Fundamentais do Framework
 
-| Termo | Definicao |
+| Termo | Definição |
 |---|---|
-| **Agent** | Persona AI com expertise especifica, definida em Markdown + YAML |
-| **Task** | Instrucao executavel passo-a-passo que agentes seguem |
-| **Template** | Estrutura YAML para geracao de documentos com elicitacao |
-| **Workflow** | Sequencia prescrita de steps e interacoes multi-agente |
-| **Checklist** | Lista de validacao que funciona como quality gate |
-| **Agent Team** | Colecao pre-configurada de agentes para um proposito especifico |
-| **Elicitation** | Processo interativo de refinamento de conteudo com o usuario |
-| **Story** | Unidade atomica de trabalho com acceptance criteria e tasks |
-| **Quality Gate** | Ponto de validacao obrigatorio entre fases do workflow |
-| **Greenfield** | Projeto completamente novo, sem codigo existente |
+| **Agent** | Persona AI com expertise específica, definida em Markdown + YAML |
+| **Task** | Instrução executável passo-a-passo que agentes seguem |
+| **Template** | Estrutura YAML para geração de documentos com elicitação |
+| **Workflow** | Sequência prescrita de steps e interações multi-agente |
+| **Checklist** | Lista de validação que funciona como quality gate |
+| **Agent Team** | Coleção pré-configurada de agentes para um propósito específico |
+| **Elicitation** | Processo interativo de refinamento de conteúdo com o usuário |
+| **Story** | Unidade atômica de trabalho com acceptance criteria e tasks |
+| **Quality Gate** | Ponto de validação obrigatório entre fases do workflow |
+| **Greenfield** | Projeto completamente novo, sem código existente |
 | **Brownfield** | Projeto existente que recebe melhorias ou refactoring |
-| **Document Sharding** | Fragmentacao de documentos grandes em partes consomiveis |
+| **Document Sharding** | Fragmentação de documentos grandes em partes consumíveis |
 | **Knowledge Base (KB)** | Base de conhecimento do framework em `aiox-kb.md` |
-| **Technical Preferences** | Perfil de preferencias tecnicas que influencia recomendacoes |
+| **Technical Preferences** | Perfil de preferências técnicas que influencia recomendações |
 
 ### Semantic Lint Policy
 
-O AIOX aplica **linting semantico** automatizado via `scripts/semantic-lint.js`:
+O AIOX aplica **linting semântico** automatizado via `scripts/semantic-lint.js`:
 
-- Termos depreciados em nivel **error** bloqueiam commits e CI
-- Termos em nivel **warning** sao reportados para migracao gradual
+- Termos depreciados em nível **error** bloqueiam commits e CI
+- Termos em nível **warning** são reportados para migração gradual
 
-Isso garante consistencia terminologica em toda a documentacao e codigo.
+Isso garante consistência terminológica em toda a documentação e código.
 
 ---
 
@@ -56,21 +56,21 @@ Isso garante consistencia terminologica em toda a documentacao e codigo.
 
 ### Filosofia do Stack
 
-A escolha tecnologica do AIOX segue dois principios:
+A escolha tecnológica do AIOX segue dois princípios:
 
-1. **Boring technology onde possivel** -- dependencias provadas e estaveis
-2. **Exciting technology onde necessario** -- apenas quando performance ou DX justificam
+1. **Boring technology onde possível** -- dependências provadas e estáveis
+2. **Exciting technology onde necessário** -- apenas quando performance ou DX justificam
 
 <ComparisonTable
   title="Boring vs. Exciting Technology"
-  headers={["Aspecto", "Boring (AIOX prefere)", "Exciting (AIOX usa quando necessario)"]}
+  headers={["Aspecto", "Boring (AIOX prefere)", "Exciting (AIOX usa quando necessário)"]}
   rows={[
     ["Runtime", "Node.js 18+ LTS", "--"],
     ["Linguagem", "JavaScript ES2022 (CommonJS)", "TypeScript (planejado Q2 2026)"],
     ["Parsing YAML", "yaml / js-yaml", "--"],
     ["CLI UX", "commander, chalk", "@clack/prompts (wizard mode)"],
     ["Testes", "Jest", "--"],
-    ["Seguranca", "isolated-vm (sandboxing)", "--"]
+    ["Segurança", "isolated-vm (sandboxing)", "--"]
   ]}
 />
 
@@ -86,116 +86,116 @@ Module System: CommonJS (ESM migration planejada)
 - Native `fetch()` API -- sem necessidade de axios
 - ES2022 support completo (top-level await, class fields)
 - Cross-platform (Windows, macOS, Linux)
-- Active LTS com patches de seguranca
+- Active LTS com patches de segurança
 
 ---
 
-### Dependencias Principais
+### Dependências Principais
 
 #### CLI e UX Interativo
 
-| Pacote | Versao | Funcao |
+| Pacote | Versão | Função |
 |---|---|---|
 | `commander` | ^14.0.1 | Framework de CLI (parsing de argumentos, subcomandos) |
 | `@clack/prompts` | ^0.11.0 | Prompts modernos com UX rica (wizards, spinners) |
-| `chalk` | ^4.1.2 | Coloracao de texto no terminal |
+| `chalk` | ^4.1.2 | Coloração de texto no terminal |
 | `picocolors` | ^1.1.1 | Alternativa leve ao chalk (14x menor) |
-| `ora` | ^5.4.1 | Spinners animados para operacoes async |
+| `ora` | ^5.4.1 | Spinners animados para operações async |
 | `inquirer` | ^8.2.6 | Prompts interativos (lists, checkboxes, inputs) |
 
 #### Processamento de Dados
 
-| Pacote | Versao | Funcao |
+| Pacote | Versão | Função |
 |---|---|---|
-| `yaml` | ^2.8.1 | Parse e serializacao YAML (principal) |
+| `yaml` | ^2.8.1 | Parse e serialização YAML (principal) |
 | `js-yaml` | ^4.1.0 | Parse YAML alternativo (legacy) |
 | `@kayvan/markdown-tree-parser` | ^1.5.0 | Parse Markdown em AST |
 
 #### Filesystem e Processos
 
-| Pacote | Versao | Funcao |
+| Pacote | Versão | Função |
 |---|---|---|
-| `fs-extra` | ^11.3.2 | Operacoes de filesystem com promises |
+| `fs-extra` | ^11.3.2 | Operações de filesystem com promises |
 | `glob` | ^11.0.3 | Pattern matching de arquivos |
-| `execa` | ^9.6.0 | Execucao cross-platform de processos |
+| `execa` | ^9.6.0 | Execução cross-platform de processos |
 
-#### Seguranca e Validacao
+#### Segurança e Validação
 
-| Pacote | Versao | Funcao |
+| Pacote | Versão | Função |
 |---|---|---|
-| `isolated-vm` | ^5.0.4 | Sandboxing V8 para execucao segura |
-| `validator` | ^13.15.15 | Validacao de strings (URLs, emails) |
-| `semver` | ^7.7.2 | Comparacao de versoes semanticas |
+| `isolated-vm` | ^5.0.4 | Sandboxing V8 para execução segura |
+| `validator` | ^13.15.15 | Validação de strings (URLs, emails) |
+| `semver` | ^7.7.2 | Comparação de versões semânticas |
 
 ---
 
 ### Ferramentas de Desenvolvimento
 
-| Ferramenta | Versao | Funcao |
+| Ferramenta | Versão | Função |
 |---|---|---|
 | **ESLint** | ^9.38.0 | Linting de JavaScript/TypeScript |
-| **Prettier** | ^3.5.3 | Formatacao de codigo |
-| **Jest** | ^30.2.0 | Framework de testes (80% coverage minimo) |
+| **Prettier** | ^3.5.3 | Formatação de código |
+| **Jest** | ^30.2.0 | Framework de testes (80% coverage mínimo) |
 | **Husky** | ^9.1.7 | Git hooks (pre-commit, pre-push) |
 | **lint-staged** | ^16.1.1 | Linting apenas em arquivos staged |
-| **semantic-release** | ^25.0.2 | Versionamento e releases automaticos |
+| **semantic-release** | ^25.0.2 | Versionamento e releases automáticos |
 
 ---
 
-### Integracoes Externas
+### Integrações Externas
 
 #### Servidores MCP (Model Context Protocol)
 
-| MCP Server | Funcao |
+| MCP Server | Função |
 |---|---|
 | `clickup-direct` | Gerenciamento de tasks (ClickUp) |
-| `context7` | Lookup de documentacao de bibliotecas |
-| `exa-direct` | Busca web avancada |
-| `desktop-commander` | Operacoes de arquivo via Docker |
+| `context7` | Lookup de documentação de bibliotecas |
+| `exa-direct` | Busca web avançada |
+| `desktop-commander` | Operações de arquivo via Docker |
 | `docker-mcp` | Gerenciamento de containers Docker |
-| `ide` | Integracao VS Code/Cursor |
+| `ide` | Integração VS Code/Cursor |
 
 #### CLI Tools Externos
 
-| Tool | Versao | Funcao |
+| Tool | Versão | Função |
 |---|---|---|
 | `gh` (GitHub CLI) | 2.x+ | Gerenciamento de repos e PRs |
-| `railway` | 3.x+ | Deploy de aplicacoes |
+| `railway` | 3.x+ | Deploy de aplicações |
 | `supabase` | 1.x+ | Database e migrations |
-| `git` | 2.30+ | Controle de versao |
+| `git` | 2.30+ | Controle de versão |
 
 ---
 
 ### Performance
 
-| Metrica | Valor |
+| Métrica | Valor |
 |---|---|
 | Cold start | ~200ms |
 | Warm start | ~50ms |
-| Memoria baseline | 30MB (Node.js + AIOX core) |
-| Memoria por agente | +10MB |
-| Pico tipico | ~100MB (workflow completo) |
+| Memória baseline | 30MB (Node.js + AIOX core) |
+| Memória por agente | +10MB |
+| Pico típico | ~100MB (workflow completo) |
 | Bundle total | ~5MB (minificado) |
 
 ---
 
 ### Matriz de Compatibilidade
 
-| Componente | Versao | Status |
+| Componente | Versão | Status |
 |---|---|---|
-| Node.js | 18.0.0+ | Obrigatorio |
-| npm | 9.0.0+ | Obrigatorio |
-| Git | 2.30+ | Obrigatorio |
+| Node.js | 18.0.0+ | Obrigatório |
+| npm | 9.0.0+ | Obrigatório |
+| Git | 2.30+ | Obrigatório |
 | TypeScript | 5.9.3 | Recomendado (tipos) |
-| ESLint | 9.38.0 | Obrigatorio |
-| Jest | 30.2.0 | Obrigatorio |
+| ESLint | 9.38.0 | Obrigatório |
+| Jest | 30.2.0 | Obrigatório |
 | GitHub CLI | 2.x+ | Opcional |
 | Railway CLI | 3.x+ | Opcional |
 | Supabase CLI | 1.x+ | Opcional |
 
 ---
 
-## Variaveis de Ambiente
+## Variáveis de Ambiente
 
 ```bash
 # AIOX Configuration
@@ -214,8 +214,8 @@ RAILWAY_TOKEN=xxx                 # Railway deploy
 SUPABASE_ACCESS_TOKEN=xxx         # Supabase CLI
 ```
 
-<Callout type="danger" title="Seguranca">
-NUNCA comite variaveis de ambiente com tokens ou API keys. Use `.env` (gitignored) e verifique seu `.gitignore` antes de cada push.
+<Callout type="danger" title="Segurança">
+NUNCA comite variáveis de ambiente com tokens ou API keys. Use `.env` (gitignored) e verifique seu `.gitignore` antes de cada push.
 </Callout>
 
 ---
@@ -223,31 +223,31 @@ NUNCA comite variaveis de ambiente com tokens ou API keys. Use `.env` (gitignore
 ## Teste seus Conhecimentos
 
 <QuizBlock
-  title="Glossario e Tech Stack"
+  title="Glossário e Tech Stack"
   questions={[
     {
       question: "Qual termo substituiu 'expansion pack' no AIOX 4.x?",
       options: ["Plugin", "Squad", "Module", "Extension"],
       correct: 1,
-      explanation: "O termo oficial e 'squad' -- um grupo de agentes especializados para um dominio. 'Expansion pack' e depreciado."
+      explanation: "O termo oficial é 'squad' -- um grupo de agentes especializados para um domínio. 'Expansion pack' é depreciado."
     },
     {
-      question: "Qual e a filosofia de escolha tecnologica do AIOX?",
-      options: ["Sempre usar a tecnologia mais nova", "Boring technology onde possivel, exciting onde necessario", "So usar ferramentas open source", "Priorizar performance acima de tudo"],
+      question: "Qual é a filosofia de escolha tecnológica do AIOX?",
+      options: ["Sempre usar a tecnologia mais nova", "Boring technology onde possível, exciting onde necessário", "Só usar ferramentas open source", "Priorizar performance acima de tudo"],
       correct: 1,
-      explanation: "O AIOX prefere tecnologia provada e estavel (boring) para a maioria dos casos, usando tecnologia nova (exciting) apenas quando performance ou DX justificam."
+      explanation: "O AIOX prefere tecnologia provada e estável (boring) para a maioria dos casos, usando tecnologia nova (exciting) apenas quando performance ou DX justificam."
     },
     {
       question: "O que o semantic-lint faz no AIOX?",
-      options: ["Formata codigo automaticamente", "Bloqueia commits que usam termos depreciados", "Gera documentacao", "Valida schemas YAML"],
+      options: ["Formata código automaticamente", "Bloqueia commits que usam termos depreciados", "Gera documentação", "Valida schemas YAML"],
       correct: 1,
-      explanation: "O semantic-lint verifica a terminologia usada em documentacao e codigo, bloqueando commits que usam termos depreciados (como 'expansion pack' em vez de 'squad')."
+      explanation: "O semantic-lint verifica a terminologia usada em documentação e código, bloqueando commits que usam termos depreciados (como 'expansion pack' em vez de 'squad')."
     }
   ]}
 />
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Com a arquitetura e terminologia dominadas, voce esta pronto para o **Modulo 3: Sistema de Agentes** -- onde vai conhecer cada agente individualmente, seus comandos e como trabalham juntos.
+Com a arquitetura e terminologia dominadas, você está pronto para o **Módulo 3: Sistema de Agentes** -- onde vai conhecer cada agente individualmente, seus comandos e como trabalham juntos.

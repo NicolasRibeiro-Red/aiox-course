@@ -1,22 +1,22 @@
 # AIOX em IDEs Visuais — Cursor, Copilot e AntiGravity
 
-Nem todo desenvolvedor prefere o terminal. O AIOX tambem funciona em IDEs visuais como **Cursor**, **GitHub Copilot** e **AntiGravity**, embora com um nivel de automacao mais limitado. Nesta licao, vamos entender como configurar e usar o AIOX nessas plataformas.
+Nem todo desenvolvedor prefere o terminal. O AIOX também funciona em IDEs visuais como **Cursor**, **GitHub Copilot** e **AntiGravity**, embora com um nível de automação mais limitado. Nesta lição, vamos entender como configurar e usar o AIOX nessas plataformas.
 
 ---
 
 ## Cursor
 
-O Cursor e uma das IDEs de IA mais populares do mercado. Baseado no VS Code, ele oferece composer, chat modes e @codebase como features nativas.
+O Cursor é uma das IDEs de IA mais populares do mercado. Baseado no VS Code, ele oferece composer, chat modes e @codebase como features nativas.
 
 ### Status no AIOX
 
-| Aspecto | Nivel |
+| Aspecto | Nível |
 |---------|-------|
 | Status Geral | Limitado |
-| Ativacao de Agentes | `@agent` + regras sincronizadas |
-| Auto-Checks | Nao disponivel |
+| Ativação de Agentes | `@agent` + regras sincronizadas |
+| Auto-Checks | Não disponível |
 | Session Tracking | Manual ou parcial |
-| MCP Support | Via configuracao |
+| MCP Support | Via configuração |
 
 ### Setup
 
@@ -35,7 +35,7 @@ special_features:
   - Long-running agent workflows (research preview)
 ```
 
-### Instalacao
+### Instalação
 
 ```bash
 # Sincronizar regras AIOX para o Cursor
@@ -47,7 +47,7 @@ ls -la .cursor/rules/
 
 ### Ativando Agentes
 
-No Cursor, agentes sao ativados com @mention no chat:
+No Cursor, agentes são ativados com @mention no chat:
 
 ```
 @dev implemente o login com OAuth
@@ -70,23 +70,23 @@ Crie o arquivo `.cursor/mcp.json`:
 ```
 
 <Callout type="warning" title="Sem Auto-Checks">
-O Cursor nao oferece auto-checks pre/pos acao. Voce precisa executar validadores manualmente: `npm run validate:parity`
+O Cursor não oferece auto-checks pré/pós ação. Você precisa executar validadores manualmente: `npm run validate:parity`
 </Callout>
 
 ### O que Funciona Bem
 
-- **Composer**: Edicao multi-arquivo poderosa
+- **Composer**: Edição multi-arquivo poderosa
 - **@codebase**: Contexto completo do projeto para o agente
-- **Chat modes**: Diferentes modos de interacao
+- **Chat modes**: Diferentes modos de interação
 - **Subagentes**: Suporte emergente a cloud handoff
 
-### Limitacoes e Workarounds
+### Limitações e Workarounds
 
-| Limitacao | Workaround |
+| Limitação | Workaround |
 |-----------|------------|
 | Sem auto-checks | Execute `npm run validate:parity` manualmente |
 | Sem audit trail | Use output dos validadores como registro |
-| Sem session tracking | Registre manualmente o inicio/fim de sessoes |
+| Sem session tracking | Registre manualmente o início/fim de sessões |
 | Sem hooks | Siga as regras sincronizadas em `.cursor/rules/` |
 
 ---
@@ -97,11 +97,11 @@ O GitHub Copilot se integra diretamente ao VS Code e oferece acesso ao ecossiste
 
 ### Status no AIOX
 
-| Aspecto | Nivel |
+| Aspecto | Nível |
 |---------|-------|
 | Status Geral | Limitado |
-| Ativacao de Agentes | Chat modes + repo instructions |
-| Auto-Checks | Nao disponivel |
+| Ativação de Agentes | Chat modes + repo instructions |
+| Auto-Checks | Não disponível |
 | Session Tracking | Manual |
 | MCP Support | Via VS Code MCP config |
 
@@ -120,7 +120,7 @@ special_features:
   - Works with repo instructions and VS Code MCP config
 ```
 
-### Instalacao
+### Instalação
 
 ```bash
 # Habilitar Copilot no repositorio
@@ -134,28 +134,28 @@ npm run sync:ide
 cat .github/copilot-instructions.md
 ```
 
-### Vantagens Unicas
+### Vantagens Únicas
 
-O Copilot se destaca por sua integracao nativa com GitHub:
+O Copilot se destaca por sua integração nativa com GitHub:
 
-- **PR Assistance**: Sugestoes inteligentes para pull requests
-- **Code Review**: Revisao automatizada de codigo
-- **Issues**: Contexto de issues do repositorio
-- **Repo Instructions**: Instrucoes persistentes no repositorio
+- **PR Assistance**: Sugestões inteligentes para pull requests
+- **Code Review**: Revisão automatizada de código
+- **Issues**: Contexto de issues do repositório
+- **Repo Instructions**: Instruções persistentes no repositório
 
 ---
 
 ## AntiGravity
 
-O AntiGravity e a IDE de IA com integracao Google Cloud e Firebase nativa.
+O AntiGravity é a IDE de IA com integração Google Cloud e Firebase nativa.
 
 ### Status no AIOX
 
-| Aspecto | Nivel |
+| Aspecto | Nível |
 |---------|-------|
 | Status Geral | Limitado |
-| Ativacao de Agentes | Workflow-driven |
-| Auto-Checks | Nao disponivel |
+| Ativação de Agentes | Workflow-driven |
+| Auto-Checks | Não disponível |
 | MCP Support | Nativo (Google) |
 
 ### Setup
@@ -173,15 +173,15 @@ special_features:
   - Native Firebase tools
 ```
 
-Os agentes AIOX sao sincronizados como workflows no AntiGravity, seguindo o formato cursor-style de regras.
+Os agentes AIOX são sincronizados como workflows no AntiGravity, seguindo o formato cursor-style de regras.
 
 ---
 
-## Compensando Limitacoes
+## Compensando Limitações
 
-Todas as tres IDEs visuais compartilham a ausencia de auto-checks. Aqui esta o fluxo recomendado para compensar:
+Todas as três IDEs visuais compartilham a ausência de auto-checks. Aqui está o fluxo recomendado para compensar:
 
-### Fluxo Manual de Validacao
+### Fluxo Manual de Validação
 
 ```bash
 # 1. Antes de comecar uma task
@@ -197,10 +197,10 @@ npm test
 ```
 
 <Callout type="tip" title="Dica de Produtividade">
-Crie um script `validate-all.sh` que execute todos os validadores de uma vez. Isso reduz a friccao de rodar manualmente cada comando.
+Crie um script `validate-all.sh` que execute todos os validadores de uma vez. Isso reduz a fricção de rodar manualmente cada comando.
 </Callout>
 
-### Script de Validacao Sugerido
+### Script de Validação Sugerido
 
 ```bash
 #!/bin/bash
@@ -216,7 +216,7 @@ echo "=== Validacao completa ==="
 
 ---
 
-## Guia de Decisao para IDEs Visuais
+## Guia de Decisão para IDEs Visuais
 
 ```
 Quer IDE visual?
@@ -229,11 +229,11 @@ Quer IDE visual?
   title="Cursor vs Copilot vs AntiGravity"
   headers={["Aspecto", "Resultado"]}
   rows={[
-    ["Ativacao de agentes", "Cursor: @agent | Copilot: chat modes | AntiGravity: workflows"],
+    ["Ativação de agentes", "Cursor: @agent | Copilot: chat modes | AntiGravity: workflows"],
     ["MCP", "Cursor: config JSON | Copilot: VS Code MCP | AntiGravity: nativo Google"],
-    ["Melhor para", "Cursor: edicao multi-arquivo | Copilot: PRs/review | AntiGravity: Google Cloud"],
-    ["Auto-Checks", "Nenhuma das tres — requer validacao manual"],
-    ["Curva de aprendizado AIOX", "Cursor: media | Copilot: media | AntiGravity: alta"],
+    ["Melhor para", "Cursor: edição multi-arquivo | Copilot: PRs/review | AntiGravity: Google Cloud"],
+    ["Auto-Checks", "Nenhuma das três — requer validação manual"],
+    ["Curva de aprendizado AIOX", "Cursor: média | Copilot: média | AntiGravity: alta"],
   ]}
 />
 
@@ -241,7 +241,7 @@ Quer IDE visual?
 
 ## Migrando Entre IDEs
 
-O AIOX facilita a migracao entre IDEs, ja que a fonte de verdade dos agentes e unica:
+O AIOX facilita a migração entre IDEs, já que a fonte de verdade dos agentes é única:
 
 ### De Cursor para Claude Code
 
@@ -266,7 +266,7 @@ npm run sync:ide:cursor
 # Copie config MCP para .cursor/mcp.json
 ```
 
-A beleza do sistema de sync e que voce pode usar **multiplas IDEs simultaneamente** — todas apontando para a mesma definicao de agentes.
+A beleza do sistema de sync é que você pode usar **múltiplas IDEs simultaneamente** — todas apontando para a mesma definição de agentes.
 
 ---
 
@@ -277,19 +277,19 @@ A beleza do sistema de sync e que voce pode usar **multiplas IDEs simultaneament
       question: "Como se ativa um agente AIOX no Cursor?",
       options: ["/agent-name", "@agent-name", "*agent-name", "#agent-name"],
       correct: 1,
-      explanation: "No Cursor, agentes sao ativados com @mention: @dev, @qa, @architect."
+      explanation: "No Cursor, agentes são ativados com @mention: @dev, @qa, @architect."
     },
     {
       question: "Qual comando compensa a falta de auto-checks nas IDEs visuais?",
       options: ["npm run auto-check", "npm run validate:parity", "npm run fix-all", "npm run ide-check"],
       correct: 1,
-      explanation: "O comando npm run validate:parity executa a validacao de paridade que as IDEs visuais nao fazem automaticamente."
+      explanation: "O comando npm run validate:parity executa a validação de paridade que as IDEs visuais não fazem automaticamente."
     },
     {
-      question: "Qual IDE visual tem integracao nativa com GitHub PRs e code review?",
-      options: ["Cursor", "AntiGravity", "GitHub Copilot", "Todas as tres"],
+      question: "Qual IDE visual tem integração nativa com GitHub PRs e code review?",
+      options: ["Cursor", "AntiGravity", "GitHub Copilot", "Todas as três"],
       correct: 2,
-      explanation: "O GitHub Copilot se destaca pela integracao nativa com o ecossistema GitHub: PRs, issues e code review."
+      explanation: "O GitHub Copilot se destaca pela integração nativa com o ecossistema GitHub: PRs, issues e code review."
     }
   ]}
 />

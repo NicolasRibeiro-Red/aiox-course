@@ -1,6 +1,6 @@
-# Sistema de Memoria — Como Agentes Lembram
+# Sistema de Memória — Como Agentes Lembram
 
-O AIOX opera um sistema de memoria em **duas camadas independentes** que permitem a agentes manter contexto entre sessoes, aprender com erros e preservar decisoes arquiteturais. Entender como essa memoria funciona e essencial para usar o framework de forma eficaz.
+O AIOX opera um sistema de memória em **duas camadas independentes** que permitem a agentes manter contexto entre sessões, aprender com erros e preservar decisões arquiteturais. Entender como essa memória funciona é essencial para usar o framework de forma eficaz.
 
 ---
 
@@ -12,7 +12,7 @@ O AIOX opera um sistema de memoria em **duas camadas independentes** que permite
 | **Camada 2: AIOX Framework** | Scripts JS em `.aiox-core/` | Gotchas, Snapshots, Timeline, Session State | `.aiox/` |
 
 <Callout type="warning" title="Camadas independentes">
-As duas camadas **nao se comunicam entre si**. Cada uma persiste de forma independente. Isso e uma limitacao arquitetural importante de entender.
+As duas camadas **não se comunicam entre si**. Cada uma persiste de forma independente. Isso é uma limitação arquitetural importante de entender.
 </Callout>
 
 ---
@@ -21,39 +21,39 @@ As duas camadas **nao se comunicam entre si**. Cada uma persiste de forma indepe
 
 ### Hierarquia de Carregamento
 
-Toda nova sessao do Claude Code carrega automaticamente, nesta ordem:
+Toda nova sessão do Claude Code carrega automaticamente, nesta ordem:
 
-| Ordem | Arquivo | Descricao |
+| Ordem | Arquivo | Descrição |
 |---|---|---|
-| 1 | `~/.claude/CLAUDE.md` | Instrucoes globais do usuario |
-| 2 | `Workspaces/.claude/CLAUDE.md` | Instrucoes do workspace |
-| 3 | `projeto/.claude/CLAUDE.md` | Instrucoes do projeto |
+| 1 | `~/.claude/CLAUDE.md` | Instruções globais do usuário |
+| 2 | `Workspaces/.claude/CLAUDE.md` | Instruções do workspace |
+| 3 | `projeto/.claude/CLAUDE.md` | Instruções do projeto |
 | 4 | `projeto/.claude/rules/*.md` | Regras detalhadas |
 | 5 | `~/.claude/projects/.../memory/MEMORY.md` | Auto Memory (primeiras 200 linhas) |
 
 ### Auto Memory — Leitura e Escrita
 
-**Leitura (automatica, toda sessao):**
-- Claude Code le o `MEMORY.md` ao iniciar
-- Se tiver mais de 200 linhas, trunca — linhas 201+ sao ignoradas
-- O conteudo e injetado no system prompt
+**Leitura (automática, toda sessão):**
+- Claude Code lê o `MEMORY.md` ao iniciar
+- Se tiver mais de 200 linhas, trunca — linhas 201+ são ignoradas
+- O conteúdo é injetado no system prompt
 
-**Escrita (durante sessao, decisao do Claude):**
-- Quando Claude encontra um padrao, erro ou insight relevante, ele **decide** salvar
+**Escrita (durante sessão, decisão do Claude):**
+- Quando Claude encontra um padrão, erro ou insight relevante, ele **decide** salvar
 - Usa Write/Edit tool para atualizar o MEMORY.md
-- Opcionalmente cria arquivos de topico em `memory/compound-analysis/`
+- Opcionalmente cria arquivos de tópico em `memory/compound-analysis/`
 
-**Fim de sessao:**
-- Transcricao salva como `.jsonl`
-- **Nada mais acontece** — sem session-digest, sem memory-flush, sem sumarizacao automatica
+**Fim de sessão:**
+- Transcrição salva como `.jsonl`
+- **Nada mais acontece** — sem session-digest, sem memory-flush, sem sumarização automática
 
 <Callout type="info" title="Limite de 200 linhas">
-O MEMORY.md tem um limite pratico de ~200 linhas. Alem disso, o conteudo e ignorado. Mantenha entradas concisas e use arquivos de topico para detalhes.
+O MEMORY.md tem um limite prático de ~200 linhas. Além disso, o conteúdo é ignorado. Mantenha entradas concisas e use arquivos de tópico para detalhes.
 </Callout>
 
 ### Agent Memory
 
-Agentes definidos em `.claude/agents/` possuem memoria individual:
+Agentes definidos em `.claude/agents/` possuem memória individual:
 
 ```
 .claude/agent-memory/
@@ -63,19 +63,19 @@ Agentes definidos em `.claude/agents/` possuem memoria individual:
 └── ...
 ```
 
-Cada agente carrega apenas seu proprio `MEMORY.md` ao ser ativado. Isso permite que agentes desenvolvam especializacao e acumulem conhecimento especifico do seu dominio.
+Cada agente carrega apenas seu próprio `MEMORY.md` ao ser ativado. Isso permite que agentes desenvolvam especialização e acumulem conhecimento específico do seu domínio.
 
 ---
 
 ## Camada 2: AIOX Framework
 
-### 4 Modulos de Memoria
+### 4 Módulos de Memória
 
-| Modulo | Arquivo | Funcao |
+| Módulo | Arquivo | Função |
 |---|---|---|
 | **Gotchas Memory** | `gotchas-memory.js` | Auto-captura: erro repetido 3x vira gotcha |
 | **Context Snapshot** | `context-snapshot.js` | Salva/restaura contexto completo (max 50, 7 dias) |
-| **File Evolution** | `file-evolution-tracker.js` | Historico de mudancas por arquivo, detecta drift |
+| **File Evolution** | `file-evolution-tracker.js` | Histórico de mudanças por arquivo, detecta drift |
 | **Timeline Manager** | `timeline-manager.js` | Facade unificada de todas as fontes, sync a cada 60s |
 
 ### Gotchas — Aprendendo com Erros
@@ -88,7 +88,7 @@ Erro acontece 2x → marcado como pattern
 Erro acontece 3x → promovido para gotcha automaticamente
 ```
 
-Gotchas ficam disponiveis para qualquer agente via `getContextForTask()`, prevenindo que o mesmo erro se repita.
+Gotchas ficam disponíveis para qualquer agente via `getContextForTask()`, prevenindo que o mesmo erro se repita.
 
 Comandos:
 
@@ -119,7 +119,7 @@ Storage: `.aiox/snapshots/{id}.json`
 
 ### Timeline Manager
 
-O Timeline Manager e uma **facade unificada** que integra todas as fontes de dados em uma unica timeline:
+O Timeline Manager é uma **facade unificada** que integra todas as fontes de dados em uma única timeline:
 
 ```javascript
 // Timeline unificada
@@ -137,25 +137,25 @@ timeline.autoSync();
 
 ---
 
-## 3 Modulos de Sessao
+## 3 Módulos de Sessão
 
-| Modulo | Funcao |
+| Módulo | Função |
 |---|---|
-| **Context Loader** | Carrega contexto relevante ao iniciar sessao |
-| **Context Detector** | Detecta tipo de sessao (nova, continuacao, retomada) |
+| **Context Loader** | Carrega contexto relevante ao iniciar sessão |
+| **Context Detector** | Detecta tipo de sessão (nova, continuação, retomada) |
 | **Session State** | Persiste estado do epic/story atual |
 
-O Context Loader e o Tier 3 do Unified Activation Pipeline — ele carrega contexto baseado no tipo de sessao detectado pelo Context Detector.
+O Context Loader é o Tier 3 do Unified Activation Pipeline — ele carrega contexto baseado no tipo de sessão detectado pelo Context Detector.
 
 ---
 
-## Persistencia por Local
+## Persistência por Local
 
 | O que | Onde | Gerenciado por |
 |---|---|---|
 | Auto Memory | `~/.claude/projects/.../memory/MEMORY.md` | Claude Code |
 | Agent Memory | `.claude/agent-memory/{agent}/MEMORY.md` | Claude Code |
-| Transcricoes | `~/.claude/projects/.../*.jsonl` | Claude Code |
+| Transcrições | `~/.claude/projects/.../*.jsonl` | Claude Code |
 | Gotchas | `.aiox/gotchas.json` + `.aiox/gotchas.md` | AIOX Framework |
 | Erros | `.aiox/error-tracking.json` | AIOX Framework |
 | Snapshots | `.aiox/snapshots/{id}.json` | AIOX Framework |
@@ -165,41 +165,41 @@ O Context Loader e o Tier 3 do Unified Activation Pipeline — ele carrega conte
 
 ---
 
-## Gaps e Limitacoes Conhecidas
+## Gaps e Limitações Conhecidas
 
-E importante entender o que o sistema de memoria **nao faz**:
+É importante entender o que o sistema de memória **não faz**:
 
-| Limitacao | Impacto |
+| Limitação | Impacto |
 |---|---|
-| Sem session-digest automatico | Quando sessao fecha, nenhuma sumarizacao acontece |
-| Sem memory-flush automatico | MEMORY.md so atualiza durante a sessao |
-| Camadas nao se comunicam | `.claude/` e `.aiox/` sao independentes |
-| Limite de 200 linhas no MEMORY.md | Conteudo alem disso e ignorado |
-| Hooks de sessao existem para Gemini, nao Claude | Features de end-of-session nao disponíveis |
+| Sem session-digest automático | Quando sessão fecha, nenhuma sumarização acontece |
+| Sem memory-flush automático | MEMORY.md só atualiza durante a sessão |
+| Camadas não se comunicam | `.claude/` e `.aiox/` são independentes |
+| Limite de 200 linhas no MEMORY.md | Conteúdo além disso é ignorado |
+| Hooks de sessão existem para Gemini, não Claude | Features de end-of-session não disponíveis |
 
-<Callout type="tip" title="Boas praticas de memoria">
-Para compensar as limitacoes: mantenha o MEMORY.md conciso (use indices para topicos), crie gotchas para erros recorrentes, e use snapshots antes de operacoes longas.
+<Callout type="tip" title="Boas práticas de memória">
+Para compensar as limitações: mantenha o MEMORY.md conciso (use índices para tópicos), crie gotchas para erros recorrentes, e use snapshots antes de operações longas.
 </Callout>
 
 ---
 
-## Fluxo de Ativacao de Agente (Memory Load)
+## Fluxo de Ativação de Agente (Memory Load)
 
-Quando um agente e ativado, o sistema carrega sua memoria em 3 tiers:
+Quando um agente é ativado, o sistema carrega sua memória em 3 tiers:
 
 | Tier | O que carrega | Fonte |
 |---|---|---|
 | 1 | System prompt base | CLAUDE.md + rules |
 | 2 | Persona e capabilities | Agent definition file |
-| 3 | Contexto e memoria | MEMORY.md + session context |
+| 3 | Contexto e memória | MEMORY.md + session context |
 
-O Tier 3 usa o Context Loader para carregar gotchas relevantes, estado da sessao anterior e snapshots se disponíveis.
+O Tier 3 usa o Context Loader para carregar gotchas relevantes, estado da sessão anterior e snapshots se disponíveis.
 
 ---
 
-## Na Pratica: Context Detection em Codigo
+## Na Prática: Context Detection em Código
 
-Abaixo esta o trecho real do `greeting-builder.js` -- o script que constroi saudacoes inteligentes para cada agente. Ele mostra como o sistema carrega contexto (sessao, git, workflow, handoff) e combina tudo em menos de 200ms:
+Abaixo está o trecho real do `greeting-builder.js` -- o script que constrói saudações inteligentes para cada agente. Ele mostra como o sistema carrega contexto (sessão, git, workflow, handoff) e combina tudo em menos de 200ms:
 
 ```javascript
 /**
@@ -241,7 +241,7 @@ const DEFAULT_USER_PROFILE = 'advanced';
 ```
 
 <Callout type="info" title="Imports revelam a arquitetura">
-Os imports deste arquivo sao um mapa da Camada 2 do sistema de memoria. `ContextDetector` identifica o tipo de sessao, `GitConfigDetector` le o estado do repositorio, `WorkflowNavigator` sabe em que fase do workflow o agente esta, e `SessionState` mantem continuidade entre terminais. Tudo isso alimenta o greeting em menos de 200ms.
+Os imports deste arquivo são um mapa da Camada 2 do sistema de memória. `ContextDetector` identifica o tipo de sessão, `GitConfigDetector` lê o estado do repositório, `WorkflowNavigator` sabe em que fase do workflow o agente está, e `SessionState` mantém continuidade entre terminais. Tudo isso alimenta o greeting em menos de 200ms.
 </Callout>
 
 ---
@@ -250,22 +250,22 @@ Os imports deste arquivo sao um mapa da Camada 2 do sistema de memoria. `Context
   title="Teste seus conhecimentos"
   questions={[
     {
-      question: "Quantas camadas o sistema de memoria do AIOX possui?",
+      question: "Quantas camadas o sistema de memória do AIOX possui?",
       options: ["1 (Claude Code)", "2 (Claude Code + AIOX Framework)", "3 (Claude Code + AIOX + External)", "4 camadas"],
       correct: 1,
-      explanation: "O sistema opera em 2 camadas independentes: Camada 1 (Claude Code Nativo) e Camada 2 (AIOX Framework), que nao se comunicam entre si."
+      explanation: "O sistema opera em 2 camadas independentes: Camada 1 (Claude Code Nativo) e Camada 2 (AIOX Framework), que não se comunicam entre si."
     },
     {
       question: "O que acontece quando um erro se repete 3 vezes?",
-      options: ["O agente para de executar", "E logado e ignorado", "E promovido para gotcha automaticamente", "Dispara uma notificacao"],
+      options: ["O agente para de executar", "É logado e ignorado", "É promovido para gotcha automaticamente", "Dispara uma notificação"],
       correct: 2,
-      explanation: "O sistema Gotchas promove automaticamente erros que se repetem 3 vezes para gotchas, que ficam disponiveis para todos os agentes prevenirem o mesmo erro."
+      explanation: "O sistema Gotchas promove automaticamente erros que se repetem 3 vezes para gotchas, que ficam disponíveis para todos os agentes prevenirem o mesmo erro."
     },
     {
-      question: "Qual e o limite pratico do MEMORY.md?",
+      question: "Qual é o limite prático do MEMORY.md?",
       options: ["50 linhas", "100 linhas", "200 linhas", "Sem limite"],
       correct: 2,
-      explanation: "O MEMORY.md tem limite de ~200 linhas. O Claude Code le apenas as primeiras 200 linhas ao iniciar — conteudo alem disso e ignorado."
+      explanation: "O MEMORY.md tem limite de ~200 linhas. O Claude Code lê apenas as primeiras 200 linhas ao iniciar — conteúdo além disso é ignorado."
     }
   ]}
 />

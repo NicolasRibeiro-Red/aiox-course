@@ -1,22 +1,22 @@
-# O Spec Pipeline — De Ideias a Especificacoes
+# O Spec Pipeline — De Ideias a Especificações
 
-O **Spec Pipeline** e o workflow que transforma requisitos informais em especificacoes formais e executaveis. Ele representa um dos pilares do AIOX: a ideia de que **antes de escrever codigo, agentes especializados devem planejar, pesquisar e validar** tudo o que sera construido.
+O **Spec Pipeline** é o workflow que transforma requisitos informais em especificações formais e executáveis. Ele representa um dos pilares do AIOX: a ideia de que **antes de escrever código, agentes especializados devem planejar, pesquisar e validar** tudo o que será construído.
 
 ---
 
-## Por que um Pipeline de Especificacao?
+## Por que um Pipeline de Especificação?
 
-Em projetos tradicionais, a especificacao e muitas vezes informal — um Slack, um rascunho, uma conversa. Isso gera:
+Em projetos tradicionais, a especificação é muitas vezes informal — um Slack, um rascunho, uma conversa. Isso gera:
 
 - Ambiguidade nos requisitos
-- Retrabalho por falta de pesquisa previa
-- Falta de rastreabilidade entre requisito e codigo
+- Retrabalho por falta de pesquisa prévia
+- Falta de rastreabilidade entre requisito e código
 
-O Spec Pipeline resolve isso com **6 fases estruturadas**, cada uma executada por um agente especializado, com quality gates obrigatorios entre elas.
+O Spec Pipeline resolve isso com **6 fases estruturadas**, cada uma executada por um agente especializado, com quality gates obrigatórios entre elas.
 
 ---
 
-## Visao Geral do Fluxo
+## Visão Geral do Fluxo
 
 <WorkflowVisualizer
   title="Spec Pipeline — 6 Fases"
@@ -25,42 +25,42 @@ O Spec Pipeline resolve isso com **6 fases estruturadas**, cada uma executada po
       agent: "@pm",
       agentIcon: "📋",
       title: "Fase 1: Gather Requirements",
-      description: "Morgan coleta requisitos via elicitacao interativa em 9 categorias: funcionais, restricoes, NFRs, aceite, suposicoes, dominio, interacao, edge cases e terminologia.",
+      description: "Morgan coleta requisitos via elicitação interativa em 9 categorias: funcionais, restrições, NFRs, aceite, suposições, domínio, interação, edge cases e terminologia.",
       artifacts: ["requirements.json"]
     },
     {
       agent: "@architect",
       agentIcon: "🏛️",
       title: "Fase 2: Assess Complexity",
-      description: "Aria avalia 5 dimensoes de complexidade (Scope, Integration, Infrastructure, Knowledge, Risk) e classifica como SIMPLE, STANDARD ou COMPLEX.",
+      description: "Aria avalia 5 dimensões de complexidade (Scope, Integration, Infrastructure, Knowledge, Risk) e classifica como SIMPLE, STANDARD ou COMPLEX.",
       artifacts: ["complexity.json"]
     },
     {
       agent: "@analyst",
       agentIcon: "🔍",
       title: "Fase 3: Research Dependencies",
-      description: "Atlas pesquisa dependencias externas usando Context7 e EXA, validando bibliotecas, APIs e conceitos tecnicos.",
+      description: "Atlas pesquisa dependências externas usando Context7 e EXA, validando bibliotecas, APIs e conceitos técnicos.",
       artifacts: ["research.json"]
     },
     {
       agent: "@pm",
       agentIcon: "📋",
       title: "Fase 4: Write Specification",
-      description: "Morgan gera a especificacao formal (spec.md) sem inventar informacao — tudo rastreia para requisitos ou pesquisa.",
+      description: "Morgan gera a especificação formal (spec.md) sem inventar informação — tudo rastreia para requisitos ou pesquisa.",
       artifacts: ["spec.md"]
     },
     {
       agent: "@qa",
       agentIcon: "✅",
       title: "Fase 5: Critique Specification",
-      description: "Quinn avalia a spec em 5 dimensoes de qualidade (Accuracy, Completeness, Consistency, Feasibility, Alignment) e emite um verdict.",
+      description: "Quinn avalia a spec em 5 dimensões de qualidade (Accuracy, Completeness, Consistency, Feasibility, Alignment) e emite um verdict.",
       artifacts: ["critique.json"]
     },
     {
       agent: "@architect",
       agentIcon: "🏛️",
       title: "Fase 6: Create Plan",
-      description: "Aria gera o plano de implementacao com subtasks atomicas, respeitando dependencias e limites de arquivos por task.",
+      description: "Aria gera o plano de implementação com subtasks atômicas, respeitando dependências e limites de arquivos por task.",
       artifacts: ["plan.json"]
     }
   ]}
@@ -68,11 +68,11 @@ O Spec Pipeline resolve isso com **6 fases estruturadas**, cada uma executada po
 
 ---
 
-## Adaptacao por Complexidade
+## Adaptação por Complexidade
 
-O pipeline nao e rigido — ele se adapta automaticamente baseado na complexidade detectada na Fase 2. Isso evita overhead desnecessario para tarefas simples e garante profundidade para tarefas complexas.
+O pipeline não é rígido — ele se adapta automaticamente baseado na complexidade detectada na Fase 2. Isso evita overhead desnecessário para tarefas simples e garante profundidade para tarefas complexas.
 
-| Classificacao | Score | Fases Ativadas | Tempo Estimado |
+| Classificação | Score | Fases Ativadas | Tempo Estimado |
 |---|---|---|---|
 | **SIMPLE** | 8 ou menos | Gather, Spec, Critique | 30-60 min |
 | **STANDARD** | 9-15 | Todas as 6 fases | 2-4 horas |
@@ -84,70 +84,70 @@ Para projetos SIMPLE, o pipeline pula Assess, Research e Plan — indo direto de
 
 ---
 
-## O Principio "No Invention"
+## O Princípio "No Invention"
 
-Um dos principios mais importantes do Spec Pipeline e o **Article IV — No Invention**. Ele determina que:
+Um dos princípios mais importantes do Spec Pipeline é o **Article IV — No Invention**. Ele determina que:
 
-- Todo statement na especificacao **deve rastrear** para um requisito funcional (`FR-*`), nao-funcional (`NFR-*`), restricao (`CON-*`) ou achado de pesquisa verificado
-- E **proibido** adicionar features nao listadas, assumir detalhes nao pesquisados, ou criar criterios de aceite inventados
-- Informacao sem rastreabilidade deve ir para a secao "Open Questions"
+- Todo statement na especificação **deve rastrear** para um requisito funcional (`FR-*`), não-funcional (`NFR-*`), restrição (`CON-*`) ou achado de pesquisa verificado
+- É **proibido** adicionar features não listadas, assumir detalhes não pesquisados, ou criar critérios de aceite inventados
+- Informação sem rastreabilidade deve ir para a seção "Open Questions"
 
 ```
-Exemplo de violacao:
+Exemplo de violação:
   "O sistema deve suportar cache Redis para melhor performance"
   ↳ Nenhum requisito menciona Redis. Nenhuma pesquisa validou.
-  ↳ ACAO: Remover ou mover para Open Questions
+  ↳ AÇÃO: Remover ou mover para Open Questions
 ```
 
 ---
 
 ## Os 4 Agentes do Pipeline
 
-| Agente | Nome | Arquetipo | Fases |
+| Agente | Nome | Arquétipo | Fases |
 |---|---|---|---|
 | `@pm` | Morgan | Strategist | 1 (Gather), 4 (Spec), 5b (Revise) |
 | `@architect` | Aria | Visionary | 2 (Assess), 6 (Plan) |
 | `@analyst` | Atlas | Decoder | 3 (Research) |
 | `@qa` | Quinn | Guardian | 5 (Critique), 5c (2a Critique) |
 
-Cada agente traz uma perspectiva unica. Morgan foca no **usuario e produto**, Aria na **arquitetura e viabilidade**, Atlas na **pesquisa e evidencia**, e Quinn na **qualidade e rastreabilidade**.
+Cada agente traz uma perspectiva única. Morgan foca no **usuário e produto**, Aria na **arquitetura e viabilidade**, Atlas na **pesquisa e evidência**, e Quinn na **qualidade e rastreabilidade**.
 
 ---
 
 ## A Critique: Quality Gate Central
 
-A Fase 5 e o ponto mais critico do pipeline. Quinn avalia a especificacao em 5 dimensoes, cada uma com peso diferente:
+A Fase 5 é o ponto mais crítico do pipeline. Quinn avalia a especificação em 5 dimensões, cada uma com peso diferente:
 
-| Dimensao | Peso | O que verifica |
+| Dimensão | Peso | O que verifica |
 |---|---|---|
 | Accuracy | 25% | Spec reflete requisitos corretamente? |
-| Completeness | 25% | Todas as secoes preenchidas? Testes cobrem FRs? |
-| Consistency | 20% | IDs validos? Sem contradicoes? |
-| Feasibility | 15% | Tecnicamente possivel? Dependencias existem? |
-| Alignment | 15% | Alinhado com stack e padroes do projeto? |
+| Completeness | 25% | Todas as seções preenchidas? Testes cobrem FRs? |
+| Consistency | 20% | IDs válidos? Sem contradições? |
+| Feasibility | 15% | Tecnicamente possível? Dependências existem? |
+| Alignment | 15% | Alinhado com stack e padrões do projeto? |
 
 O verdict pode ser:
 
-- **APPROVED** — Sem issues HIGH, media >= 4.0, todas dimensoes >= 3. Avanca para Plan.
-- **NEEDS_REVISION** — Issues MEDIUM ou media entre 3.0-3.9. Retorna para o PM revisar.
-- **BLOCKED** — Issues HIGH ou media < 3.0. Escala para o Architect.
+- **APPROVED** — Sem issues HIGH, média >= 4.0, todas dimensões >= 3. Avança para Plan.
+- **NEEDS_REVISION** — Issues MEDIUM ou média entre 3.0-3.9. Retorna para o PM revisar.
+- **BLOCKED** — Issues HIGH ou média < 3.0. Escala para o Architect.
 
 ---
 
 ## Artefatos Gerados
 
-Ao final do pipeline, 6 artefatos ficam disponiveis em `docs/stories/{storyId}/spec/`:
+Ao final do pipeline, 6 artefatos ficam disponíveis em `docs/stories/{storyId}/spec/`:
 
 ```
 docs/stories/STORY-42/
 ├── spec/
 │   ├── requirements.json    # Requisitos estruturados (9 categorias)
-│   ├── complexity.json      # Avaliacao de complexidade (5 dimensoes)
-│   ├── research.json        # Dependencias pesquisadas e validadas
-│   ├── spec.md              # Especificacao completa executavel
-│   └── critique.json        # Resultado da avaliacao de qualidade
+│   ├── complexity.json      # Avaliação de complexidade (5 dimensões)
+│   ├── research.json        # Dependências pesquisadas e validadas
+│   ├── spec.md              # Especificação completa executável
+│   └── critique.json        # Resultado da avaliação de qualidade
 └── plan/
-    └── implementation.yaml  # Plano com subtasks atomicas
+    └── implementation.yaml  # Plano com subtasks atômicas
 ```
 
 ---
@@ -160,8 +160,8 @@ O pipeline pode ser iniciado de duas formas:
 # Comando direto
 *create-spec STORY-42
 
-# Ou automaticamente quando autoSpec esta habilitado
-# e uma story e criada
+# Ou automaticamente quando autoSpec está habilitado
+# e uma story é criada
 ```
 
 Para executar fases individuais:
@@ -172,8 +172,8 @@ Para executar fases individuais:
 *critique-spec STORY-42         # Apenas Fase 5
 ```
 
-<Callout type="tip" title="Retomando execucoes">
-O pipeline suporta checkpoints. Se uma fase falhar, voce pode retomar de onde parou com `*create-spec STORY-42 --resume`.
+<Callout type="tip" title="Retomando execuções">
+O pipeline suporta checkpoints. Se uma fase falhar, você pode retomar de onde parou com `*create-spec STORY-42 --resume`.
 </Callout>
 
 ---
@@ -182,22 +182,22 @@ O pipeline suporta checkpoints. Se uma fase falhar, voce pode retomar de onde pa
   title="Teste seus conhecimentos"
   questions={[
     {
-      question: "Qual principio impede que agentes adicionem features nao solicitadas na especificacao?",
+      question: "Qual princípio impede que agentes adicionem features não solicitadas na especificação?",
       options: ["Quality Gate", "No Invention (Article IV)", "Adaptive Phases", "Traceability"],
       correct: 1,
       explanation: "O Article IV — No Invention determina que todo statement deve rastrear para um requisito ou pesquisa verificada. Nada pode ser inventado."
     },
     {
-      question: "Para um projeto classificado como SIMPLE (score <= 8), quais fases sao executadas?",
+      question: "Para um projeto classificado como SIMPLE (score <= 8), quais fases são executadas?",
       options: ["Todas as 6 fases", "Gather, Spec, Critique", "Gather, Assess, Spec", "Apenas Gather e Spec"],
       correct: 1,
-      explanation: "Projetos SIMPLE pulam Assess, Research e Plan, executando apenas Gather (coleta), Spec (escrita) e Critique (validacao)."
+      explanation: "Projetos SIMPLE pulam Assess, Research e Plan, executando apenas Gather (coleta), Spec (escrita) e Critique (validação)."
     },
     {
-      question: "O que acontece quando o verdict da Critique e BLOCKED?",
-      options: ["Retorna para o PM revisar", "Avanca para o Plan", "Escala para o Architect", "O pipeline reinicia do zero"],
+      question: "O que acontece quando o verdict da Critique é BLOCKED?",
+      options: ["Retorna para o PM revisar", "Avança para o Plan", "Escala para o Architect", "O pipeline reinicia do zero"],
       correct: 2,
-      explanation: "BLOCKED indica issues HIGH ou media muito baixa. O pipeline escala para o @architect (Aria) para revisao arquitetural."
+      explanation: "BLOCKED indica issues HIGH ou média muito baixa. O pipeline escala para o @architect (Aria) para revisão arquitetural."
     }
   ]}
 />

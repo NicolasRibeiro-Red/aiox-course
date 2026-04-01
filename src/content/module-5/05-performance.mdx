@@ -1,24 +1,24 @@
 # Performance — Otimizando Projetos AIOX
 
-Performance importa em dois niveis no AIOX: a velocidade dos **agentes durante a orquestracao** e a velocidade do **codigo produzido**. Este capitulo foca em otimizacoes praticas que reduzem latencia, evitam timeouts e tornam o ciclo de desenvolvimento mais fluido.
+Performance importa em dois níveis no AIOX: a velocidade dos **agentes durante a orquestração** e a velocidade do **código produzido**. Este capítulo foca em otimizações práticas que reduzem latência, evitam timeouts e tornam o ciclo de desenvolvimento mais fluido.
 
 ---
 
-## Git fsmonitor — Aceleracao de git status
+## Git fsmonitor — Aceleração de git status
 
 ### O Problema
 
-O Unified Activation Pipeline do AIOX executa `git status` durante a ativacao de agentes para detectar arquivos modificados e o estado do projeto. Em repositorios grandes, isso pode causar **timeouts no loader `projectStatus`** — uma taxa de timeout de ~60% foi observada em projetos com muitos arquivos.
+O Unified Activation Pipeline do AIOX executa `git status` durante a ativação de agentes para detectar arquivos modificados e o estado do projeto. Em repositórios grandes, isso pode causar **timeouts no loader `projectStatus`** — uma taxa de timeout de ~60% foi observada em projetos com muitos arquivos.
 
-### A Solucao
+### A Solução
 
-O Git possui um recurso built-in chamado `fsmonitor` que usa um daemon de filesystem watcher para rastrear mudancas de arquivos. Em vez de escanear todo o working directory, ele mantem um cache atualizado em tempo real.
+O Git possui um recurso built-in chamado `fsmonitor` que usa um daemon de filesystem watcher para rastrear mudanças de arquivos. Em vez de escanear todo o working directory, ele mantém um cache atualizado em tempo real.
 
-| Metrica | Sem fsmonitor | Com fsmonitor |
+| Métrica | Sem fsmonitor | Com fsmonitor |
 |---|---|---|
 | Tempo de `git status` | 50-200ms | < 10ms |
 | Taxa de timeout no Pipeline | ~60% | ~0% |
-| Impacto na ativacao de agentes | Perceptivel | Imperceptivel |
+| Impacto na ativação de agentes | Perceptível | Imperceptível |
 
 ### Como Habilitar
 
@@ -43,7 +43,7 @@ git config --unset core.fsmonitor
 git fsmonitor--daemon stop
 ```
 
-### Diagnostico
+### Diagnóstico
 
 ```bash
 # Verificar status do fsmonitor
@@ -52,30 +52,30 @@ npx aiox-core doctor
 
 O doctor reporta:
 - **Habilitado**: `Git fsmonitor: enabled (git status acceleration active)`
-- **Disponivel**: `Git fsmonitor: not enabled (opt-in optimization available)`
-- **Indisponivel**: `Git fsmonitor: not available (Git 2.37+ required)`
+- **Disponível**: `Git fsmonitor: not enabled (opt-in optimization available)`
+- **Indisponível**: `Git fsmonitor: not available (Git 2.37+ required)`
 
-### Requisitos e Limitacoes
+### Requisitos e Limitações
 
 | Requisito | Detalhe |
 |---|---|
 | Git | >= 2.37 (introduziu `fsmonitor--daemon`) |
-| Filesystem | Local (nao NFS, CIFS ou network-mounted) |
+| Filesystem | Local (não NFS, CIFS ou network-mounted) |
 | OS | Windows (ReadDirectoryChangesW), macOS (FSEvents), Linux (inotify) |
 
 <Callout type="warning" title="Filesystems de rede">
-NAO habilite fsmonitor em filesystems de rede (NFS, CIFS). O daemon pode nao detectar mudancas remotas, causando `git status` com informacoes desatualizadas.
+NÃO habilite fsmonitor em filesystems de rede (NFS, CIFS). O daemon pode não detectar mudanças remotas, causando `git status` com informações desatualizadas.
 </Callout>
 
-| Limitacao | Descricao |
+| Limitação | Descrição |
 |---|---|
-| Network filesystems | Daemon nao detecta mudancas remotas |
+| Network filesystems | Daemon não detecta mudanças remotas |
 | Repos muito grandes (> 100k arquivos) | Startup inicial pode levar segundos |
-| WSL | Funciona, mas watchers cross-filesystem (Windows ↔ WSL) podem ter latencia |
+| WSL | Funciona, mas watchers cross-filesystem (Windows ↔ WSL) podem ter latência |
 
 ---
 
-## Otimizacao de Pre-commit Hooks
+## Otimização de Pre-commit Hooks
 
 Os pre-commit hooks do AIOX usam **cache incremental** para manter velocidade:
 
@@ -88,10 +88,10 @@ Os pre-commit hooks do AIOX usam **cache incremental** para manter velocidade:
 }
 ```
 
-- **Primeira execucao**: ~10-15s (sem cache)
-- **Execucoes subsequentes**: < 5s (com cache)
+- **Primeira execução**: ~10-15s (sem cache)
+- **Execuções subsequentes**: < 5s (com cache)
 
-O cache e invalidado quando: configuracao muda, dependencias sao atualizadas, ou arquivos sao deletados.
+O cache é invalidado quando: configuração muda, dependências são atualizadas, ou arquivos são deletados.
 
 ### TypeScript Incremental
 
@@ -104,11 +104,11 @@ O cache e invalidado quando: configuracao muda, dependencias sao atualizadas, ou
 }
 ```
 
-O compilador TypeScript reutiliza informacoes de compilacoes anteriores, verificando apenas arquivos que mudaram.
+O compilador TypeScript reutiliza informações de compilações anteriores, verificando apenas arquivos que mudaram.
 
 ### .gitignore para Caches
 
-Adicione ao `.gitignore` para nao commitar caches:
+Adicione ao `.gitignore` para não commitar caches:
 
 ```gitignore
 .eslintcache
@@ -118,7 +118,7 @@ coverage/
 
 ---
 
-## Otimizacao de CI/CD
+## Otimização de CI/CD
 
 ### Jobs em Paralelo
 
@@ -134,9 +134,9 @@ jobs:
     needs: [lint, typecheck, test, story-validation]
 ```
 
-Todos os jobs de validacao rodam simultaneamente. O `validation-summary` so executa depois que todos completaram, agregando resultados.
+Todos os jobs de validação rodam simultaneamente. O `validation-summary` só executa depois que todos completaram, agregando resultados.
 
-### Cache de Dependencias
+### Cache de Dependências
 
 ```yaml
 - uses: actions/setup-node@v4
@@ -145,41 +145,41 @@ Todos os jobs de validacao rodam simultaneamente. O `validation-summary` so exec
     cache: "npm"  # Cache automatico de node_modules
 ```
 
-O cache de npm evita reinstalar dependencias a cada run.
+O cache de npm evita reinstalar dependências a cada run.
 
 ### Timeouts por Job
 
 | Job | Timeout | Justificativa |
 |---|---|---|
-| lint | 5 min | ESLint e rapido |
-| typecheck | 5 min | TypeScript e rapido |
+| lint | 5 min | ESLint é rápido |
+| typecheck | 5 min | TypeScript é rápido |
 | test | 10 min | Testes podem ser mais lentos |
-| story-validation | 5 min | Validacao de YAML |
+| story-validation | 5 min | Validação de YAML |
 
 ---
 
-## Otimizacao de Validacao de Stories
+## Otimização de Validação de Stories
 
 ### Performance Atual
 
-| Cenario | Tempo |
+| Cenário | Tempo |
 |---|---|
-| Story unica | < 100ms |
-| Todas as stories | < 2s (tipico) |
+| Story única | < 100ms |
+| Todas as stories | < 2s (típico) |
 
-### Dicas de Otimizacao
+### Dicas de Otimização
 
 1. **Stories focadas** — Uma feature por story reduz parsing
 2. **Limitar tasks** — Quebrar stories grandes em menores
-3. **YAML valido** — Erros de parsing sao mais lentos que validacao
+3. **YAML válido** — Erros de parsing são mais lentos que validação
 
 ---
 
-## Boas Praticas Gerais de Performance
+## Boas Práticas Gerais de Performance
 
 ### Commits Pequenos e Frequentes
 
-Menos arquivos por commit = validacao mais rapida. Commits grandes com dezenas de arquivos sobrecarregam o ESLint e o TypeScript.
+Menos arquivos por commit = validação mais rápida. Commits grandes com dezenas de arquivos sobrecarregam o ESLint e o TypeScript.
 
 ### Testar Durante Desenvolvimento
 
@@ -190,13 +190,13 @@ npm run typecheck
 npm test
 ```
 
-Encontrar e corrigir problemas durante o desenvolvimento e mais rapido do que esperar hooks ou CI falharem.
+Encontrar e corrigir problemas durante o desenvolvimento é mais rápido do que esperar hooks ou CI falharem.
 
 ### Corrigir Issues Imediatamente
 
-Nao acumule lint warnings ou type errors. Cada issue nao-corrigido adiciona tempo ao proximo commit.
+Não acumule lint warnings ou type errors. Cada issue não-corrigido adiciona tempo ao próximo commit.
 
-### Manter Dependencias Atualizadas
+### Manter Dependências Atualizadas
 
 ```bash
 # Verificar dependencias desatualizadas
@@ -209,13 +209,13 @@ npm update
 npm audit
 ```
 
-Dependencias desatualizadas podem ser mais lentas e ter vulnerabilidades conhecidas.
+Dependências desatualizadas podem ser mais lentas e ter vulnerabilidades conhecidas.
 
 ---
 
 ## Monitoramento com aiox doctor
 
-O comando `aiox doctor` faz um diagnostico completo do ambiente:
+O comando `aiox doctor` faz um diagnóstico completo do ambiente:
 
 ```bash
 npx aiox-core doctor
@@ -223,29 +223,29 @@ npx aiox-core doctor
 
 Ele verifica:
 - Status do Git fsmonitor
-- Versao do Git (>= 2.37 para fsmonitor)
-- Versao do Node.js
+- Versão do Git (>= 2.37 para fsmonitor)
+- Versão do Node.js
 - Estado dos caches (ESLint, TypeScript)
-- Configuracao de hooks (Husky)
-- Saude das dependencias
+- Configuração de hooks (Husky)
+- Saúde das dependências
 
 <Callout type="tip" title="Rode periodicamente">
-Execute `aiox doctor` pelo menos 1x por semana ou quando notar lentidao. Ele identifica problemas de performance antes que se tornem criticos.
+Execute `aiox doctor` pelo menos 1x por semana ou quando notar lentidão. Ele identifica problemas de performance antes que se tornem críticos.
 </Callout>
 
 ---
 
-## Resumo de Otimizacoes
+## Resumo de Otimizações
 
-| Area | Otimizacao | Impacto |
+| Área | Otimização | Impacto |
 |---|---|---|
 | git status | Habilitar fsmonitor | 50-200ms → < 10ms |
 | ESLint | Cache habilitado | 15s → < 5s |
-| TypeScript | Compilacao incremental | 10s → < 3s |
+| TypeScript | Compilação incremental | 10s → < 3s |
 | CI/CD | Jobs em paralelo | Sequencial → paralelo |
 | CI/CD | Cache de npm | Reinstall → cache hit |
-| Stories | YAML valido e focado | Parsing mais rapido |
-| Geral | Commits pequenos | Menos arquivos = mais rapido |
+| Stories | YAML válido e focado | Parsing mais rápido |
+| Geral | Commits pequenos | Menos arquivos = mais rápido |
 
 ---
 
@@ -256,19 +256,19 @@ Execute `aiox doctor` pelo menos 1x por semana ou quando notar lentidao. Ele ide
       question: "Qual recurso do Git reduz o tempo de git status de 200ms para < 10ms?",
       options: ["git gc", "git fsmonitor", "git sparse-checkout", "git lfs"],
       correct: 1,
-      explanation: "O fsmonitor usa um daemon de filesystem watcher para rastrear mudancas em tempo real, eliminando a necessidade de escanear todo o working directory."
+      explanation: "O fsmonitor usa um daemon de filesystem watcher para rastrear mudanças em tempo real, eliminando a necessidade de escanear todo o working directory."
     },
     {
-      question: "Qual versao minima do Git e necessaria para o fsmonitor?",
+      question: "Qual versão mínima do Git é necessária para o fsmonitor?",
       options: ["2.20", "2.30", "2.37", "2.40"],
       correct: 2,
-      explanation: "O built-in fsmonitor--daemon foi introduzido no Git 2.37. Versoes anteriores nao suportam esse recurso."
+      explanation: "O built-in fsmonitor--daemon foi introduzido no Git 2.37. Versões anteriores não suportam esse recurso."
     },
     {
-      question: "Por que NAO devemos habilitar fsmonitor em filesystems de rede?",
-      options: ["E mais lento que sem fsmonitor", "O daemon nao detecta mudancas remotas", "Nao e suportado", "Causa corrupcao de dados"],
+      question: "Por que NÃO devemos habilitar fsmonitor em filesystems de rede?",
+      options: ["É mais lento que sem fsmonitor", "O daemon não detecta mudanças remotas", "Não é suportado", "Causa corrupção de dados"],
       correct: 1,
-      explanation: "Em filesystems de rede (NFS, CIFS), o daemon pode nao detectar mudancas feitas por outros usuarios, resultando em git status com informacoes desatualizadas."
+      explanation: "Em filesystems de rede (NFS, CIFS), o daemon pode não detectar mudanças feitas por outros usuários, resultando em git status com informações desatualizadas."
     }
   ]}
 />

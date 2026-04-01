@@ -1,6 +1,6 @@
 # Greenfield Workflows — Criando Projetos do Zero
 
-O **Greenfield Fullstack Workflow** e o fluxo principal do AIOX para construir aplicacoes completas desde o conceito ate a entrega. Ele orquestra 9 agentes em 4 fases progressivas — do bootstrap do ambiente ate o ciclo de desenvolvimento iterativo.
+O **Greenfield Fullstack Workflow** é o fluxo principal do AIOX para construir aplicações completas desde o conceito até a entrega. Ele orquestra 9 agentes em 4 fases progressivas — do bootstrap do ambiente até o ciclo de desenvolvimento iterativo.
 
 ---
 
@@ -8,10 +8,10 @@ O **Greenfield Fullstack Workflow** e o fluxo principal do AIOX para construir a
 
 Use workflows greenfield quando:
 
-- Voce esta construindo uma aplicacao nova, do zero
-- O projeto precisa de documentacao abrangente (PRD, arquitetura, specs)
-- Ha expectativa de manutencao de longo prazo
-- Multiplos membros vao colaborar no projeto
+- Você está construindo uma aplicação nova, do zero
+- O projeto precisa de documentação abrangente (PRD, arquitetura, specs)
+- Há expectativa de manutenção de longo prazo
+- Múltiplos membros vão colaborar no projeto
 
 | Tipo de Projeto | Suportado |
 |---|---|
@@ -26,13 +26,13 @@ Use workflows greenfield quando:
 ## As 4 Fases
 
 <WorkflowVisualizer
-  title="Greenfield Fullstack — Do Conceito ao Codigo"
+  title="Greenfield Fullstack — Do Conceito ao Código"
   steps={[
     {
       agent: "@devops",
       agentIcon: "⚡",
       title: "Fase 0: Bootstrap do Ambiente",
-      description: "Gage detecta o SO, audita CLIs instaladas (git, gh, node), autentica servicos (GitHub, Supabase), inicializa repositorio Git e cria a estrutura do projeto.",
+      description: "Gage detecta o SO, audita CLIs instaladas (git, gh, node), autentica serviços (GitHub, Supabase), inicializa repositório Git e cria a estrutura do projeto.",
       artifacts: [".aiox/config.yaml", ".aiox/environment-report.json", "package.json"]
     },
     {
@@ -45,7 +45,7 @@ Use workflows greenfield quando:
     {
       agent: "@po",
       agentIcon: "🎯",
-      title: "Fase 2: Fragmentacao de Documentos",
+      title: "Fase 2: Fragmentação de Documentos",
       description: "Pax fragmenta o PRD e a arquitetura em documentos menores prontos para desenvolvimento: source-tree, tech-stack e coding-standards.",
       artifacts: ["docs/prd/*.md", "source-tree.md", "tech-stack.md", "coding-standards.md"]
     },
@@ -53,8 +53,8 @@ Use workflows greenfield quando:
       agent: "@sm → @dev → @qa",
       agentIcon: "💻",
       title: "Fase 3: Ciclo de Desenvolvimento",
-      description: "River cria stories, Dex implementa com testes, Quinn faz review de QA. O ciclo repete para cada story ate completar o epic.",
-      artifacts: ["stories/*.md", "codigo fonte", "testes automatizados"]
+      description: "River cria stories, Dex implementa com testes, Quinn faz review de QA. O ciclo repete para cada story até completar o epic.",
+      artifacts: ["stories/*.md", "código fonte", "testes automatizados"]
     }
   ]}
 />
@@ -63,9 +63,9 @@ Use workflows greenfield quando:
 
 ## Fase 0: Bootstrap — Preparando o Terreno
 
-Antes de qualquer planejamento, o `@devops` (Gage) garante que o ambiente esta pronto. Ele verifica e instala automaticamente as ferramentas necessarias:
+Antes de qualquer planejamento, o `@devops` (Gage) garante que o ambiente está pronto. Ele verifica e instala automaticamente as ferramentas necessárias:
 
-| Categoria | Ferramenta | Obrigatoria |
+| Categoria | Ferramenta | Obrigatória |
 |---|---|---|
 | Essencial | git, gh (GitHub CLI), node, npm | Sim |
 | Infraestrutura | supabase, docker | Recomendada |
@@ -73,14 +73,14 @@ Antes de qualquer planejamento, o `@devops` (Gage) garante que o ambiente esta p
 | Opcional | pnpm, bun | Opcional |
 
 <Callout type="tip" title="Pular o Bootstrap">
-Se o projeto ja tem um `.aiox/environment-report.json`, a Fase 0 e automaticamente pulada. Re-execute ao trocar de maquina ou quando novos membros entrarem.
+Se o projeto já tem um `.aiox/environment-report.json`, a Fase 0 é automaticamente pulada. Re-execute ao trocar de máquina ou quando novos membros entrarem.
 </Callout>
 
 ---
 
 ## Fase 1: Descoberta — O Pipeline de Planejamento
 
-A Fase 1 e um pipeline sequencial de 5 agentes, onde cada um consome o artefato do anterior:
+A Fase 1 é um pipeline sequencial de 5 agentes, onde cada um consome o artefato do anterior:
 
 ```
 @analyst → project-brief.md
@@ -91,40 +91,40 @@ A Fase 1 e um pipeline sequencial de 5 agentes, onde cada um consome o artefato 
     ↓
 @architect → fullstack-architecture.md
     ↓
-@po → validacao final (po-master-checklist)
+@po → validação final (po-master-checklist)
 ```
 
-### Pontos de Decisao na Fase 1
+### Pontos de Decisão na Fase 1
 
-| Decisao | Opcoes | Criterio |
+| Decisão | Opções | Critério |
 |---|---|---|
-| Gerar prompt v0? | Sim / Nao | Usuario quer gerar UI com IA (v0, Lovable) |
-| Arquitetura sugere mudancas no PRD? | Atualizar / Continuar | Recomendacao do @architect |
+| Gerar prompt v0? | Sim / Não | Usuário quer gerar UI com IA (v0, Lovable) |
+| Arquitetura sugere mudanças no PRD? | Atualizar / Continuar | Recomendação do @architect |
 | PO encontrou problemas? | Corrigir / Aprovar | Resultado do checklist |
 
-Se o `@architect` detecta que a arquitetura exige mudancas nos requisitos, o PRD e atualizado pelo `@pm` antes de prosseguir. Se o `@po` encontra problemas, o artefato retorna ao agente responsavel.
+Se o `@architect` detecta que a arquitetura exige mudanças nos requisitos, o PRD é atualizado pelo `@pm` antes de prosseguir. Se o `@po` encontra problemas, o artefato retorna ao agente responsável.
 
 ---
 
-## Fase 2: Fragmentacao — Documentos Prontos para Dev
+## Fase 2: Fragmentação — Documentos Prontos para Dev
 
-O `@po` pega o PRD monolitico e o fragmenta em partes menores usando a task `shard-doc`:
+O `@po` pega o PRD monolítico e o fragmenta em partes menores usando a task `shard-doc`:
 
 ```
 docs/prd/
-├── index.md          # Indice com links
-├── overview.md       # Secao 1
-├── features.md       # Secao 2
-├── requirements.md   # Secao 3
+├── index.md          # Índice com links
+├── overview.md       # Seção 1
+├── features.md       # Seção 2
+├── requirements.md   # Seção 3
 └── ...
 
 docs/architecture/
-├── source-tree.md    # Estrutura de diretorios
-├── tech-stack.md     # Stack tecnologica
-└── coding-standards.md  # Padroes de codigo
+├── source-tree.md    # Estrutura de diretórios
+├── tech-stack.md     # Stack tecnológica
+└── coding-standards.md  # Padrões de código
 ```
 
-Essa fragmentacao permite que agentes na Fase 3 trabalhem com documentos focados em vez de ler o PRD inteiro.
+Essa fragmentação permite que agentes na Fase 3 trabalhem com documentos focados em vez de ler o PRD inteiro.
 
 ---
 
@@ -132,12 +132,12 @@ Essa fragmentacao permite que agentes na Fase 3 trabalhem com documentos focados
 
 O ciclo de desenvolvimento segue um loop:
 
-1. **@sm cria** a proxima story baseada nos documentos fragmentados
-2. **Revisao opcional** — @analyst ou @pm revisam se a story esta clara
-3. **@dev implementa** — codigo, testes, CodeRabbit self-healing
+1. **@sm cria** a próxima story baseada nos documentos fragmentados
+2. **Revisão opcional** — @analyst ou @pm revisam se a story está clara
+3. **@dev implementa** — código, testes, CodeRabbit self-healing
 4. **@qa revisa** — quality gate com checklist de 7 pontos
 5. **@dev corrige** — se QA encontrar problemas
-6. **Repete** — ate completar todas as stories do epic
+6. **Repete** — até completar todas as stories do epic
 
 O status de cada story segue o fluxo: `Draft → Approved → In Progress → Review → Done`.
 
@@ -145,23 +145,23 @@ O status de cada story segue o fluxo: `Draft → Approved → In Progress → Re
 
 ## Os 9 Agentes Participantes
 
-| Agente | Nome | Arquetipo | Responsabilidade |
+| Agente | Nome | Arquétipo | Responsabilidade |
 |---|---|---|---|
 | `@devops` | Gage | Operator | Bootstrap, push, releases, CI/CD |
 | `@analyst` | Atlas | Decoder | Pesquisa, brainstorming, project brief |
-| `@pm` | Morgan | Strategist | PRD, estrategia de produto, epics |
+| `@pm` | Morgan | Strategist | PRD, estratégia de produto, epics |
 | `@ux-expert` | Uma | Empathizer | Specs de frontend, UX, design systems |
-| `@architect` | Aria | Visionary | Arquitetura fullstack, decisoes tecnicas |
-| `@po` | Pax | Balancer | Validacao, backlog, fragmentacao |
-| `@sm` | River | Facilitator | Criacao de stories, sprint planning |
-| `@dev` | Dex | Builder | Implementacao de codigo, testes |
-| `@qa` | Quinn | Guardian | Revisao de qualidade, gates |
+| `@architect` | Aria | Visionary | Arquitetura fullstack, decisões técnicas |
+| `@po` | Pax | Balancer | Validação, backlog, fragmentação |
+| `@sm` | River | Facilitator | Criação de stories, sprint planning |
+| `@dev` | Dex | Builder | Implementação de código, testes |
+| `@qa` | Quinn | Guardian | Revisão de qualidade, gates |
 
 ---
 
 ## Handoff entre Fases
 
-O AIOX fornece **prompts de handoff** padronizados para transicoes entre agentes e fases. Isso garante que o contexto nao se perde:
+O AIOX fornece **prompts de handoff** padronizados para transições entre agentes e fases. Isso garante que o contexto não se perde:
 
 | De | Para | Handoff |
 |---|---|---|
@@ -171,27 +171,27 @@ O AIOX fornece **prompts de handoff** padronizados para transicoes entre agentes
 | Fase 1 → 2 | @po | "Artefatos validados. Fragmente documentos: @po *shard-doc docs/prd.md" |
 | Fase 2 → 3 | @sm | "Documentos fragmentados. Inicie desenvolvimento: @sm *draft" |
 
-<Callout type="warning" title="Contexto entre sessoes">
-Se voce precisa trocar de sessao entre fases, sempre salve os artefatos gerados em disco antes. O handoff prompt so funciona se os arquivos existirem.
+<Callout type="warning" title="Contexto entre sessões">
+Se você precisa trocar de sessão entre fases, sempre salve os artefatos gerados em disco antes. O handoff prompt só funciona se os arquivos existirem.
 </Callout>
 
 ---
 
 ## Variantes de Greenfield
 
-Alem do fullstack, o AIOX oferece workflows greenfield especializados:
+Além do fullstack, o AIOX oferece workflows greenfield especializados:
 
-| Workflow | Uso | Diferenca |
+| Workflow | Uso | Diferença |
 |---|---|---|
 | `greenfield-fullstack` | Apps completas (frontend + backend + DB) | Pipeline completo com 9 agentes |
-| `greenfield-service` | APIs e microsservicos | Sem @ux-expert, foco em arquitetura de APIs |
+| `greenfield-service` | APIs e microsserviços | Sem @ux-expert, foco em arquitetura de APIs |
 | `greenfield-ui` | Interfaces e SPAs | Sem @data-engineer, foco em componentes UI |
 
 ---
 
-## Na Pratica: Workflow YAML Real
+## Na Prática: Workflow YAML Real
 
-Abaixo esta o trecho real do arquivo `greenfield-fullstack.yaml` -- a definicao completa do workflow que orquestra as 4 fases. Note como cada step especifica o agente responsavel, os artefatos que cria, a duracao estimada e as dependencias:
+Abaixo está o trecho real do arquivo `greenfield-fullstack.yaml` -- a definição completa do workflow que orquestra as 4 fases. Note como cada step especifica o agente responsável, os artefatos que cria, a duração estimada e as dependências:
 
 ```yaml
 workflow:
@@ -269,7 +269,7 @@ workflow:
 ```
 
 <Callout type="info" title="Workflow como contrato">
-O campo `creates` em cada step funciona como um contrato -- define exatamente quais artefatos aquele agente deve produzir. O campo `requires` estabelece pre-condicoes, garantindo que a sequencia de fases seja respeitada.
+O campo `creates` em cada step funciona como um contrato -- define exatamente quais artefatos aquele agente deve produzir. O campo `requires` estabelece pré-condições, garantindo que a sequência de fases seja respeitada.
 </Callout>
 
 ---
@@ -278,22 +278,22 @@ O campo `creates` em cada step funciona como um contrato -- define exatamente qu
   title="Teste seus conhecimentos"
   questions={[
     {
-      question: "Qual agente e responsavel pelo Bootstrap do ambiente na Fase 0?",
+      question: "Qual agente é responsável pelo Bootstrap do ambiente na Fase 0?",
       options: ["@dev (Dex)", "@devops (Gage)", "@architect (Aria)", "@pm (Morgan)"],
       correct: 1,
-      explanation: "O @devops (Gage) e o Operator responsavel por configurar o ambiente: verificar CLIs, autenticar servicos e criar a estrutura do projeto."
+      explanation: "O @devops (Gage) é o Operator responsável por configurar o ambiente: verificar CLIs, autenticar serviços e criar a estrutura do projeto."
     },
     {
-      question: "O que acontece na Fase 2: Fragmentacao?",
-      options: ["O codigo e dividido em microsservicos", "O PRD e fragmentado em documentos menores prontos para dev", "As stories sao criadas", "Os testes sao separados por modulo"],
+      question: "O que acontece na Fase 2: Fragmentação?",
+      options: ["O código é dividido em microsserviços", "O PRD é fragmentado em documentos menores prontos para dev", "As stories são criadas", "Os testes são separados por módulo"],
       correct: 1,
-      explanation: "Na Fase 2, o @po fragmenta o PRD monolitico e a arquitetura em documentos focados (source-tree, tech-stack, coding-standards) para facilitar o trabalho dos agentes de desenvolvimento."
+      explanation: "Na Fase 2, o @po fragmenta o PRD monolítico e a arquitetura em documentos focados (source-tree, tech-stack, coding-standards) para facilitar o trabalho dos agentes de desenvolvimento."
     },
     {
-      question: "Se o @architect detecta que a arquitetura exige mudancas nos requisitos, o que acontece?",
-      options: ["O pipeline e cancelado", "O @pm atualiza o PRD antes de prosseguir", "O @qa bloqueia o workflow", "O @po cria um novo epic"],
+      question: "Se o @architect detecta que a arquitetura exige mudanças nos requisitos, o que acontece?",
+      options: ["O pipeline é cancelado", "O @pm atualiza o PRD antes de prosseguir", "O @qa bloqueia o workflow", "O @po cria um novo epic"],
       correct: 1,
-      explanation: "O PRD e atualizado pelo @pm (Morgan) com base nas recomendacoes do @architect antes de continuar a validacao pelo @po."
+      explanation: "O PRD é atualizado pelo @pm (Morgan) com base nas recomendações do @architect antes de continuar a validação pelo @po."
     }
   ]}
 />

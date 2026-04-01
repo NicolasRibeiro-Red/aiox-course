@@ -1,10 +1,10 @@
 # Os 5 Building Blocks do AIOX
 
-Todo o framework AIOX e construido sobre cinco componentes fundamentais: **Agents, Tasks, Templates, Workflows e Checklists**. Entender como cada um funciona -- e como se conectam entre si -- e essencial para usar o framework com eficacia. Nesta licao, vamos dissecar cada building block.
+Todo o framework AIOX é construído sobre cinco componentes fundamentais: **Agents, Tasks, Templates, Workflows e Checklists**. Entender como cada um funciona -- e como se conectam entre si -- é essencial para usar o framework com eficácia. Nesta lição, vamos dissecar cada building block.
 
 ---
 
-## Visao Geral da Arquitetura
+## Visão Geral da Arquitetura
 
 ```
 aiox-core/
@@ -17,8 +17,8 @@ aiox-core/
 └── data/           # Knowledge base e preferencias
 ```
 
-<Callout type="info" title="Tudo e linguagem natural">
-Nenhum desses componentes e codigo executavel. Sao arquivos Markdown e YAML que LLMs leem e interpretam diretamente. Isso significa que voce pode inspecionar, editar e entender qualquer componente sem ferramentas especiais.
+<Callout type="info" title="Tudo é linguagem natural">
+Nenhum desses componentes é código executável. São arquivos Markdown e YAML que LLMs leem e interpretam diretamente. Isso significa que você pode inspecionar, editar e entender qualquer componente sem ferramentas especiais.
 </Callout>
 
 ---
@@ -27,16 +27,16 @@ Nenhum desses componentes e codigo executavel. Sao arquivos Markdown e YAML que 
 
 **Localizado em:** `aiox-core/agents/`
 
-Agentes sao os **atores** do sistema. Cada agente e definido em um arquivo Markdown com frontmatter YAML que especifica:
+Agentes são os **atores** do sistema. Cada agente é definido em um arquivo Markdown com frontmatter YAML que especifica:
 
-| Atributo | Descricao | Exemplo |
+| Atributo | Descrição | Exemplo |
 |---|---|---|
 | **Persona** | Nome e personalidade | Dex (The Builder) |
-| **Archetype** | Papel arquetipico | Builder, Strategist, Guardian |
+| **Archetype** | Papel arquetípico | Builder, Strategist, Guardian |
 | **Capabilities** | O que sabe fazer | Implementar stories, criar PRDs |
 | **Dependencies** | Tasks, templates e checklists que usa | `dev-develop-story.md`, `story-dod-checklist.md` |
-| **Startup Instructions** | O que carregar ao ativar | Documentos do projeto, preferencias tecnicas |
-| **Restrictions** | O que NAO pode fazer | @architect nao faz git push |
+| **Startup Instructions** | O que carregar ao ativar | Documentos do projeto, preferências técnicas |
+| **Restrictions** | O que NÃO pode fazer | @architect não faz git push |
 
 ### Exemplo de Estrutura de Agente
 
@@ -69,7 +69,7 @@ Dex is a pragmatic, solution-oriented full-stack developer...
 
 **Localizado em:** `aiox-core/agent-teams/`
 
-Times pre-configurados agrupam agentes para cenarios especificos:
+Times pré-configurados agrupam agentes para cenários específicos:
 
 | Time | Agentes | Uso |
 |---|---|---|
@@ -82,27 +82,27 @@ Times pre-configurados agrupam agentes para cenarios especificos:
 
 **Localizado em:** `aiox-core/tasks/`
 
-Tasks sao **instrucoes executaveis** -- procedimentos passo-a-passo que agentes seguem para completar uma acao especifica.
+Tasks são **instruções executáveis** -- procedimentos passo-a-passo que agentes seguem para completar uma ação específica.
 
-| Aspecto | Descricao |
+| Aspecto | Descrição |
 |---|---|
 | **Formato** | Markdown com passos numerados |
-| **Escopo** | Uma acao atomica e reutilizavel |
-| **Invocacao** | Via comandos `*` (ex: `*develop`, `*brainstorm`) |
-| **Modos** | YOLO (autonomo), Interactive (padrao), Pre-Flight (planejamento completo) |
+| **Escopo** | Uma ação atômica e reutilizável |
+| **Invocação** | Via comandos `*` (ex: `*develop`, `*brainstorm`) |
+| **Modos** | YOLO (autônomo), Interactive (padrão), Pre-Flight (planejamento completo) |
 
 ### Tasks Principais por Tipo
 
-| Tipo | Exemplos | Agente Tipico |
+| Tipo | Exemplos | Agente Típico |
 |---|---|---|
-| **Criacao** | `create-doc.md`, `create-next-story.md` | @pm, @sm |
+| **Criação** | `create-doc.md`, `create-next-story.md` | @pm, @sm |
 | **Desenvolvimento** | `dev-develop-story.md`, `apply-qa-fixes.md` | @dev |
-| **Analise** | `analyze-framework.md`, `spec-assess-complexity.md` | @architect, @analyst |
-| **Validacao** | `execute-checklist.md`, `qa-review-story.md` | @qa, @po |
-| **Operacoes** | `github-devops-pre-push-quality-gate.md` | @devops |
+| **Análise** | `analyze-framework.md`, `spec-assess-complexity.md` | @architect, @analyst |
+| **Validação** | `execute-checklist.md`, `qa-review-story.md` | @qa, @po |
+| **Operações** | `github-devops-pre-push-quality-gate.md` | @devops |
 
 <Callout type="tip" title="Design de Tasks">
-Prefira **multiplas tasks pequenas** a uma task grande com muitos branches. Tasks atomicas sao mais reutilizaveis e mais faceis de manter. A task `create-doc.md`, por exemplo, e usada por @pm, @architect e @analyst -- cada um com templates diferentes.
+Prefira **múltiplas tasks pequenas** a uma task grande com muitos branches. Tasks atômicas são mais reutilizáveis e mais fáceis de manter. A task `create-doc.md`, por exemplo, é usada por @pm, @architect e @analyst -- cada um com templates diferentes.
 </Callout>
 
 ---
@@ -111,7 +111,7 @@ Prefira **multiplas tasks pequenas** a uma task grande com muitos branches. Task
 
 **Localizado em:** `aiox-core/templates/`
 
-Templates sao **estruturas YAML** que definem o formato e conteudo de documentos gerados pelo framework.
+Templates são **estruturas YAML** que definem o formato e conteúdo de documentos gerados pelo framework.
 
 ### Tipos de Templates
 
@@ -127,7 +127,7 @@ Templates sao **estruturas YAML** que definem o formato e conteudo de documentos
 
 ### Anatomia de um Template
 
-Templates AIOX sao **auto-contidos** -- embutem tanto a estrutura do documento quanto instrucoes para a LLM:
+Templates AIOX são **auto-contidos** -- embutem tanto a estrutura do documento quanto instruções para a LLM:
 
 ```yaml
 template:
@@ -150,7 +150,7 @@ sections:
     instructions: "[[LLM: Present elicitation options 1-9...]]"
 ```
 
-A flag `elicit: true` indica que aquela secao requer interacao com o usuario -- o agente apresenta opcoes e aguarda resposta antes de prosseguir.
+A flag `elicit: true` indica que aquela seção requer interação com o usuário -- o agente apresenta opções e aguarda resposta antes de prosseguir.
 
 ---
 
@@ -158,17 +158,17 @@ A flag `elicit: true` indica que aquela secao requer interacao com o usuario -- 
 
 **Localizado em:** `aiox-core/workflows/`
 
-Workflows sao **sequencias prescritas** de steps e interacoes entre agentes para tipos especificos de projeto.
+Workflows são **sequências prescritas** de steps e interações entre agentes para tipos específicos de projeto.
 
-### Workflows Disponiveis
+### Workflows Disponíveis
 
 | Workflow | Tipo de Projeto | Agentes Envolvidos |
 |---|---|---|
 | `greenfield-fullstack` | Novo projeto full-stack | Todos |
-| `greenfield-service` | Novo servico backend | @analyst -> @pm -> @architect -> @sm -> @dev |
+| `greenfield-service` | Novo serviço backend | @analyst -> @pm -> @architect -> @sm -> @dev |
 | `greenfield-ui` | Nova interface frontend | @analyst -> @pm -> @ux -> @architect -> @sm -> @dev |
 | `brownfield-fullstack` | Projeto existente full-stack | @analyst -> @architect -> @pm -> @sm -> @dev |
-| `brownfield-service` | Servico existente | @architect -> @pm -> @sm -> @dev |
+| `brownfield-service` | Serviço existente | @architect -> @pm -> @sm -> @dev |
 | `brownfield-ui` | Interface existente | @ux -> @architect -> @pm -> @sm -> @dev |
 
 ### Greenfield vs. Brownfield
@@ -177,10 +177,10 @@ Workflows sao **sequencias prescritas** de steps e interacoes entre agentes para
   title="Greenfield vs. Brownfield"
   headers={["Aspecto", "Greenfield (Projeto Novo)", "Brownfield (Projeto Existente)"]}
   rows={[
-    ["Inicio", "Research e brainstorming do zero", "Discovery e analise do projeto existente"],
-    ["Documentacao", "Criada do zero (brief, PRD, arch)", "Gerada a partir do codigo existente"],
-    ["Arquitetura", "Design livre de restricoes", "Respeita padroes e tech debt existentes"],
-    ["Risk", "Menor -- sem legacy", "Maior -- integracao com codigo existente"],
+    ["Início", "Research e brainstorming do zero", "Discovery e análise do projeto existente"],
+    ["Documentação", "Criada do zero (brief, PRD, arch)", "Gerada a partir do código existente"],
+    ["Arquitetura", "Design livre de restrições", "Respeita padrões e tech debt existentes"],
+    ["Risk", "Menor -- sem legacy", "Maior -- integração com código existente"],
     ["Agente chave", "@analyst (discovery)", "@architect (document-project)"]
   ]}
 />
@@ -191,26 +191,26 @@ Workflows sao **sequencias prescritas** de steps e interacoes entre agentes para
 
 **Localizado em:** `aiox-core/checklists/`
 
-Checklists sao os **quality gates** do framework -- listas de validacao que garantem que artefatos estao completos e corretos antes de avancarem.
+Checklists são os **quality gates** do framework -- listas de validação que garantem que artefatos estão completos e corretos antes de avançarem.
 
 | Checklist | Quem usa | O que valida |
 |---|---|---|
-| `pm-checklist.md` | @pm, @po | 9 categorias de validacao de PRD |
-| `architect-checklist.md` | @architect | Decisoes de arquitetura e trade-offs |
+| `pm-checklist.md` | @pm, @po | 9 categorias de validação de PRD |
+| `architect-checklist.md` | @architect | Decisões de arquitetura e trade-offs |
 | `story-draft-checklist.md` | @sm | Completude e clareza de stories |
-| `story-dod-checklist.md` | @dev | Definition of Done para implementacao |
+| `story-dod-checklist.md` | @dev | Definition of Done para implementação |
 | `po-master-checklist.md` | @po | Alinhamento geral entre documentos |
-| `change-checklist.md` | @pm | Navegacao de mudancas mid-sprint |
+| `change-checklist.md` | @pm | Navegação de mudanças mid-sprint |
 
 ### Status de Checklist
 
 Cada categoria de um checklist resulta em um status:
 
-| Status | Significado | Acao |
+| Status | Significado | Ação |
 |---|---|---|
-| **PASS** | 90%+ completo | Prosseguir para proxima fase |
+| **PASS** | 90%+ completo | Prosseguir para próxima fase |
 | **PARTIAL** | 60-89% completo | Revisar itens pendentes |
-| **FAIL** | Menos de 60% | Refazer secao antes de prosseguir |
+| **FAIL** | Menos de 60% | Refazer seção antes de prosseguir |
 
 ---
 
@@ -225,20 +225,20 @@ Agent ──usa──> Task ──processa──> Template ──gera──> Doc
 Exemplo concreto:
 
 1. `@pm` (Agent) executa `*create-prd` (Task)
-2. A task processa `prd-tmpl.yaml` (Template) secao por secao
-3. O resultado e `docs/prd.md` (Documento gerado)
+2. A task processa `prd-tmpl.yaml` (Template) seção por seção
+3. O resultado é `docs/prd.md` (Documento gerado)
 4. `@po` valida com `pm-checklist.md` (Checklist)
-5. Se PASS, o Workflow avanca para `@architect`
+5. Se PASS, o Workflow avança para `@architect`
 
 ---
 
-## Na Pratica: Artefatos Reais
+## Na Prática: Artefatos Reais
 
-Ate agora voce viu a teoria dos 5 building blocks. Agora vamos olhar artefatos **reais** extraidos diretamente do repositorio AIOX. Esses sao os arquivos que os agentes leem e executam.
+Até agora você viu a teoria dos 5 building blocks. Agora vamos olhar artefatos **reais** extraídos diretamente do repositório AIOX. Esses são os arquivos que os agentes leem e executam.
 
-### 1. Task: `create-doc.md` (definicao YAML)
+### 1. Task: `create-doc.md` (definição YAML)
 
-Esta e a task que agentes como @pm e @architect usam para criar documentos a partir de templates. Note os tres modos de execucao (YOLO, Interactive, Pre-Flight) e como a task referencia ferramentas e utils:
+Esta é a task que agentes como @pm e @architect usam para criar documentos a partir de templates. Note os três modos de execução (YOLO, Interactive, Pre-Flight) e como a task referencia ferramentas e utils:
 
 ```yaml
 ---
@@ -277,7 +277,7 @@ utils:
 
 ### 2. Template: `agent-handoff-tmpl.yaml` (completo)
 
-Quando um agente passa o bastao para outro (ex: @dev → @qa), ele preenche este template de handoff. O artefato e compacto (max 500 tokens) e carrega apenas o essencial: story em andamento, decisoes tomadas, arquivos modificados e proxima acao:
+Quando um agente passa o bastão para outro (ex: @dev → @qa), ele preenche este template de handoff. O artefato é compacto (max 500 tokens) e carrega apenas o essencial: story em andamento, decisões tomadas, arquivos modificados e próxima ação:
 
 ```yaml
 # Agent Handoff Artifact Template
@@ -328,7 +328,7 @@ handoff:
 
 ### 3. Checklist: `story-dod-checklist.md` (Definition of Done)
 
-Este e o checklist que o @dev usa para validar se uma story esta realmente pronta antes de marcar como "Review". Note as instrucoes `[[LLM: ...]]` -- sao diretivas que a LLM interpreta durante a execucao:
+Este é o checklist que o @dev usa para validar se uma story está realmente pronta antes de marcar como "Review". Note as instruções `[[LLM: ...]]` -- são diretivas que a LLM interpreta durante a execução:
 
 ```markdown
 # Story Definition of Done (DoD) Checklist
@@ -379,7 +379,7 @@ The goal is quality delivery, not just checking boxes.]]
 ```
 
 <Callout type="info" title="Artefatos vivos">
-Esses nao sao exemplos inventados -- sao arquivos reais do repositorio `.aiox-core/`. Voce pode inspeciona-los, edita-los e personaliza-los para o seu contexto.
+Esses não são exemplos inventados -- são arquivos reais do repositório `.aiox-core/`. Você pode inspecioná-los, editá-los e personalizá-los para o seu contexto.
 </Callout>
 
 ---
@@ -393,25 +393,25 @@ Esses nao sao exemplos inventados -- sao arquivos reais do repositorio `.aiox-co
       question: "Qual componente define QUEM faz o trabalho no AIOX?",
       options: ["Tasks", "Templates", "Agents", "Workflows"],
       correct: 2,
-      explanation: "Agents sao os atores do sistema. Cada agente tem persona, capabilities e dependencias definidas em arquivo Markdown."
+      explanation: "Agents são os atores do sistema. Cada agente tem persona, capabilities e dependências definidas em arquivo Markdown."
     },
     {
       question: "Para que serve a flag 'elicit: true' em um template YAML?",
-      options: ["Para pular a secao automaticamente", "Para indicar que a secao requer interacao com o usuario", "Para marcar a secao como opcional", "Para gerar codigo automaticamente"],
+      options: ["Para pular a seção automaticamente", "Para indicar que a seção requer interação com o usuário", "Para marcar a seção como opcional", "Para gerar código automaticamente"],
       correct: 1,
-      explanation: "Quando elicit e true, o agente apresenta opcoes de elicitacao (1-9) e aguarda a resposta do usuario antes de prosseguir com a secao."
+      explanation: "Quando elicit é true, o agente apresenta opções de elicitação (1-9) e aguarda a resposta do usuário antes de prosseguir com a seção."
     },
     {
-      question: "Qual e a diferenca entre workflow Greenfield e Brownfield?",
-      options: ["Greenfield e mais rapido", "Greenfield cria do zero, Brownfield trabalha com projeto existente", "Brownfield so funciona no terminal", "Nao ha diferenca pratica"],
+      question: "Qual é a diferença entre workflow Greenfield e Brownfield?",
+      options: ["Greenfield é mais rápido", "Greenfield cria do zero, Brownfield trabalha com projeto existente", "Brownfield só funciona no terminal", "Não há diferença prática"],
       correct: 1,
-      explanation: "Greenfield e para projetos novos (research, PRD, architecture do zero). Brownfield e para projetos existentes (discovery, analise de tech debt, integracao com codigo existente)."
+      explanation: "Greenfield é para projetos novos (research, PRD, architecture do zero). Brownfield é para projetos existentes (discovery, análise de tech debt, integração com código existente)."
     }
   ]}
 />
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima licao, vamos mergulhar fundo no **Sistema de Templates** -- a engine que processa YAML, gerencia variaveis e habilita elicitacao interativa.
+Na próxima lição, vamos mergulhar fundo no **Sistema de Templates** -- a engine que processa YAML, gerencia variáveis e habilita elicitação interativa.

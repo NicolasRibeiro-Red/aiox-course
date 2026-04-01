@@ -1,22 +1,22 @@
-# Instalacao do AIOX
+# Instalação do AIOX
 
-Hora de instalar. O AIOX usa um wizard interativo via `npx` que cria toda a estrutura do framework no seu projeto. Nesta licao, vamos cobrir a instalacao completa, as opcoes disponiveis e o que cada etapa faz por baixo dos panos.
+Hora de instalar. O AIOX usa um wizard interativo via `npx` que cria toda a estrutura do framework no seu projeto. Nesta lição, vamos cobrir a instalação completa, as opções disponíveis e o que cada etapa faz por baixo dos panos.
 
 ---
 
-## Instalacao Rapida (Projeto Novo)
+## Instalação Rápida (Projeto Novo)
 
-Se voce esta comecando um projeto do zero, o caminho mais rapido e:
+Se você está começando um projeto do zero, o caminho mais rápido é:
 
 ```bash
 npx aiox-core init my-first-project
 cd my-first-project
 ```
 
-Isso cria um diretorio `my-first-project/` com toda a estrutura AIOX pronta para uso.
+Isso cria um diretório `my-first-project/` com toda a estrutura AIOX pronta para uso.
 
-<Callout type="warning" title="Cuidado com diretorios temporarios do NPX">
-O NPX executa pacotes em diretorios temporarios. Se voce rodar o instalador do diretorio home ou de um local arbitrario, ele pode falhar porque nao consegue detectar seu IDE corretamente. Sempre navegue ate o diretorio do projeto ANTES de rodar o comando.
+<Callout type="warning" title="Cuidado com diretórios temporários do NPX">
+O NPX executa pacotes em diretórios temporários. Se você rodar o instalador do diretório home ou de um local arbitrário, ele pode falhar porque não consegue detectar seu IDE corretamente. Sempre navegue até o diretório do projeto ANTES de rodar o comando.
 </Callout>
 
 ### O Erro mais Comum
@@ -31,7 +31,7 @@ cd ~/my-project
 npx aiox-core install
 ```
 
-A partir da versao 4.31.1, o AIOX detecta automaticamente quando esta rodando de um diretorio temporario do NPX e exibe uma mensagem de erro clara:
+A partir da versão 4.31.1, o AIOX detecta automaticamente quando está rodando de um diretório temporário do NPX e exibe uma mensagem de erro clara:
 
 ```
 NPX Temporary Directory Detected
@@ -46,30 +46,30 @@ Solution:
 
 ---
 
-## Instalacao em Projeto Existente (Brownfield)
+## Instalação em Projeto Existente (Brownfield)
 
-Ja tem um codebase? O AIOX se instala sem destruir nada:
+Já tem um codebase? O AIOX se instala sem destruir nada:
 
 ```bash
 cd existing-project
 npx aiox-core install
 ```
 
-### Garantias de Seguranca
+### Garantias de Segurança
 
-- **Nao-destrutivo**: O AIOX cria arquivos, nunca sobrescreve existentes
+- **Não-destrutivo**: O AIOX cria arquivos, nunca sobrescreve existentes
 - **Rollback simples**: `git checkout HEAD~1 -- .` restaura o estado anterior
 - **Configs preservadas**: Seus `.eslintrc`, `tsconfig.json` etc. permanecem intactos
 
 <Callout type="tip" title="Brownfield Discovery">
-Na primeira vez que voce ativa um agente AIOX em um projeto existente, ele detecta que existe codigo mas nao existem docs AIOX. O agente oferece analisar o codebase (leva 4-8 horas) e gera documentacao de arquitetura + relatorio de debito tecnico automaticamente.
+Na primeira vez que você ativa um agente AIOX em um projeto existente, ele detecta que existe código mas não existem docs AIOX. O agente oferece analisar o codebase (leva 4-8 horas) e gera documentação de arquitetura + relatório de débito técnico automaticamente.
 </Callout>
 
 ---
 
-## Opcoes de Instalacao
+## Opções de Instalação
 
-O installer suporta diversas flags para customizar a instalacao:
+O installer suporta diversas flags para customizar a instalação:
 
 ```bash
 # Projeto novo com template enterprise
@@ -87,18 +87,18 @@ npx aiox-core init my-project --skip-install
 
 ### O Wizard Interativo
 
-Quando voce roda o installer, ele pergunta:
+Quando você roda o installer, ele pergunta:
 
-1. **Diretorio de instalacao** -- confirme que e o diretorio atual
-2. **Componentes** -- Core (obrigatorio) + Squads (opcional)
-3. **Integracoes de IDE** -- Quais IDEs voce usa (Claude Code, Cursor, Gemini, etc.)
-4. **Organizacao de docs** -- Estrutura de documentacao desejada
+1. **Diretório de instalação** -- confirme que é o diretório atual
+2. **Componentes** -- Core (obrigatório) + Squads (opcional)
+3. **Integrações de IDE** -- Quais IDEs você usa (Claude Code, Cursor, Gemini, etc.)
+4. **Organização de docs** -- Estrutura de documentação desejada
 
 ---
 
 ## O que o Installer Cria
 
-Apos a instalacao, seu projeto tera esta estrutura:
+Após a instalação, seu projeto terá esta estrutura:
 
 <FileTree>
   <FileTree.Folder name="my-first-project" defaultOpen>
@@ -141,23 +141,23 @@ Apos a instalacao, seu projeto tera esta estrutura:
   </FileTree.Folder>
 </FileTree>
 
-### Detalhamento dos Diretorios Criados
+### Detalhamento dos Diretórios Criados
 
-| Diretorio | Conteudo | Proposito |
+| Diretório | Conteúdo | Propósito |
 |---|---|---|
-| `.aiox-core/core/` | Configuracao, quality gates, utils | Motor do framework |
+| `.aiox-core/core/` | Configuração, quality gates, utils | Motor do framework |
 | `.aiox-core/data/` | Knowledge base, preferences | Dados compartilhados entre agentes |
 | `.aiox-core/development/` | Agentes, tasks, workflows | Assets de desenvolvimento |
 | `.aiox-core/infrastructure/` | CI/CD, scripts, integ. | Ferramentas de infraestrutura |
 | `.aiox-core/product/` | Checklists, templates | Assets de PM/PO |
-| `.claude/` | CLAUDE.md, commands, rules | Integracao Claude Code |
+| `.claude/` | CLAUDE.md, commands, rules | Integração Claude Code |
 | `docs/stories/` | Stories de desenvolvimento | Tracking de features |
 
 ---
 
-## Instalacao Global (Alternativa)
+## Instalação Global (Alternativa)
 
-Se voce nao quer usar `npx` toda vez:
+Se você não quer usar `npx` toda vez:
 
 ```bash
 # Instalar globalmente
@@ -170,15 +170,15 @@ aiox-core install
 
 ---
 
-## Deteccao de Plataforma
+## Detecção de Plataforma
 
-O installer detecta automaticamente seu sistema operacional e aplica configuracoes especificas:
+O installer detecta automaticamente seu sistema operacional e aplica configurações específicas:
 
-| Plataforma | Ajustes Automaticos |
+| Plataforma | Ajustes Automáticos |
 |---|---|
-| **Windows** | Paths com backslash, CRLF para batch files, permissoes Windows |
-| **macOS** | Paths Unix, LF, deteccao de case-sensitivity |
-| **Linux** | Permissoes 755/644, XDG compliance, deteccao de distro |
+| **Windows** | Paths com backslash, CRLF para batch files, permissões Windows |
+| **macOS** | Paths Unix, LF, detecção de case-sensitivity |
+| **Linux** | Permissões 755/644, XDG compliance, detecção de distro |
 
 ### Paths de IDE por Plataforma
 
@@ -189,19 +189,19 @@ O installer detecta automaticamente seu sistema operacional e aplica configuraco
 
 ---
 
-## Verificando a Instalacao
+## Verificando a Instalação
 
-Apos instalar, rode o diagnostico:
+Após instalar, rode o diagnóstico:
 
 ```bash
 npx aiox-core doctor
 ```
 
 O doctor verifica:
-- Versoes de Node.js e npm
+- Versões de Node.js e npm
 - Integridade dos arquivos instalados
 - IDEs detectados e configurados
-- Permissoes de diretorio
+- Permissões de diretório
 
 Se houver problemas:
 
@@ -211,9 +211,9 @@ npx aiox-core doctor --fix
 
 ---
 
-## Sincronizacao Multi-IDE
+## Sincronização Multi-IDE
 
-Se voce usa mais de um IDE (ex: Claude Code + Cursor), o AIOX pode sincronizar regras entre eles:
+Se você usa mais de um IDE (ex: Claude Code + Cursor), o AIOX pode sincronizar regras entre eles:
 
 ```bash
 # Sincronizar agentes para todos os IDEs configurados
@@ -227,28 +227,28 @@ npm run validate:parity
 ```
 
 <Callout type="info" title="Quando sincronizar">
-Rode `npm run sync:ide` sempre que atualizar o AIOX, adicionar um novo agente ou alterar configuracoes de qualquer IDE. O validador de paridade garante que todos os IDEs estao na mesma versao.
+Rode `npm run sync:ide` sempre que atualizar o AIOX, adicionar um novo agente ou alterar configurações de qualquer IDE. O validador de paridade garante que todos os IDEs estão na mesma versão.
 </Callout>
 
 ---
 
-## Atualizacao
+## Atualização
 
-Para atualizar uma instalacao existente:
+Para atualizar uma instalação existente:
 
 ```bash
 npx aiox-core install
 ```
 
 O updater automaticamente:
-- Detecta a instalacao existente
-- Faz backup de customizacoes em `.aiox-backup/`
+- Detecta a instalação existente
+- Faz backup de customizações em `.aiox-backup/`
 - Atualiza apenas arquivos que mudaram
-- Preserva suas configuracoes
+- Preserva suas configurações
 
 ---
 
-## Desinstalacao
+## Desinstalação
 
 Se precisar remover o AIOX:
 
@@ -263,19 +263,19 @@ npm uninstall -g aiox-core
 
 ---
 
-## Troubleshooting Rapido
+## Troubleshooting Rápido
 
-| Problema | Solucao |
+| Problema | Solução |
 |---|---|
-| `NPX Temporary Directory Detected` | `cd` ate o diretorio do projeto antes de rodar |
-| IDE nao detectado | Rode `npm run sync:ide` e reinicie o IDE |
-| Erro de permissao (EACCES) | Corrija permissoes do npm (ver licao de plataforma) |
-| Versao do Node.js muito antiga | Atualize com nvm ou instalador oficial |
+| `NPX Temporary Directory Detected` | `cd` até o diretório do projeto antes de rodar |
+| IDE não detectado | Rode `npm run sync:ide` e reinicie o IDE |
+| Erro de permissão (EACCES) | Corrija permissões do npm (ver lição de plataforma) |
+| Versão do Node.js muito antiga | Atualize com nvm ou instalador oficial |
 
-Para problemas especificos da sua plataforma, consulte a proxima licao: **Setup por Plataforma**.
+Para problemas específicos da sua plataforma, consulte a próxima lição: **Setup por Plataforma**.
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima licao, vamos cobrir a configuracao especifica para **Windows, macOS e Linux** -- incluindo troubleshooting detalhado para cada sistema operacional.
+Na próxima lição, vamos cobrir a configuração específica para **Windows, macOS e Linux** -- incluindo troubleshooting detalhado para cada sistema operacional.

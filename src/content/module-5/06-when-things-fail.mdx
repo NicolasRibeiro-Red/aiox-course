@@ -1,14 +1,14 @@
-# Quando da Errado — Failure Cases do AIOX
+# Quando dá Errado — Failure Cases do AIOX
 
-O AIOX foi projetado para **falhar de forma controlada**. Gates, loops e escalacoes existem para capturar problemas cedo e impedir que erros se propaguem pelo pipeline. Nesta licao, voce vai ver o que acontece quando coisas dao errado — e como o sistema reage.
+O AIOX foi projetado para **falhar de forma controlada**. Gates, loops e escalações existem para capturar problemas cedo e impedir que erros se propaguem pelo pipeline. Nesta lição, você vai ver o que acontece quando coisas dão errado — e como o sistema reage.
 
 ---
 
 ## Constitutional Gate Violation
 
-A primeira linha de defesa do AIOX sao os **Constitutional Gates** — validacoes automaticas que bloqueiam execucao quando pre-condicoes nao sao atendidas. O mais fundamental e o **Article III: Story-Driven Development**, que impede qualquer desenvolvimento sem uma story valida.
+A primeira linha de defesa do AIOX são os **Constitutional Gates** — validações automáticas que bloqueiam execução quando pré-condições não são atendidas. O mais fundamental é o **Article III: Story-Driven Development**, que impede qualquer desenvolvimento sem uma story válida.
 
-Veja o que acontece quando o `@dev` tenta desenvolver uma story que nao existe:
+Veja o que acontece quando o `@dev` tenta desenvolver uma story que não existe:
 
 <InteractionTranscript
   title="Constitutional Gate: Story Inexistente"
@@ -30,19 +30,19 @@ Veja o que acontece quando o `@dev` tenta desenvolver uma story que nao existe:
   ]}
 />
 
-O bloqueio e **absoluto**. Nao importa o modo de execucao (YOLO, Interactive ou Pre-Flight) — sem story valida, nao ha desenvolvimento. Isso garante que todo codigo produzido tem rastreabilidade completa ate uma especificacao aprovada.
+O bloqueio é **absoluto**. Não importa o modo de execução (YOLO, Interactive ou Pre-Flight) — sem story válida, não há desenvolvimento. Isso garante que todo código produzido tem rastreabilidade completa até uma especificação aprovada.
 
 <Callout type="info" title="Dois Gates Constitucionais">
-Alem do Article III (Story-Driven Development), existe o **Article I (CLI First)** que emite um WARNING quando detecta implementacao de UI sem fundacao CLI. O Article I nao bloqueia, mas registra o desvio para auditoria.
+Além do Article III (Story-Driven Development), existe o **Article I (CLI First)** que emite um WARNING quando detecta implementação de UI sem fundação CLI. O Article I não bloqueia, mas registra o desvio para auditoria.
 </Callout>
 
 ---
 
 ## QA Gate FAIL
 
-Depois que o `@dev` completa o desenvolvimento, a story vai para revisao do `@qa`. O agente Quinn executa uma analise completa — requirements traceability, code quality, test architecture, NFR validation — e emite um verdict: **PASS**, **CONCERNS**, **FAIL** ou **WAIVED**.
+Depois que o `@dev` completa o desenvolvimento, a story vai para revisão do `@qa`. O agente Quinn executa uma análise completa — requirements traceability, code quality, test architecture, NFR validation — e emite um verdict: **PASS**, **CONCERNS**, **FAIL** ou **WAIVED**.
 
-Quando o verdict e FAIL, a story volta para o desenvolvedor com um relatorio estruturado:
+Quando o verdict é FAIL, a story volta para o desenvolvedor com um relatório estruturado:
 
 <InteractionTranscript
   title="QA Gate: Story Rejeitada"
@@ -55,7 +55,7 @@ Quando o verdict e FAIL, a story volta para o desenvolvedor com um relatorio est
       role: "agent",
       agent: "Quinn",
       agentIcon: "✅",
-      content: "QA Review — STORY-001: User Authentication\n\n## Findings\n\n| Severity | Count | Issues |\n|----------|-------|--------|\n| CRITICAL | 2 | SQL injection em login endpoint, JWT sem expiracao |\n| HIGH | 1 | Senha aceita menos de 6 caracteres |\n| MEDIUM | 3 | Logs sem sanitizacao, falta teste de rate limiting, error messages expoe stack trace |\n\n## Gate Decision: FAIL\n\nIssues CRITICAL devem ser resolvidos antes do merge.\n\n## Fix Request\n\n### 1. [CRITICAL] SQL Injection — login endpoint\n- Location: `src/api/auth/login.ts:42`\n- Problem: Input do usuario concatenado diretamente na query SQL\n- Expected: Usar parameterized queries ou ORM\n- Verification: [ ] Teste com payloads maliciosos\n\n### 2. [CRITICAL] JWT sem expiracao\n- Location: `src/api/auth/token.ts:15`\n- Problem: Token gerado sem campo `exp`\n- Expected: Expiracao maxima de 24h para access tokens\n- Verification: [ ] Verificar que tokens expiram corretamente"
+      content: "QA Review — STORY-001: User Authentication\n\n## Findings\n\n| Severity | Count | Issues |\n|----------|-------|--------|\n| CRITICAL | 2 | SQL injection em login endpoint, JWT sem expiração |\n| HIGH | 1 | Senha aceita menos de 6 caracteres |\n| MEDIUM | 3 | Logs sem sanitização, falta teste de rate limiting, error messages expõe stack trace |\n\n## Gate Decision: FAIL\n\nIssues CRITICAL devem ser resolvidos antes do merge.\n\n## Fix Request\n\n### 1. [CRITICAL] SQL Injection — login endpoint\n- Location: `src/api/auth/login.ts:42`\n- Problem: Input do usuário concatenado diretamente na query SQL\n- Expected: Usar parameterized queries ou ORM\n- Verification: [ ] Teste com payloads maliciosos\n\n### 2. [CRITICAL] JWT sem expiração\n- Location: `src/api/auth/token.ts:15`\n- Problem: Token gerado sem campo `exp`\n- Expected: Expiração máxima de 24h para access tokens\n- Verification: [ ] Verificar que tokens expiram corretamente"
     },
     {
       role: "system",
@@ -64,17 +64,17 @@ Quando o verdict e FAIL, a story volta para o desenvolvedor com um relatorio est
   ]}
 />
 
-O fix request segue um formato estruturado com **localizacao exata, descricao do problema, comportamento esperado e steps de verificacao**. Isso elimina ambiguidade — o @dev sabe exatamente o que corrigir e como validar.
+O fix request segue um formato estruturado com **localização exata, descrição do problema, comportamento esperado e steps de verificação**. Isso elimina ambiguidade — o @dev sabe exatamente o que corrigir e como validar.
 
 <Callout type="warning" title="BLOCKED vs FAIL">
-FAIL significa "corrija e resubmeta". **BLOCKED** significa "requer intervencao humana" — o agente identifica que o problema esta alem da capacidade de auto-correcao (ex: requisitos contraditorios, dependencia externa quebrada). BLOCKED escala imediatamente.
+FAIL significa "corrija e resubmeta". **BLOCKED** significa "requer intervenção humana" — o agente identifica que o problema está além da capacidade de auto-correção (ex: requisitos contraditórios, dependência externa quebrada). BLOCKED escala imediatamente.
 </Callout>
 
 ---
 
 ## O Fix-Review Loop
 
-Quando o QA rejeita uma story, entra o **QA Loop** — um ciclo automatizado de Review, Fix e Re-review que roda ate no maximo **5 iteracoes** (configuravel). O objetivo e resolver todos os issues sem intervencao humana.
+Quando o QA rejeita uma story, entra o **QA Loop** — um ciclo automatizado de Review, Fix e Re-review que roda até no máximo **5 iterações** (configurável). O objetivo é resolver todos os issues sem intervenção humana.
 
 <InteractionTranscript
   title="QA Loop: Fix → Re-review → Pass"
@@ -87,7 +87,7 @@ Quando o QA rejeita uma story, entra o **QA Loop** — um ciclo automatizado de 
       role: "agent",
       agent: "Dex",
       agentIcon: "💻",
-      content: "## Aplicando QA Fixes — STORY-001 (Iteracao 1/5)\n\n### Fixes Aplicados:\n- [x] SQL Injection: refatorado para parameterized queries com Prisma ORM\n- [x] JWT expiracao: adicionado `expiresIn: '24h'` na geracao de tokens\n- [x] Validacao de senha: minimo 8 caracteres com regex de complexidade\n\n### Validacao:\n- `npm run lint` — PASS\n- `npm test` — PASS (32 tests, 0 failures)\n- `npm run typecheck` — PASS\n\nPronto para re-review."
+      content: "## Aplicando QA Fixes — STORY-001 (Iteração 1/5)\n\n### Fixes Aplicados:\n- [x] SQL Injection: refatorado para parameterized queries com Prisma ORM\n- [x] JWT expiração: adicionado `expiresIn: '24h'` na geração de tokens\n- [x] Validação de senha: mínimo 8 caracteres com regex de complexidade\n\n### Validação:\n- `npm run lint` — PASS\n- `npm test` — PASS (32 tests, 0 failures)\n- `npm run typecheck` — PASS\n\nPronto para re-review."
     },
     {
       role: "user",
@@ -97,19 +97,19 @@ Quando o QA rejeita uma story, entra o **QA Loop** — um ciclo automatizado de 
       role: "agent",
       agent: "Quinn",
       agentIcon: "✅",
-      content: "QA Re-review — STORY-001 (Iteracao 2/5)\n\n## Findings\n\n| Severity | Count |\n|----------|-------|\n| CRITICAL | 0 |\n| HIGH | 0 |\n| MEDIUM | 1 |\n\nMEDIUM: Error messages ainda expoe nome interno de tabelas (nao-bloqueante).\n\n## Gate Decision: PASS\n\nTodos issues criticos resolvidos. MEDIUM documentado como tech debt."
+      content: "QA Re-review — STORY-001 (Iteração 2/5)\n\n## Findings\n\n| Severity | Count |\n|----------|-------|\n| CRITICAL | 0 |\n| HIGH | 0 |\n| MEDIUM | 1 |\n\nMEDIUM: Error messages ainda expõe nome interno de tabelas (não-bloqueante).\n\n## Gate Decision: PASS\n\nTodos issues críticos resolvidos. MEDIUM documentado como tech debt."
     },
     {
       role: "system",
-      content: "QA Loop COMPLETE — STORY-001 aprovada apos 2 iteracoes. Story status: Ready for Deploy."
+      content: "QA Loop COMPLETE — STORY-001 aprovada após 2 iterações. Story status: Ready for Deploy."
     }
   ]}
 />
 
-O loop funciona assim: cada iteracao incrementa o contador. Se apos 5 iteracoes o QA ainda nao aprova, o sistema **escala para intervencao humana** — um desenvolvedor precisa analisar manualmente por que os fixes nao estao resolvendo os problemas.
+O loop funciona assim: cada iteração incrementa o contador. Se após 5 iterações o QA ainda não aprova, o sistema **escala para intervenção humana** — um desenvolvedor precisa analisar manualmente por que os fixes não estão resolvendo os problemas.
 
-<Callout type="danger" title="Limite de 5 iteracoes">
-O limite de 5 iteracoes existe para evitar loops infinitos. Se o QA rejeita repetidamente, geralmente indica um problema mais profundo: requisitos ambiguos, arquitetura inadequada, ou incompatibilidade entre o que o @dev implementa e o que o @qa espera. Nesses casos, o sistema escala com um pacote completo de contexto — historico de todas iteracoes, gate files e fix requests — para que o humano tenha visibilidade total do problema.
+<Callout type="danger" title="Limite de 5 iterações">
+O limite de 5 iterações existe para evitar loops infinitos. Se o QA rejeita repetidamente, geralmente indica um problema mais profundo: requisitos ambíguos, arquitetura inadequada, ou incompatibilidade entre o que o @dev implementa e o que o @qa espera. Nesses casos, o sistema escala com um pacote completo de contexto — histórico de todas iterações, gate files e fix requests — para que o humano tenha visibilidade total do problema.
 </Callout>
 
 ### Estados do QA Loop
@@ -118,13 +118,13 @@ O loop possui estados bem definidos que controlam seu ciclo de vida:
 
 | Estado | Significado |
 |--------|-------------|
-| `pending` | Loop criado, aguardando inicio |
+| `pending` | Loop criado, aguardando início |
 | `in_progress` | Ciclo review-fix ativo |
 | `completed` | Story aprovada pelo QA |
 | `stopped` | Pausa manual via `*stop-qa-loop` |
 | `escalated` | Limite atingido ou BLOCKED — requer humano |
 
-Voce pode pausar (`*stop-qa-loop`), retomar (`*resume-qa-loop`) ou resetar (`*qa-loop --reset`) o loop a qualquer momento.
+Você pode pausar (`*stop-qa-loop`), retomar (`*resume-qa-loop`) ou resetar (`*qa-loop --reset`) o loop a qualquer momento.
 
 ---
 
@@ -133,7 +133,7 @@ Voce pode pausar (`*stop-qa-loop`), retomar (`*resume-qa-loop`) ou resetar (`*qa
 Requisitos mudam. Quando isso acontece no meio do desenvolvimento, o `@pm` tem o comando `*correct-course` para avaliar o impacto e replanejar sem jogar trabalho fora.
 
 <InteractionTranscript
-  title="Course Correction: Mudanca de Requisitos"
+  title="Course Correction: Mudança de Requisitos"
   messages={[
     {
       role: "user",
@@ -143,7 +143,7 @@ Requisitos mudam. Quando isso acontece no meio do desenvolvimento, o `@pm` tem o
       role: "agent",
       agent: "Morgan",
       agentIcon: "📋",
-      content: "## Course Correction — Sprint 4\n\nQual e o trigger da mudanca?\n\n1. Requisito do cliente mudou\n2. Descoberta tecnica durante implementacao\n3. Dependencia externa quebrou\n4. Repriorizacao de backlog"
+      content: "## Course Correction — Sprint 4\n\nQual é o trigger da mudança?\n\n1. Requisito do cliente mudou\n2. Descoberta técnica durante implementação\n3. Dependência externa quebrou\n4. Repriorização de backlog"
     },
     {
       role: "user",
@@ -153,43 +153,43 @@ Requisitos mudam. Quando isso acontece no meio do desenvolvimento, o `@pm` tem o
       role: "agent",
       agent: "Morgan",
       agentIcon: "📋",
-      content: "## Impact Analysis\n\n### Stories Afetadas:\n| Story | Status | Impacto |\n|-------|--------|--------|\n| STORY-001 | In Progress (70%) | ALTO — auth precisa ser reescrita |\n| STORY-002 | Ready | MEDIO — depende de STORY-001 |\n| STORY-005 | Done | NENHUM — independente |\n\n### Change Proposal:\n- **STORY-001**: Pivotar de email/senha para OAuth (Google + GitHub). Reaproveitar ~40% do codigo existente (session management, middleware). Estimativa: +3 dias\n- **STORY-002**: Atrasar inicio ate STORY-001 completar. Sem mudanca de escopo\n- **Sprint deadline**: Precisa extender 2 dias ou remover STORY-003 do sprint\n\n### Recomendacao:\nRemover STORY-003 (nice-to-have) e manter deadline. Aprovar?"
+      content: "## Impact Analysis\n\n### Stories Afetadas:\n| Story | Status | Impacto |\n|-------|--------|--------|\n| STORY-001 | In Progress (70%) | ALTO — auth precisa ser reescrita |\n| STORY-002 | Ready | MÉDIO — depende de STORY-001 |\n| STORY-005 | Done | NENHUM — independente |\n\n### Change Proposal:\n- **STORY-001**: Pivotar de email/senha para OAuth (Google + GitHub). Reaproveitar ~40% do código existente (session management, middleware). Estimativa: +3 dias\n- **STORY-002**: Atrasar início até STORY-001 completar. Sem mudança de escopo\n- **Sprint deadline**: Precisa extender 2 dias ou remover STORY-003 do sprint\n\n### Recomendação:\nRemover STORY-003 (nice-to-have) e manter deadline. Aprovar?"
     }
   ]}
 />
 
-<Callout type="tip" title="Course correction vs. comecar do zero">
-Use `*correct-course` quando a mudanca **pivota** algo existente — o PM avalia o que reaproveitar. Se a mudanca invalida completamente o trabalho feito (ex: trocar de stack), e melhor criar novas stories do zero via `@po *create-story` e arquivar as antigas.
+<Callout type="tip" title="Course correction vs. começar do zero">
+Use `*correct-course` quando a mudança **pivota** algo existente — o PM avalia o que reaproveitar. Se a mudança invalida completamente o trabalho feito (ex: trocar de stack), é melhor criar novas stories do zero via `@po *create-story` e arquivar as antigas.
 </Callout>
 
 ---
 
 ## CodeRabbit Self-Healing
 
-O AIOX integra o CodeRabbit como camada automatica de code review. Tanto o `@dev` quanto o `@qa` executam **self-healing loops** — o CodeRabbit identifica issues, o agente tenta corrigir automaticamente, e roda novamente para validar.
+O AIOX integra o CodeRabbit como camada automática de code review. Tanto o `@dev` quanto o `@qa` executam **self-healing loops** — o CodeRabbit identifica issues, o agente tenta corrigir automaticamente, e roda novamente para validar.
 
 ### Como funciona
 
 O loop tem limites diferentes por agente:
 
-| Agente | Max Iteracoes | Severidade Tratada | Comportamento |
+| Agente | Max Iterações | Severidade Tratada | Comportamento |
 |--------|---------------|--------------------|---------------|
-| `@dev` | 2 | CRITICAL apenas | Light mode — auto-fix rapido antes do DOD checklist |
+| `@dev` | 2 | CRITICAL apenas | Light mode — auto-fix rápido antes do DOD checklist |
 | `@qa` | 3 | CRITICAL + HIGH | Full mode — auto-fix completo durante a review |
 
-O fluxo e simples:
+O fluxo é simples:
 
-1. **Rodar CodeRabbit CLI** contra o codigo uncommitted
+1. **Rodar CodeRabbit CLI** contra o código uncommitted
 2. **Parsear output** por severidade (CRITICAL, HIGH, MEDIUM, LOW)
-3. Se ha issues no nivel tratado: **tentar auto-fix** e repetir
-4. Se nao ha issues bloqueantes: **prosseguir**
-5. Se max iteracoes atingido com issues restantes: **halt e reportar**
+3. Se há issues no nível tratado: **tentar auto-fix** e repetir
+4. Se não há issues bloqueantes: **prosseguir**
+5. Se max iterações atingido com issues restantes: **halt e reportar**
 
-Issues MEDIUM e LOW sao **documentados** (nao corrigidos automaticamente). MEDIUM vai para o @qa tratar. LOW e ignorado.
+Issues MEDIUM e LOW são **documentados** (não corrigidos automaticamente). MEDIUM vai para o @qa tratar. LOW é ignorado.
 
 ### Quando falha
 
-Se o CodeRabbit nao esta instalado ou da timeout, o self-healing e **silenciosamente pulado** — nao bloqueia o workflow. O agente registra um warning e continua. A review manual compensara.
+Se o CodeRabbit não está instalado ou dá timeout, o self-healing é **silenciosamente pulado** — não bloqueia o workflow. O agente registra um warning e continua. A review manual compensará.
 
 ```
 ⚠️  CodeRabbit not installed in WSL
@@ -200,6 +200,6 @@ Se o CodeRabbit nao esta instalado ou da timeout, o self-healing e **silenciosam
 
 ## Resumo
 
-<Callout type="tip" title="Failure cases sao features, nao bugs">
-Os gates e loops do AIOX nao sao obstaculos — sao **redes de seguranca**. Constitutional Gates impedem desenvolvimento sem rastreabilidade. QA Gates capturam bugs antes do merge. O Fix-Review Loop automatiza a correcao. Course Correction preserva trabalho feito. CodeRabbit Self-Healing pega issues de qualidade automaticamente. Cada failure case foi desenhado para capturar problemas cedo, quando sao baratos de corrigir — nao tarde, quando custam dias de retrabalho.
+<Callout type="tip" title="Failure cases são features, não bugs">
+Os gates e loops do AIOX não são obstáculos — são **redes de segurança**. Constitutional Gates impedem desenvolvimento sem rastreabilidade. QA Gates capturam bugs antes do merge. O Fix-Review Loop automatiza a correção. Course Correction preserva trabalho feito. CodeRabbit Self-Healing pega issues de qualidade automaticamente. Cada failure case foi desenhado para capturar problemas cedo, quando são baratos de corrigir — não tarde, quando custam dias de retrabalho.
 </Callout>

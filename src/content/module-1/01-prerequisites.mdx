@@ -1,20 +1,20 @@
-# Pre-requisitos
+# Pré-requisitos
 
-Antes de instalar o AIOX, voce precisa ter algumas ferramentas configuradas no seu sistema. Nada exotico -- sao ferramentas padrao de desenvolvimento que provavelmente voce ja tem. Vamos verificar cada uma.
+Antes de instalar o AIOX, você precisa ter algumas ferramentas configuradas no seu sistema. Nada exótico -- são ferramentas padrão de desenvolvimento que provavelmente você já tem. Vamos verificar cada uma.
 
 ---
 
-## Checklist Rapido
+## Checklist Rápido
 
-| Ferramenta | Versao Minima | Recomendada | Obrigatoria? |
+| Ferramenta | Versão Mínima | Recomendada | Obrigatória? |
 |---|---|---|---|
 | Node.js | 18.0.0 | 20.x LTS | Sim |
 | npm | 9.0.0 | 10.x | Sim |
-| Git | 2.30+ | Ultima versao | Recomendado |
-| GitHub CLI (`gh`) | 2.0+ | Ultima versao | Recomendado |
-| IDE compativel | -- | Claude Code / Gemini CLI | Sim |
+| Git | 2.30+ | Última versão | Recomendado |
+| GitHub CLI (`gh`) | 2.0+ | Última versão | Recomendado |
+| IDE compatível | -- | Claude Code / Gemini CLI | Sim |
 
-Para verificar rapidamente se voce tem tudo:
+Para verificar rapidamente se você tem tudo:
 
 ```bash
 node --version    # >= 18.0.0
@@ -25,36 +25,36 @@ gh --version      # >= 2.0 (opcional)
 
 ---
 
-## 1. Node.js (v18+ obrigatorio, v20 recomendado)
+## 1. Node.js (v18+ obrigatório, v20 recomendado)
 
-<Callout type="error" title="Obrigatorio">
-Node.js e a unica dependencia hard do AIOX. Sem Node.js 18+, o instalador nao vai rodar. O AIOX usa recursos da linguagem que so existem a partir da v18 (como fetch nativo e structuredClone).
+<Callout type="error" title="Obrigatório">
+Node.js é a única dependência hard do AIOX. Sem Node.js 18+, o instalador não vai rodar. O AIOX usa recursos da linguagem que só existem a partir da v18 (como fetch nativo e structuredClone).
 </Callout>
 
-O Node.js e o runtime JavaScript que executa o CLI do AIOX, o sistema de instalacao e os scripts de build.
+O Node.js é o runtime JavaScript que executa o CLI do AIOX, o sistema de instalação e os scripts de build.
 
 ### Por que v18 ou superior?
 
 - **ES Modules** nativos com suporte completo
 - **Fetch API** nativa (sem polyfills)
-- **Performance** significativamente melhor em operacoes de I/O
-- **LTS** (Long Term Support) -- recebe patches de seguranca por anos
+- **Performance** significativamente melhor em operações de I/O
+- **LTS** (Long Term Support) -- recebe patches de segurança por anos
 
 ### Como instalar
 
-A instalacao varia por plataforma. Resumo rapido:
+A instalação varia por plataforma. Resumo rápido:
 
-| Plataforma | Metodo recomendado |
+| Plataforma | Método recomendado |
 |---|---|
 | **Windows** | Instalador oficial ou `winget install OpenJS.NodeJS.LTS` |
 | **macOS** | Homebrew: `brew install node` |
 | **Linux** | nvm: `nvm install 20` ou NodeSource |
 
 <Callout type="tip" title="Use nvm">
-Se voce trabalha com multiplos projetos que requerem versoes diferentes de Node.js, use o **nvm** (Node Version Manager). Ele permite alternar entre versoes com um comando. No Windows, use o nvm-windows.
+Se você trabalha com múltiplos projetos que requerem versões diferentes de Node.js, use o **nvm** (Node Version Manager). Ele permite alternar entre versões com um comando. No Windows, use o nvm-windows.
 </Callout>
 
-### Verificacao
+### Verificação
 
 ```bash
 node --version
@@ -64,23 +64,23 @@ npm --version
 # Esperado: 10.x.x (ou qualquer versao >= 9.0.0)
 ```
 
-Se `node --version` retornar um erro ou uma versao abaixo de 18, instale ou atualize antes de continuar.
+Se `node --version` retornar um erro ou uma versão abaixo de 18, instale ou atualize antes de continuar.
 
 ---
 
-## 2. npm (v9+ obrigatorio)
+## 2. npm (v9+ obrigatório)
 
 <Callout type="info" title="Vem junto com Node.js">
-O npm e instalado automaticamente com o Node.js. Se voce instalou Node.js 18+, voce ja tem uma versao compativel do npm. Verifique com `npm --version` -- se for 9.0.0 ou superior, esta pronto.
+O npm é instalado automaticamente com o Node.js. Se você instalou Node.js 18+, você já tem uma versão compatível do npm. Verifique com `npm --version` -- se for 9.0.0 ou superior, está pronto.
 </Callout>
 
-O npm (Node Package Manager) e usado para:
+O npm (Node Package Manager) é usado para:
 
 - Instalar o AIOX via `npx aiox-core init`
-- Gerenciar dependencias do seu projeto
+- Gerenciar dependências do seu projeto
 - Executar scripts como `npm run sync:ide` e `npm test`
 
-### Atualizar npm (se necessario)
+### Atualizar npm (se necessário)
 
 ```bash
 # Atualizar para a ultima versao
@@ -90,33 +90,33 @@ npm install -g npm@latest
 npm --version
 ```
 
-**pnpm tambem funciona**: Se voce prefere pnpm, o AIOX e compativel. Apenas substitua `npm` por `pnpm` nos comandos.
+**pnpm também funciona**: Se você prefere pnpm, o AIOX é compatível. Apenas substitua `npm` por `pnpm` nos comandos.
 
 ---
 
 ## 3. Git (recomendado)
 
 <Callout type="warning" title="Fortemente recomendado">
-Git nao e tecnicamente obrigatorio para instalar o AIOX, mas e essencial para qualquer fluxo de trabalho real. O agente `@devops` depende de Git para push, branches e PRs. Story-driven development sem Git perde metade do valor.
+Git não é tecnicamente obrigatório para instalar o AIOX, mas é essencial para qualquer fluxo de trabalho real. O agente `@devops` depende de Git para push, branches e PRs. Story-driven development sem Git perde metade do valor.
 </Callout>
 
-O Git e usado para:
+O Git é usado para:
 
-- Controle de versao do seu projeto
-- Operacoes do agente `@devops` (push, branch, PR)
-- Rollback seguro: `git checkout HEAD~1 -- .` restaura o estado pre-AIOX
-- Integracao com GitHub para code review automatizado (CodeRabbit)
+- Controle de versão do seu projeto
+- Operações do agente `@devops` (push, branch, PR)
+- Rollback seguro: `git checkout HEAD~1 -- .` restaura o estado pré-AIOX
+- Integração com GitHub para code review automatizado (CodeRabbit)
 
-### Verificacao
+### Verificação
 
 ```bash
 git --version
 # Esperado: git version 2.30+ (qualquer versao recente funciona)
 ```
 
-### Configuracao inicial
+### Configuração inicial
 
-Se voce nunca configurou o Git:
+Se você nunca configurou o Git:
 
 ```bash
 git config --global user.name "Seu Nome"
@@ -127,8 +127,8 @@ git config --global user.email "seu@email.com"
 
 ## 4. GitHub CLI (recomendado)
 
-<Callout type="info" title="Recomendado para colaboracao">
-O GitHub CLI (`gh`) nao e obrigatorio para usar o AIOX localmente, mas e necessario para criar PRs, gerenciar issues e usar o fluxo completo de CI/CD. Se voce trabalha em time, instale.
+<Callout type="info" title="Recomendado para colaboração">
+O GitHub CLI (`gh`) não é obrigatório para usar o AIOX localmente, mas é necessário para criar PRs, gerenciar issues e usar o fluxo completo de CI/CD. Se você trabalha em time, instale.
 </Callout>
 
 O GitHub CLI permite:
@@ -137,7 +137,7 @@ O GitHub CLI permite:
 - Gerenciar issues e releases
 - Autenticar com GitHub sem tokens manuais
 
-### Instalacao rapida
+### Instalação rápida
 
 | Plataforma | Comando |
 |---|---|
@@ -147,9 +147,9 @@ O GitHub CLI permite:
 | **Linux (Fedora)** | `sudo dnf install gh` |
 | **Linux (Arch)** | `sudo pacman -S github-cli` |
 
-### Autenticacao
+### Autenticação
 
-Apos instalar:
+Após instalar:
 
 ```bash
 gh auth login
@@ -166,13 +166,13 @@ gh auth status
 
 ---
 
-## 5. IDE Compativel
+## 5. IDE Compatível
 
-<Callout type="error" title="Obrigatorio">
-Voce precisa de pelo menos um IDE/CLI compativel para ativar agentes AIOX. Sem isso, o framework nao tem como se comunicar com voce.
+<Callout type="error" title="Obrigatório">
+Você precisa de pelo menos um IDE/CLI compatível para ativar agentes AIOX. Sem isso, o framework não tem como se comunicar com você.
 </Callout>
 
-O AIOX funciona com multiplos IDEs, mas nem todos tem suporte igual:
+O AIOX funciona com múltiplos IDEs, mas nem todos têm suporte igual:
 
 | IDE/CLI | Status | Como Ativar Agentes |
 |---|---|---|
@@ -182,9 +182,9 @@ O AIOX funciona com multiplos IDEs, mas nem todos tem suporte igual:
 | **Cursor** | Suporte limitado | `@agent` + regras sincronizadas |
 | **GitHub Copilot** | Suporte limitado | Chat modes + repo instructions |
 
-### Recomendacao para iniciantes
+### Recomendação para iniciantes
 
-Se voce esta comecando agora, use **Claude Code** ou **Gemini CLI**. Ambos tem suporte completo e sao os mais testados pela comunidade.
+Se você está começando agora, use **Claude Code** ou **Gemini CLI**. Ambos têm suporte completo e são os mais testados pela comunidade.
 
 **Instalar Claude Code:**
 
@@ -196,17 +196,17 @@ npm install -g @anthropic-ai/claude-code
 
 ## Requisitos de Sistema
 
-### Hardware minimo
+### Hardware mínimo
 
-| Recurso | Minimo | Recomendado |
+| Recurso | Mínimo | Recomendado |
 |---|---|---|
 | RAM | 4 GB | 8 GB |
 | Disco | 500 MB livre | 2 GB livre |
-| Internet | Necessaria para instalacao | Banda larga |
+| Internet | Necessária para instalação | Banda larga |
 
 ### Sistemas operacionais suportados
 
-| SO | Versao | Status |
+| SO | Versão | Status |
 |---|---|---|
 | Windows 11 | Qualquer | Totalmente suportado |
 | Windows 10 | 22H2+ | Totalmente suportado |
@@ -217,21 +217,21 @@ npm install -g @anthropic-ai/claude-code
 
 ---
 
-## Diagnostico Rapido
+## Diagnóstico Rápido
 
-Se algo nao esta funcionando, o AIOX tem um comando de diagnostico:
+Se algo não está funcionando, o AIOX tem um comando de diagnóstico:
 
 ```bash
 npx aiox-core doctor
 ```
 
 Esse comando verifica:
-- Versao do Node.js e npm
-- Permissoes de diretorio
+- Versão do Node.js e npm
+- Permissões de diretório
 - IDEs detectados
-- Configuracoes de path
+- Configurações de path
 
-Se ele encontrar problemas, tente a correcao automatica:
+Se ele encontrar problemas, tente a correção automática:
 
 ```bash
 npx aiox-core doctor --fix
@@ -239,6 +239,6 @@ npx aiox-core doctor --fix
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Com todos os pre-requisitos verificados, vamos para a **instalacao do AIOX** na proxima licao. Se algum item acima falhou, resolva antes de continuar -- vai economizar tempo e frustracao.
+Com todos os pré-requisitos verificados, vamos para a **instalação do AIOX** na próxima lição. Se algum item acima falhou, resolva antes de continuar -- vai economizar tempo e frustração.

@@ -1,14 +1,14 @@
 # Setup por Plataforma
 
-O AIOX funciona em Windows, macOS e Linux, mas cada plataforma tem particularidades de instalacao e configuracao. Nesta licao, vamos cobrir o setup especifico de cada sistema, incluindo os problemas mais comuns e como resolve-los.
+O AIOX funciona em Windows, macOS e Linux, mas cada plataforma tem particularidades de instalação e configuração. Nesta lição, vamos cobrir o setup específico de cada sistema, incluindo os problemas mais comuns e como resolvê-los.
 
 ---
 
 ## Windows
 
-### Versoes Suportadas
+### Versões Suportadas
 
-| Versao | Status |
+| Versão | Status |
 |---|---|
 | Windows 11 | Totalmente suportado (recomendado) |
 | Windows 10 (22H2+) | Totalmente suportado |
@@ -17,16 +17,16 @@ O AIOX funciona em Windows, macOS e Linux, mas cada plataforma tem particularida
 
 ### Instalando Node.js no Windows
 
-A forma mais rapida e via **winget** (ja vem no Windows 11):
+A forma mais rápida é via **winget** (já vem no Windows 11):
 
 ```powershell
 winget install OpenJS.NodeJS.LTS
 ```
 
 Alternativas:
-- **Instalador oficial**: Baixe de [nodejs.org](https://nodejs.org/) -- escolha a versao LTS
+- **Instalador oficial**: Baixe de [nodejs.org](https://nodejs.org/) -- escolha a versão LTS
 - **Chocolatey**: `choco install nodejs-lts -y`
-- **nvm-windows**: Para gerenciar multiplas versoes
+- **nvm-windows**: Para gerenciar múltiplas versões
 
 ### Instalando Git e GitHub CLI
 
@@ -39,16 +39,16 @@ gh auth login
 ```
 
 <Callout type="warning" title="Execution Policy">
-Se o PowerShell bloquear a execucao de scripts com o erro "running scripts is disabled", execute:
+Se o PowerShell bloquear a execução de scripts com o erro "running scripts is disabled", execute:
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
-Isso permite scripts locais sem comprometer a seguranca do sistema.
+Isso permite scripts locais sem comprometer a segurança do sistema.
 </Callout>
 
 ### Problemas Comuns no Windows
 
-**Long Paths (caminhos longos):** O Windows tem limite de 260 caracteres por padrao. Projetos com node_modules profundos podem estourar esse limite.
+**Long Paths (caminhos longos):** O Windows tem limite de 260 caracteres por padrão. Projetos com node_modules profundos podem estourar esse limite.
 
 ```powershell
 # Habilitar long paths (requer admin)
@@ -56,12 +56,12 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
   -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
 ```
 
-**Antivirus bloqueando npm:** Alguns antivirus interferem com operacoes do npm. Adicione excecoes para:
+**Antivírus bloqueando npm:** Alguns antivírus interferem com operações do npm. Adicione exceções para:
 - `%APPDATA%\npm`
 - `%APPDATA%\npm-cache`
-- Diretorio do seu projeto
+- Diretório do seu projeto
 
-**Permissoes npm:**
+**Permissões npm:**
 
 ```powershell
 npm cache clean --force
@@ -70,7 +70,7 @@ npm config set prefix "$env:APPDATA\npm"
 
 ### Terminal Recomendado
 
-Use o **Windows Terminal** para a melhor experiencia:
+Use o **Windows Terminal** para a melhor experiência:
 
 ```powershell
 winget install Microsoft.WindowsTerminal
@@ -78,22 +78,22 @@ winget install Microsoft.WindowsTerminal
 
 | Terminal | Recomendado? | Tab completion | Scripts |
 |---|---|---|---|
-| PowerShell 7 | Sim | Avancado | .ps1 |
-| Windows Terminal | Sim | Avancado | Multiplos |
-| CMD | Basico | Limitado | .bat/.cmd |
+| PowerShell 7 | Sim | Avançado | .ps1 |
+| Windows Terminal | Sim | Avançado | Múltiplos |
+| CMD | Básico | Limitado | .bat/.cmd |
 
 ---
 
 ## macOS
 
-### Versoes Suportadas
+### Versões Suportadas
 
 - macOS 10.15 (Catalina) ou superior
 - Apple Silicon (M1/M2/M3) e Intel totalmente suportados
 
 ### Instalando Node.js no macOS
 
-A forma recomendada e via **Homebrew**:
+A forma recomendada é via **Homebrew**:
 
 ```bash
 # Instalar Homebrew (se nao tiver)
@@ -109,7 +109,7 @@ Alternativas:
 
 ### Instalando Git e GitHub CLI
 
-Git ja vem instalado no macOS via Xcode Command Line Tools. Para o GitHub CLI:
+Git já vem instalado no macOS via Xcode Command Line Tools. Para o GitHub CLI:
 
 ```bash
 brew install gh
@@ -118,13 +118,13 @@ gh auth login
 
 ### Problemas Comuns no macOS
 
-**Permissoes npm:**
+**Permissões npm:**
 
 ```bash
 sudo chown -R $(whoami) ~/.npm
 ```
 
-**Path nao encontrado apos instalacao:**
+**Path não encontrado após instalação:**
 
 ```bash
 # Adicione ao ~/.zshrc (ou ~/.bash_profile)
@@ -132,23 +132,23 @@ export PATH="/usr/local/bin:$PATH"
 source ~/.zshrc
 ```
 
-**Case sensitivity do filesystem:** O macOS usa filesystem case-insensitive por padrao. O AIOX lida com isso automaticamente, mas se voce tiver problemas:
+**Case sensitivity do filesystem:** O macOS usa filesystem case-insensitive por padrão. O AIOX lida com isso automaticamente, mas se você tiver problemas:
 
 ```bash
 diskutil info / | grep "File System"
 ```
 
-<Callout type="tip" title="macOS e simples">
-De todas as plataformas, macOS e a que tem menos fricao na instalacao. Homebrew resolve quase tudo. Se algo falhar, geralmente e problema de permissao -- resolvido com o `chown` acima.
+<Callout type="tip" title="macOS é simples">
+De todas as plataformas, macOS é a que tem menos fricção na instalação. Homebrew resolve quase tudo. Se algo falhar, geralmente é problema de permissão -- resolvido com o `chown` acima.
 </Callout>
 
 ---
 
 ## Linux
 
-### Distribuicoes Suportadas
+### Distribuições Suportadas
 
-| Distro | Versao | Status |
+| Distro | Versão | Status |
 |---|---|---|
 | Ubuntu | 20.04+ (LTS) | Totalmente suportado |
 | Debian | 11+ (Bullseye) | Totalmente suportado |
@@ -160,7 +160,7 @@ De todas as plataformas, macOS e a que tem menos fricao na instalacao. Homebrew 
 
 ### Instalando Node.js no Linux
 
-**Metodo recomendado: nvm**
+**Método recomendado: nvm**
 
 ```bash
 # Instalar nvm
@@ -175,7 +175,7 @@ nvm use 20
 nvm alias default 20
 ```
 
-**Metodo alternativo: NodeSource (Ubuntu/Debian)**
+**Método alternativo: NodeSource (Ubuntu/Debian)**
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -196,7 +196,7 @@ sudo pacman -S nodejs npm
 
 ### Build Essentials
 
-Alguns pacotes npm requerem compilacao nativa. Instale as ferramentas de build:
+Alguns pacotes npm requerem compilação nativa. Instale as ferramentas de build:
 
 ```bash
 # Ubuntu/Debian
@@ -211,11 +211,11 @@ sudo pacman -S base-devel
 
 ### Problemas Comuns no Linux
 
-<Callout type="error" title="Permissoes -- o problema mais comum">
-A maioria dos problemas no Linux envolve permissoes do npm. Nunca use `sudo npm install` para pacotes globais. Em vez disso, configure um prefix local.
+<Callout type="error" title="Permissões -- o problema mais comum">
+A maioria dos problemas no Linux envolve permissões do npm. Nunca use `sudo npm install` para pacotes globais. Em vez disso, configure um prefix local.
 </Callout>
 
-**Corrigir permissoes npm (solucao definitiva):**
+**Corrigir permissões npm (solução definitiva):**
 
 ```bash
 mkdir -p ~/.npm-global
@@ -234,7 +234,7 @@ sudo apt install libsecret-1-dev
 sudo dnf install libsecret-devel
 ```
 
-**SELinux (Fedora):** Se operacoes forem bloqueadas:
+**SELinux (Fedora):** Se operações forem bloqueadas:
 
 ```bash
 # Verificar se SELinux esta ativo
@@ -246,16 +246,16 @@ sudo setenforce 0
 
 ### XDG Compliance
 
-O AIOX respeita a especificacao XDG Base Directory no Linux:
+O AIOX respeita a especificação XDG Base Directory no Linux:
 
-| Tipo | Diretorio |
+| Tipo | Diretório |
 |---|---|
 | Dados | `~/.local/share/aiox/` |
 | Config | `~/.config/aiox/` |
 | Cache | `~/.cache/aiox/` |
 | Estado | `~/.local/state/aiox/` |
 
-### Configuracao Recomendada do Shell
+### Configuração Recomendada do Shell
 
 Adicione ao seu `~/.bashrc` ou `~/.zshrc`:
 
@@ -275,7 +275,7 @@ export EDITOR=vim
 
 ## WSL (Windows Subsystem for Linux)
 
-Se voce usa Windows mas prefere ferramentas Linux, o WSL2 e uma opcao excelente:
+Se você usa Windows mas prefere ferramentas Linux, o WSL2 é uma opção excelente:
 
 ```powershell
 # Instalar WSL2 (PowerShell como admin)
@@ -283,7 +283,7 @@ wsl --install
 ```
 
 <Callout type="tip" title="Performance no WSL">
-Mantenha seus projetos no filesystem Linux (`~/projects/`) em vez de acessar o Windows (`/mnt/c/`). A performance de I/O e dramaticamente melhor no filesystem nativo do WSL.
+Mantenha seus projetos no filesystem Linux (`~/projects/`) em vez de acessar o Windows (`/mnt/c/`). A performance de I/O é dramaticamente melhor no filesystem nativo do WSL.
 </Callout>
 
 Dentro do WSL, siga o guia de Linux normalmente.
@@ -294,13 +294,13 @@ Dentro do WSL, siga o guia de Linux normalmente.
 
 | Aspecto | Windows | macOS | Linux |
 |---|---|---|---|
-| **Instalacao Node.js** | winget / instalador | Homebrew / nvm | nvm / NodeSource |
-| **Principal dor** | Long paths, antivirus | Permissoes npm | Permissoes npm |
+| **Instalação Node.js** | winget / instalador | Homebrew / nvm | nvm / NodeSource |
+| **Principal dor** | Long paths, antivírus | Permissões npm | Permissões npm |
 | **Terminal ideal** | Windows Terminal | Terminal nativo | Qualquer com bash/zsh |
-| **Complexidade** | Media | Baixa | Media-Alta (depende da distro) |
+| **Complexidade** | Média | Baixa | Média-Alta (depende da distro) |
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
 Com o ambiente configurado, vamos para o momento mais satisfatório do curso: **ativar seu primeiro agente e ver o sistema funcionando**.

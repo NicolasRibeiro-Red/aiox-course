@@ -1,44 +1,44 @@
 # Matriz de Compatibilidade — O que Funciona Onde
 
-Saber qual feature funciona em qual IDE e essencial para escolher a plataforma certa e evitar frustracao. Nesta licao, vamos explorar a **matriz completa de compatibilidade** do AIOX com todas as IDEs suportadas.
+Saber qual feature funciona em qual IDE é essencial para escolher a plataforma certa e evitar frustração. Nesta lição, vamos explorar a **matriz completa de compatibilidade** do AIOX com todas as IDEs suportadas.
 
 ---
 
 ## Matriz Principal de Status
 
-Esta e a visao geral de cada IDE no ecossistema AIOX 4.2.11:
+Esta é a visão geral de cada IDE no ecossistema AIOX 4.2.11:
 
-| IDE/CLI | Status Geral | Ativacao de Agentes | Auto-Checks | Workaround |
+| IDE/CLI | Status Geral | Ativação de Agentes | Auto-Checks | Workaround |
 |---------|-------------|---------------------|-------------|------------|
 | **Claude Code** | Works | `/agent-name` | Full | -- |
 | **Gemini CLI** | Works | `/aiox-menu` + `/aiox-<agent>` | Alto | -- |
 | **Codex CLI** | Limited | `/skills` + `aiox-<agent-id>` | Parcial | `npm run sync:ide:codex` |
-| **Cursor** | Limited | `@agent` + regras sync | Nao disponivel | `npm run validate:parity` |
-| **GitHub Copilot** | Limited | chat modes + repo instructions | Nao disponivel | Repo instructions + VS Code MCP |
-| **AntiGravity** | Limited | workflow-driven | Nao disponivel | Workflows gerados + validadores |
+| **Cursor** | Limited | `@agent` + regras sync | Não disponível | `npm run validate:parity` |
+| **GitHub Copilot** | Limited | chat modes + repo instructions | Não disponível | Repo instructions + VS Code MCP |
+| **AntiGravity** | Limited | workflow-driven | Não disponível | Workflows gerados + validadores |
 
 ### Legenda de Status
 
-- **Works**: Totalmente recomendado para novos usuarios. Experiencia completa.
-- **Limited**: Utilizavel com os workarounds documentados. Requer passos extras.
+- **Works**: Totalmente recomendado para novos usuários. Experiência completa.
+- **Limited**: Utilizável com os workarounds documentados. Requer passos extras.
 
 ---
 
 ## Matriz de Auto-Checks Detalhada
 
-Os auto-checks sao o diferencial entre uma experiencia fluida e uma que exige disciplina manual:
+Os auto-checks são o diferencial entre uma experiência fluida e uma que exige disciplina manual:
 
-| IDE | Nivel de Auto-Check | O que e Reduzido | Como Compensar |
+| IDE | Nível de Auto-Check | O que é Reduzido | Como Compensar |
 |-----|---------------------|------------------|----------------|
 | **Claude Code** | Full | Nada | Checks nativos cuidam de tudo |
-| **Gemini CLI** | Alto | Diferencas menores em timing | Checks nativos cobrem maioria |
+| **Gemini CLI** | Alto | Diferenças menores em timing | Checks nativos cobrem maioria |
 | **Codex CLI** | Parcial | Menos session tracking; alguns checks manuais | `AGENTS.md` + `/skills` + scripts sync |
-| **Cursor** | Nenhum | Sem checks pre/pos; sem audit trail | Regras sync + MCP + validadores |
+| **Cursor** | Nenhum | Sem checks pré/pós; sem audit trail | Regras sync + MCP + validadores |
 | **Copilot** | Nenhum | Mesmo que Cursor + mais workflow manual | Repo instructions + VS Code MCP |
 | **AntiGravity** | Nenhum | Sem equivalentes de check | Workflows gerados + validadores |
 
-<Callout type="info" title="O que sao Auto-Checks?">
-Auto-checks sao validacoes automaticas que rodam antes e depois de cada acao do agente — verificando contexto, aplicando regras, garantindo qualidade. Sem eles, voce precisa validar manualmente.
+<Callout type="info" title="O que são Auto-Checks?">
+Auto-checks são validações automáticas que rodam antes e depois de cada ação do agente — verificando contexto, aplicando regras, garantindo qualidade. Sem eles, você precisa validar manualmente.
 </Callout>
 
 ---
@@ -49,21 +49,21 @@ Auto-checks sao validacoes automaticas que rodam antes e depois de cada acao do 
 
 | IDE | Session Tracking | Detalhes |
 |-----|-----------------|----------|
-| Claude Code | Automatico | Detecta inicio/fim de sessao nativamente |
-| Gemini CLI | Automatico | Detecta inicio/fim de sessao nativamente |
+| Claude Code | Automático | Detecta início/fim de sessão nativamente |
+| Gemini CLI | Automático | Detecta início/fim de sessão nativamente |
 | Codex CLI | Manual/Parcial | Requer sync manual ou scripts auxiliares |
-| Cursor | Manual | Sem deteccao automatica |
-| Copilot | Manual | Sem deteccao automatica |
-| AntiGravity | Manual | Sem deteccao automatica |
+| Cursor | Manual | Sem detecção automática |
+| Copilot | Manual | Sem detecção automática |
+| AntiGravity | Manual | Sem detecção automática |
 
 ### Pre/Post-Action Guardrails
 
-Guardrails sao checks que rodam antes e depois de cada uso de ferramenta pelo agente:
+Guardrails são checks que rodam antes e depois de cada uso de ferramenta pelo agente:
 
 | IDE | Guardrails | Comportamento |
 |-----|-----------|---------------|
-| Claude Code | Full | Automaticos em toda acao |
-| Gemini CLI | Full | Automaticos, minor timing diffs |
+| Claude Code | Full | Automáticos em toda ação |
+| Gemini CLI | Full | Automáticos, minor timing diffs |
 | Codex CLI | Parcial | Rode scripts de sync para compensar |
 | Cursor | Nenhum | Execute validadores manualmente |
 | Copilot | Nenhum | Execute validadores manualmente |
@@ -73,8 +73,8 @@ Guardrails sao checks que rodam antes e depois de cada uso de ferramenta pelo ag
 
 | IDE | Audit Trail | Riqueza de Dados |
 |-----|------------|------------------|
-| Claude Code | Automatico | Mais rico disponivel |
-| Gemini CLI | Automatico | Rico |
+| Claude Code | Automático | Mais rico disponível |
+| Gemini CLI | Automático | Rico |
 | Codex CLI | Reduzido | Compensar com output de validadores |
 | Cursor | Nenhum | Validadores geram output |
 | Copilot | Nenhum | Validadores geram output |
@@ -82,27 +82,27 @@ Guardrails sao checks que rodam antes e depois de cada uso de ferramenta pelo ag
 
 ---
 
-## Consequencias Praticas
+## Consequências Práticas
 
-### Para Novos Usuarios
+### Para Novos Usuários
 
-<Callout type="tip" title="Recomendacao para Iniciantes">
-Use Claude Code ou Gemini CLI — eles tem a maior automacao e menos passos manuais. Voce pode migrar para outra IDE depois, quando ja entender o framework.
+<Callout type="tip" title="Recomendação para Iniciantes">
+Use Claude Code ou Gemini CLI — eles têm a maior automação e menos passos manuais. Você pode migrar para outra IDE depois, quando já entender o framework.
 </Callout>
 
 ### Para Equipes
 
-| Cenario da Equipe | IDE Recomendada |
+| Cenário da Equipe | IDE Recomendada |
 |-------------------|----------------|
 | Time iniciante em AIOX | Claude Code ou Gemini CLI |
-| Time que ja usa Cursor | Cursor (com validadores manuais) |
+| Time que já usa Cursor | Cursor (com validadores manuais) |
 | Time focado em GitHub | GitHub Copilot |
 | Time Google Cloud | AntiGravity ou Gemini CLI |
-| Time misto (multiplas IDEs) | Definir Claude Code como padrao, sync para outras |
+| Time misto (múltiplas IDEs) | Definir Claude Code como padrão, sync para outras |
 
 ### Para CI/CD
 
-Em pipelines de CI/CD, o modo recomendado e:
+Em pipelines de CI/CD, o modo recomendado é:
 
 ```yaml
 # .github/workflows/aiox-validate.yml
@@ -114,7 +114,7 @@ Em pipelines de CI/CD, o modo recomendado e:
 
 ## Contrato de Compatibilidade
 
-O AIOX 4.2.11 mantem um contrato formal de compatibilidade:
+O AIOX 4.2.11 mantém um contrato formal de compatibilidade:
 
 ```bash
 # Arquivo do contrato
@@ -124,11 +124,11 @@ O AIOX 4.2.11 mantem um contrato formal de compatibilidade:
 npm run validate:parity
 ```
 
-Se as informacoes nesta documentacao divergirem dos resultados do validador, a **validacao de paridade falha**. Isso garante que a matriz de compatibilidade esta sempre atualizada.
+Se as informações nesta documentação divergirem dos resultados do validador, a **validação de paridade falha**. Isso garante que a matriz de compatibilidade está sempre atualizada.
 
 ---
 
-## Arvore de Decisao Completa
+## Árvore de Decisão Completa
 
 ```
 Qual IDE usar com AIOX?
@@ -154,7 +154,7 @@ Qual IDE usar com AIOX?
 
 ## Sync Entre IDEs
 
-O ponto forte do AIOX e que **todas as IDEs compartilham a mesma fonte de verdade**:
+O ponto forte do AIOX é que **todas as IDEs compartilham a mesma fonte de verdade**:
 
 ```bash
 # Sincronizar todas de uma vez
@@ -175,9 +175,9 @@ cp -r .cursor/rules/ .cursor/rules.backup/
 npm run sync:ide
 ```
 
-### Sync Automatico
+### Sync Automático
 
-Configure o sync automatico para nao precisar lembrar de rodar manualmente:
+Configure o sync automático para não precisar lembrar de rodar manualmente:
 
 ```yaml
 # .aiox-core/core/config/sync.yaml
@@ -200,10 +200,10 @@ auto_sync:
   title="Teste seus Conhecimentos"
   questions={[
     {
-      question: "Quais IDEs tem Auto-Checks completos no AIOX?",
+      question: "Quais IDEs têm Auto-Checks completos no AIOX?",
       options: ["Apenas Claude Code", "Claude Code e Gemini CLI", "Claude Code, Gemini e Codex", "Todas as IDEs"],
       correct: 1,
-      explanation: "Claude Code tem auto-checks 'Full' e Gemini CLI tem nivel 'Alto' (quase completo). As demais IDEs nao possuem auto-checks."
+      explanation: "Claude Code tem auto-checks 'Full' e Gemini CLI tem nível 'Alto' (quase completo). As demais IDEs não possuem auto-checks."
     },
     {
       question: "Qual comando valida o contrato de compatibilidade do AIOX?",
@@ -212,10 +212,10 @@ auto_sync:
       explanation: "O comando npm run validate:parity valida o contrato formal de compatibilidade do AIOX com todas as IDEs."
     },
     {
-      question: "O que acontece se voce usar Cursor sem rodar validadores manualmente?",
-      options: ["Funciona normalmente", "Sem checks pre/pos acao e sem audit trail", "O agente nao ativa", "Da erro de compilacao"],
+      question: "O que acontece se você usar Cursor sem rodar validadores manualmente?",
+      options: ["Funciona normalmente", "Sem checks pré/pós ação e sem audit trail", "O agente não ativa", "Dá erro de compilação"],
       correct: 1,
-      explanation: "O Cursor funciona, mas sem auto-checks voce perde validacoes pre/pos acao e audit trail. Rode npm run validate:parity para compensar."
+      explanation: "O Cursor funciona, mas sem auto-checks você perde validações pré/pós ação e audit trail. Rode npm run validate:parity para compensar."
     }
   ]}
 />

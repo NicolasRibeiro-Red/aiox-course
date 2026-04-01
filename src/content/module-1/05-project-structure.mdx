@@ -1,22 +1,22 @@
 # Estrutura do Projeto
 
-Entender a estrutura de diretorios do AIOX e fundamental para trabalhar efetivamente com o framework. Cada pasta tem um proposito claro, e saber onde cada coisa vive evita confusao e acelera seu workflow.
+Entender a estrutura de diretórios do AIOX é fundamental para trabalhar efetivamente com o framework. Cada pasta tem um propósito claro, e saber onde cada coisa vive evita confusão e acelera seu workflow.
 
 ---
 
-## Visao Geral
+## Visão Geral
 
-O AIOX usa uma **arquitetura modular** com separacao clara de responsabilidades:
+O AIOX usa uma **arquitetura modular** com separação clara de responsabilidades:
 
-1. **Framework Core** (`.aiox-core/`) -- Componentes portaveis organizados por dominio
-2. **Project Workspace** (raiz) -- Implementacao especifica do projeto
-3. **Documentation** (`docs/`) -- Documentacao publica e stories
+1. **Framework Core** (`.aiox-core/`) -- Componentes portáveis organizados por domínio
+2. **Project Workspace** (raiz) -- Implementação específica do projeto
+3. **Documentation** (`docs/`) -- Documentação pública e stories
 
-A filosofia e: **organizacao por dominio**, nao por tipo de arquivo. Agentes ficam com agentes, templates ficam com templates, infraestrutura fica com infraestrutura.
+A filosofia é: **organização por domínio**, não por tipo de arquivo. Agentes ficam com agentes, templates ficam com templates, infraestrutura fica com infraestrutura.
 
 ---
 
-## Arvore Completa
+## Árvore Completa
 
 <FileTree>
   <FileTree.Folder name=".aiox-core" defaultOpen>
@@ -116,46 +116,46 @@ A filosofia e: **organizacao por dominio**, nao por tipo de arquivo. Agentes fic
 
 ---
 
-## Modulos em Detalhe
+## Módulos em Detalhe
 
 ### `.aiox-core/development/` -- Assets de Desenvolvimento
 
-Este e o coracao do framework. Aqui vivem os agentes, tasks e workflows.
+Este é o coração do framework. Aqui vivem os agentes, tasks e workflows.
 
 **Agentes** (`.aiox-core/development/agents/`):
 
-Cada agente e um arquivo Markdown com frontmatter YAML que define persona, comandos e dependencias. Sao 11 agentes core:
+Cada agente é um arquivo Markdown com frontmatter YAML que define persona, comandos e dependências. São 11 agentes core:
 
 | Arquivo | Agente | Papel |
 |---|---|---|
 | `aiox-master.md` | @aiox-master (Orion) | Orquestrador Mestre |
-| `dev.md` | @dev (Dex) | Desenvolvedor Senior |
+| `dev.md` | @dev (Dex) | Desenvolvedor Sênior |
 | `qa.md` | @qa (Quinn) | Arquiteto de Testes |
 | `architect.md` | @architect (Aria) | Arquiteta de Sistemas |
 | `pm.md` | @pm (Morgan) | Product Manager |
 | `po.md` | @po (Pax) | Product Owner |
 | `sm.md` | @sm (River) | Scrum Master |
-| `analyst.md` | @analyst (Atlas) | Analista de Negocios |
+| `analyst.md` | @analyst (Atlas) | Analista de Negócios |
 | `data-engineer.md` | @data-engineer (Dara) | Engenheira de Dados |
-| `devops.md` | @devops (Gage) | Guardiao de Repositorios |
+| `devops.md` | @devops (Gage) | Guardião de Repositórios |
 | `ux-design-expert.md` | @ux-design-expert (Uma) | Designer UX/UI |
 
 **Tasks** (`.aiox-core/development/tasks/`):
 
-Mais de 60 tasks disponiveis. Cada task e um procedimento step-by-step que um agente executa. Exemplos:
+Mais de 60 tasks disponíveis. Cada task é um procedimento step-by-step que um agente executa. Exemplos:
 
-- `create-next-story.md` -- Cria a proxima story do backlog
+- `create-next-story.md` -- Cria a próxima story do backlog
 - `develop-story.md` -- Implementa uma story
-- `spec-write-spec.md` -- Escreve especificacao tecnica
+- `spec-write-spec.md` -- Escreve especificação técnica
 
 **Workflows** (`.aiox-core/development/workflows/`):
 
-Workflows orquestram multiplas tasks em sequencia:
+Workflows orquestram múltiplas tasks em sequência:
 
 - `greenfield-fullstack.yaml` -- Projeto novo do zero
 - `brownfield-service.yaml` -- Feature em projeto existente
-- `spec-pipeline.yaml` -- Pipeline de especificacao (ADE)
-- `qa-loop.yaml` -- Loop de review e correcao (ADE)
+- `spec-pipeline.yaml` -- Pipeline de especificação (ADE)
+- `qa-loop.yaml` -- Loop de review e correção (ADE)
 
 ---
 
@@ -163,33 +163,33 @@ Workflows orquestram multiplas tasks em sequencia:
 
 Componentes essenciais que fazem o framework funcionar:
 
-| Diretorio | Responsabilidade |
+| Diretório | Responsabilidade |
 |---|---|
-| `config/` | Sistema de configuracao |
+| `config/` | Sistema de configuração |
 | `elicitation/` | Engine de prompting interativo |
 | `quality-gates/` | Validadores de quality gates |
-| `registry/` | Registro de servicos |
+| `registry/` | Registro de serviços |
 | `session/` | Gerenciamento de estado em runtime |
-| `utils/` | Utilitarios compartilhados |
+| `utils/` | Utilitários compartilhados |
 
-<Callout type="info" title="Voce raramente edita core/">
-O diretorio core/ e gerenciado pelo framework. Voce interage com ele indiretamente atraves de agentes e configuracao. A menos que esteja contribuindo para o AIOX, nao modifique esses arquivos.
+<Callout type="info" title="Você raramente edita core/">
+O diretório core/ é gerenciado pelo framework. Você interage com ele indiretamente através de agentes e configuração. A menos que esteja contribuindo para o AIOX, não modifique esses arquivos.
 </Callout>
 
 ---
 
 ### `.aiox-core/data/` -- Dados Compartilhados
 
-Arquivos de dados que agentes leem durante a ativacao:
+Arquivos de dados que agentes leem durante a ativação:
 
-| Arquivo | Dono | Funcao |
+| Arquivo | Dono | Função |
 |---|---|---|
 | `aiox-kb.md` | @aiox-master | Knowledge base do AIOX (lazy-loaded) |
 | `agent-config-requirements.yaml` | @architect | Regras de carregamento por agente |
-| `technical-preferences.md` | @architect | Preferencias tecnicas do time |
-| `workflow-patterns.yaml` | @sm | Padroes de deteccao de workflow |
+| `technical-preferences.md` | @architect | Preferências técnicas do time |
+| `workflow-patterns.yaml` | @sm | Padrões de detecção de workflow |
 
-Cada arquivo tem um **dono** (agente responsavel) e um **trigger de atualizacao** definido. Isso garante que dados compartilhados nao fiquem desatualizados.
+Cada arquivo tem um **dono** (agente responsável) e um **trigger de atualização** definido. Isso garante que dados compartilhados não fiquem desatualizados.
 
 ---
 
@@ -198,13 +198,13 @@ Cada arquivo tem um **dono** (agente responsavel) e um **trigger de atualizacao*
 Templates e checklists usados por agentes de produto:
 
 **Checklists:**
-- `po-master-checklist.md` -- Validacao do Product Owner
-- `story-draft-checklist.md` -- Validacao de draft de story
+- `po-master-checklist.md` -- Validação do Product Owner
+- `story-draft-checklist.md` -- Validação de draft de story
 - `architect-checklist.md` -- Review de arquitetura
-- `change-checklist.md` -- Gestao de mudancas
+- `change-checklist.md` -- Gestão de mudanças
 
 **Templates:**
-- `story-tmpl.yaml` -- Template de story (YAML com instrucoes)
+- `story-tmpl.yaml` -- Template de story (YAML com instruções)
 - `prd-tmpl.yaml` -- Template de PRD
 - `epic-tmpl.md` -- Template de epic
 
@@ -212,29 +212,29 @@ Templates e checklists usados por agentes de produto:
 
 ### `.aiox-core/infrastructure/` -- Ferramentas de Infra
 
-| Subdiretorio | Conteudo |
+| Subdiretório | Conteúdo |
 |---|---|
 | `integrations/pm-adapters/` | Adaptadores para ClickUp, GitHub Projects, Jira |
 | `scripts/documentation-integrity/` | Verificador de integridade de docs |
-| `scripts/llm-routing/` | Utilitarios de roteamento de LLM |
+| `scripts/llm-routing/` | Utilitários de roteamento de LLM |
 | `templates/github-workflows/` | Templates de CI/CD para GitHub Actions |
 | `templates/gitignore/` | Templates de .gitignore |
 
 ---
 
-### `docs/` -- Documentacao do Projeto
+### `docs/` -- Documentação do Projeto
 
-| Subdiretorio | Conteudo |
+| Subdiretório | Conteúdo |
 |---|---|
 | `stories/` | Stories de desenvolvimento com checkboxes |
 | `epics/` | Planejamento de epics |
-| `architecture/` | Decisoes e reviews de arquitetura |
+| `architecture/` | Decisões e reviews de arquitetura |
 | `prd/` | Product Requirements Documents |
 | `guides/` | Guias de uso |
 
 ---
 
-## Convencoes de Nomenclatura
+## Convenções de Nomenclatura
 
 O AIOX segue regras estritas de nomenclatura:
 
@@ -261,17 +261,17 @@ Epics: epic-{numero}-{nome}.md
   epic-6.1-agent-identity-system.md
 ```
 
-<Callout type="warning" title="Siga as convencoes">
-Arquivos fora do padrao podem nao ser detectados pelo framework. Se voce criar um agente chamado `MyAgent.MD` em vez de `my-agent.md`, ele pode nao ser carregado corretamente.
+<Callout type="warning" title="Siga as convenções">
+Arquivos fora do padrão podem não ser detectados pelo framework. Se você criar um agente chamado `MyAgent.MD` em vez de `my-agent.md`, ele pode não ser carregado corretamente.
 </Callout>
 
 ---
 
 ## Onde Colocar Novos Arquivos
 
-Uma referencia rapida para quando voce precisar criar algo:
+Uma referência rápida para quando você precisar criar algo:
 
-| Voce quer criar... | Coloque em... |
+| Você quer criar... | Coloque em... |
 |---|---|
 | Novo agente | `.aiox-core/development/agents/{nome}.md` |
 | Nova task | `.aiox-core/development/tasks/{nome}.md` |
@@ -286,7 +286,7 @@ Uma referencia rapida para quando voce precisar criar algo:
 
 ## Runtime State: `.aiox/`
 
-Alem dos diretorios de framework, o AIOX cria um diretorio de estado em runtime:
+Além dos diretórios de framework, o AIOX cria um diretório de estado em runtime:
 
 ```
 .aiox/
@@ -297,23 +297,23 @@ Alem dos diretorios de framework, o AIOX cria um diretorio de estado em runtime:
   qa-loops/              # Estado de QA loops (ADE)
 ```
 
-Esse diretorio e **gitignored** por padrao -- contem estado transiente que nao deve ir para o repositorio.
+Esse diretório é **gitignored** por padrão -- contém estado transiente que não deve ir para o repositório.
 
 ---
 
 ## Resumo
 
-A estrutura do AIOX e organizada em quatro camadas:
+A estrutura do AIOX é organizada em quatro camadas:
 
 1. **Framework** (`.aiox-core/`) -- O motor. Agentes, tasks, templates, quality gates
-2. **Projeto** (`docs/`, `tests/`, `src/`) -- Seu codigo e documentacao
-3. **IDE** (`.claude/`, `.cursor/`, `.gemini/`) -- Integracao com editores
-4. **Runtime** (`.aiox/`) -- Estado transiente durante execucao
+2. **Projeto** (`docs/`, `tests/`, `src/`) -- Seu código e documentação
+3. **IDE** (`.claude/`, `.cursor/`, `.gemini/`) -- Integração com editores
+4. **Runtime** (`.aiox/`) -- Estado transiente durante execução
 
-Essa separacao garante que o framework e portavel (move `.aiox-core/` para outro projeto e funciona), que seu codigo nao se mistura com o framework, e que cada IDE tem sua propria configuracao sem conflitos.
+Essa separação garante que o framework é portável (move `.aiox-core/` para outro projeto e funciona), que seu código não se mistura com o framework, e que cada IDE tem sua própria configuração sem conflitos.
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Com a estrutura dominada, voce esta pronto para mergulhar nos **Conceitos Fundamentais** do AIOX no Modulo 2 -- onde vamos explorar em profundidade como agentes, tasks, templates e quality gates funcionam juntos.
+Com a estrutura dominada, você está pronto para mergulhar nos **Conceitos Fundamentais** do AIOX no Módulo 2 -- onde vamos explorar em profundidade como agentes, tasks, templates e quality gates funcionam juntos.

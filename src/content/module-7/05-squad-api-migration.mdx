@@ -1,6 +1,6 @@
-# Versionamento e Migracao de Squads
+# Versionamento e Migração de Squads
 
-Squads evoluem com o tempo — agentes ganham novas capacidades, tasks sao refinadas, formatos mudam. O AIOX oferece ferramentas para migrar squads legadas e gerenciar versoes de forma segura.
+Squads evoluem com o tempo — agentes ganham novas capacidades, tasks são refinadas, formatos mudam. O AIOX oferece ferramentas para migrar squads legadas e gerenciar versões de forma segura.
 
 ---
 
@@ -12,13 +12,13 @@ O AIOX 2.1 introduziu um novo formato de squad com melhorias significativas:
 |---------|---------------|--------------|
 | Manifesto | `config.yaml` | `squad.yaml` |
 | Campo AIOX type | Ausente | `aiox.type: squad` |
-| Versao minima | Ausente | `aiox.minVersion: "2.1.0"` |
+| Versão mínima | Ausente | `aiox.minVersion: "2.1.0"` |
 | Arquitetura | Agent-first | Task-first |
-| Validacao | Nenhuma | JSON Schema |
-| Distribuicao | Apenas local | 3 niveis (local, GitHub, marketplace) |
+| Validação | Nenhuma | JSON Schema |
+| Distribuição | Apenas local | 3 níveis (local, GitHub, marketplace) |
 
-<Callout type="warning" title="Migracao Necessaria">
-Se sua squad usa `config.yaml` em vez de `squad.yaml`, ela esta no formato legado e precisa ser migrada para aproveitar todas as features do AIOX 2.1+.
+<Callout type="warning" title="Migração Necessária">
+Se sua squad usa `config.yaml` em vez de `squad.yaml`, ela está no formato legado e precisa ser migrada para aproveitar todas as features do AIOX 2.1+.
 </Callout>
 
 ---
@@ -36,14 +36,14 @@ Verifique estes indicadores:
 | Campo aiox.minVersion | Ausente | `aiox.minVersion: "2.1.0"` |
 | Estrutura de pastas | Arquivos na raiz | Organizados em `agents/`, `tasks/` |
 
-### Comando de Verificacao
+### Comando de Verificação
 
 ```bash
 @squad-creator
 *validate-squad ./squads/legacy-squad
 ```
 
-O output indicara se a migracao e necessaria:
+O output indicará se a migração é necessária:
 
 ```
 ⚠ Legacy format detected (config.yaml)
@@ -52,11 +52,11 @@ O output indicara se a migracao e necessaria:
 
 ---
 
-## Executando a Migracao
+## Executando a Migração
 
 ### Preview (Recomendado Primeiro)
 
-Sempre faca um preview antes de migrar:
+Sempre faça um preview antes de migrar:
 
 ```bash
 @squad-creator
@@ -65,7 +65,7 @@ Sempre faca um preview antes de migrar:
 
 Isso mostra o que mudaria **sem modificar nenhum arquivo**.
 
-### Executar Migracao
+### Executar Migração
 
 ```bash
 *migrate-squad ./squads/legacy-squad
@@ -79,7 +79,7 @@ Isso mostra o que mudaria **sem modificar nenhum arquivo**.
 
 ---
 
-## O que a Migracao Faz
+## O que a Migração Faz
 
 ### 1. Renomeia o Manifesto
 
@@ -109,7 +109,7 @@ Antes:                     Depois:
 
 ### 4. Converte Formatos
 
-Arquivos YAML de agentes sao convertidos para Markdown:
+Arquivos YAML de agentes são convertidos para Markdown:
 
 **Antes (YAML):**
 ```yaml
@@ -133,9 +133,9 @@ agent:
 
 ---
 
-## Cenarios de Migracao
+## Cenários de Migração
 
-### Cenario 1: Squad Simples (apenas config.yaml)
+### Cenário 1: Squad Simples (apenas config.yaml)
 
 ```
 Antes:                    Depois:
@@ -146,7 +146,7 @@ my-squad/                 my-squad/
                               └── pre-migration-2026-01-15/
 ```
 
-### Cenario 2: Squad com Agentes YAML
+### Cenário 2: Squad com Agentes YAML
 
 ```
 Antes:                    Depois:
@@ -159,26 +159,26 @@ my-squad/                 my-squad/
                           └── .backup/
 ```
 
-### Cenario 3: Migracao Parcial
+### Cenário 3: Migração Parcial
 
-Se a squad ja tem algumas features 2.1 (ex: ja renomeou para `squad.yaml` mas ainda tem agentes em YAML):
+Se a squad já tem algumas features 2.1 (ex: já renomeou para `squad.yaml` mas ainda tem agentes em YAML):
 
 ```bash
 *migrate-squad ./squads/my-squad
 ```
 
-A migracao e inteligente:
+A migração é inteligente:
 - Adiciona campos AIOX faltantes ao manifesto
 - Converte arquivos YAML restantes
-- Pula arquivos ja migrados
+- Pula arquivos já migrados
 
 ---
 
 ## Backup e Rollback
 
-### Backup Automatico
+### Backup Automático
 
-Toda migracao cria um backup automatico:
+Toda migração cria um backup automático:
 
 ```
 .backup/
@@ -199,7 +199,7 @@ cp -r ./squads/my-squad/.backup/pre-migration-2026-01-15/. \
       ./squads/my-squad/
 ```
 
-### Rollback Programatico
+### Rollback Programático
 
 ```javascript
 const { SquadMigrator } = require(
@@ -210,27 +210,27 @@ const migrator = new SquadMigrator();
 await migrator.rollback('./squads/my-squad');
 ```
 
-<Callout type="tip" title="Seguranca">
-O backup automatico garante que voce nunca perde dados durante a migracao. Mesmo assim, e recomendavel commitar o estado atual antes de migrar.
+<Callout type="tip" title="Segurança">
+O backup automático garante que você nunca perde dados durante a migração. Mesmo assim, é recomendável commitar o estado atual antes de migrar.
 </Callout>
 
 ---
 
-## Versionamento Semantico
+## Versionamento Semântico
 
-Apos a migracao, mantenha suas squads versionadas corretamente:
+Após a migração, mantenha suas squads versionadas corretamente:
 
 ### Quando Incrementar
 
-| Tipo de Mudanca | Versao | Exemplo |
+| Tipo de Mudança | Versão | Exemplo |
 |----------------|--------|---------|
 | Breaking change (remover agente, mudar API) | Major (X.0.0) | 1.0.0 → 2.0.0 |
 | Nova feature (novo agente, nova task) | Minor (0.X.0) | 1.0.0 → 1.1.0 |
-| Bug fix (correcao de comportamento) | Patch (0.0.X) | 1.0.0 → 1.0.1 |
+| Bug fix (correção de comportamento) | Patch (0.0.X) | 1.0.0 → 1.0.1 |
 
-### Dependencias com Range
+### Dependências com Range
 
-Ao depender de outras squads, use ranges de versao:
+Ao depender de outras squads, use ranges de versão:
 
 ```yaml
 dependencies:
@@ -241,18 +241,18 @@ dependencies:
 
 ---
 
-## Checklist Pos-Migracao
+## Checklist Pós-Migração
 
-Apos migrar, verifique cada item:
+Após migrar, verifique cada item:
 
-- [ ] `squad.yaml` existe e YAML e valido
-- [ ] `aiox.type` e `"squad"`
-- [ ] `aiox.minVersion` e `"2.1.0"` ou superior
-- [ ] Todos os agentes estao em `agents/`
-- [ ] Todas as tasks estao em `tasks/`
-- [ ] Agentes em formato Markdown (nao YAML)
+- [ ] `squad.yaml` existe e YAML é válido
+- [ ] `aiox.type` é `"squad"`
+- [ ] `aiox.minVersion` é `"2.1.0"` ou superior
+- [ ] Todos os agentes estão em `agents/`
+- [ ] Todas as tasks estão em `tasks/`
+- [ ] Agentes em formato Markdown (não YAML)
 - [ ] Tasks seguem TASK-FORMAT-SPEC-V1
-- [ ] Validacao passa: `*validate-squad --strict`
+- [ ] Validação passa: `*validate-squad --strict`
 
 ```bash
 # Validacao final
@@ -269,7 +269,7 @@ Apos migrar, verifique cada item:
 Error: No manifest found (config.yaml or squad.yaml)
 ```
 
-Crie um manifesto basico:
+Crie um manifesto básico:
 
 ```yaml
 name: my-squad
@@ -288,13 +288,13 @@ components:
 ### "Invalid YAML syntax"
 
 Verifique:
-1. Use espacos, nao tabs
+1. Use espaços, não tabs
 2. Strings com caracteres especiais precisam de aspas
 3. Valide com um linter YAML online
 
 ### "Backup failed"
 
-Verifique permissoes de escrita e espaco em disco:
+Verifique permissões de escrita e espaço em disco:
 
 ```bash
 chmod 755 ./squads/my-squad
@@ -310,22 +310,22 @@ Execute com `--verbose` para ver quais arquivos falharam e corrija manualmente a
   title="Teste seus Conhecimentos"
   questions={[
     {
-      question: "Qual e o principal indicador de que uma squad esta no formato legado?",
-      options: ["Falta de README", "Usa config.yaml em vez de squad.yaml", "Nao tem testes", "Versao abaixo de 1.0"],
+      question: "Qual é o principal indicador de que uma squad está no formato legado?",
+      options: ["Falta de README", "Usa config.yaml em vez de squad.yaml", "Não tem testes", "Versão abaixo de 1.0"],
       correct: 1,
-      explanation: "O principal indicador e o uso de config.yaml como manifesto. O formato 2.1+ usa squad.yaml."
+      explanation: "O principal indicador é o uso de config.yaml como manifesto. O formato 2.1+ usa squad.yaml."
     },
     {
-      question: "O que o flag --dry-run faz no comando de migracao?",
-      options: ["Executa mais rapido", "Mostra o que mudaria sem modificar arquivos", "Pula a validacao", "Forca a migracao"],
+      question: "O que o flag --dry-run faz no comando de migração?",
+      options: ["Executa mais rápido", "Mostra o que mudaria sem modificar arquivos", "Pula a validação", "Força a migração"],
       correct: 1,
-      explanation: "O --dry-run mostra um preview de todas as mudancas que seriam feitas, sem modificar nenhum arquivo. Sempre recomendado antes da migracao real."
+      explanation: "O --dry-run mostra um preview de todas as mudanças que seriam feitas, sem modificar nenhum arquivo. Sempre recomendado antes da migração real."
     },
     {
-      question: "Onde o backup automatico e armazenado?",
+      question: "Onde o backup automático é armazenado?",
       options: ["Na raiz do projeto", "Em .backup/pre-migration-{timestamp}/", "Em /tmp/", "No GitHub"],
       correct: 1,
-      explanation: "O backup e criado dentro da propria squad, no diretorio .backup/pre-migration-{timestamp}/, contendo todos os arquivos originais."
+      explanation: "O backup é criado dentro da própria squad, no diretório .backup/pre-migration-{timestamp}/, contendo todos os arquivos originais."
     }
   ]}
 />

@@ -1,14 +1,14 @@
 # O Diferencial do AIOX
 
-O que torna o AIOX fundamentalmente diferente de outros frameworks de desenvolvimento? Nao e uma ferramenta a mais no seu toolkit -- e uma **mudanca de paradigma** em como software e concebido, planejado e construido. Nesta licao, vamos dissecar os tres pilares que sustentam essa diferenca.
+O que torna o AIOX fundamentalmente diferente de outros frameworks de desenvolvimento? Não é uma ferramenta a mais no seu toolkit -- é uma **mudança de paradigma** em como software é concebido, planejado e construído. Nesta lição, vamos dissecar os três pilares que sustentam essa diferença.
 
 ---
 
-## Os Tres Pilares
+## Os Três Pilares
 
-O AIOX se apoia em tres principios arquiteturais que, juntos, criam uma experiencia de desenvolvimento que nenhum framework tradicional consegue replicar:
+O AIOX se apoia em três princípios arquiteturais que, juntos, criam uma experiência de desenvolvimento que nenhum framework tradicional consegue replicar:
 
-1. **CLI First** -- O terminal como interface primaria
+1. **CLI First** -- O terminal como interface primária
 2. **Agentic Planning** -- Planejamento liderado por agentes especializados
 3. **Engineering-Contextualized Development** -- Desenvolvimento com contexto completo
 
@@ -22,35 +22,35 @@ Vamos explorar cada um.
 CLI > Observability > UI
 ```
 
-A filosofia CLI First nao e apenas "usar o terminal". E uma decisao arquitetural profunda:
+A filosofia CLI First não é apenas "usar o terminal". É uma decisão arquitetural profunda:
 
-- **Zero overhead visual**: Sem servidores web, sem dashboards obrigatorios, sem interfaces graficas pesadas
-- **Integravel com qualquer IDE**: Claude Code, Gemini CLI, Cursor, Copilot -- o AIOX se adapta ao seu ambiente
-- **Reprodutivel**: Comandos no terminal sao deterministicos, documentaveis e automatizaveis
-- **Leve**: O framework inteiro roda em linguagem natural -- Markdown e YAML. Sem binarios, sem compilacao
+- **Zero overhead visual**: Sem servidores web, sem dashboards obrigatórios, sem interfaces gráficas pesadas
+- **Integrável com qualquer IDE**: Claude Code, Gemini CLI, Cursor, Copilot -- o AIOX se adapta ao seu ambiente
+- **Reprodutível**: Comandos no terminal são determinísticos, documentáveis e automatizáveis
+- **Leve**: O framework inteiro roda em linguagem natural -- Markdown e YAML. Sem binários, sem compilação
 
 <Callout type="info" title="Por que isso importa?">
-Frameworks que dependem de UI criam fricao. Cada clique e tempo perdido. No AIOX, voce ativa um agente com um comando e comeca a trabalhar em segundos. O terminal e a interface mais rapida que existe para quem sabe o que quer fazer.
+Frameworks que dependem de UI criam fricção. Cada clique é tempo perdido. No AIOX, você ativa um agente com um comando e começa a trabalhar em segundos. O terminal é a interface mais rápida que existe para quem sabe o que quer fazer.
 </Callout>
 
 ### Agentes Dev vs. Agentes de Planejamento
 
-Um aspecto central do CLI First e a distincao entre tipos de agentes:
+Um aspecto central do CLI First é a distinção entre tipos de agentes:
 
-| Caracteristica | Agentes Dev (IDE) | Agentes de Planejamento (Web) |
+| Característica | Agentes Dev (IDE) | Agentes de Planejamento (Web) |
 |---|---|---|
-| **Contexto** | Minimo -- foco no codigo | Rico -- documentacao completa |
-| **Dependencias** | Poucas tasks, lean | Multiplas tasks e templates |
-| **Objetivo** | Gerar codigo de qualidade | Criar PRDs, arquitetura, stories |
+| **Contexto** | Mínimo -- foco no código | Rico -- documentação completa |
+| **Dependências** | Poucas tasks, lean | Múltiplas tasks e templates |
+| **Objetivo** | Gerar código de qualidade | Criar PRDs, arquitetura, stories |
 | **Exemplo** | `@dev`, `@qa` | `@pm`, `@architect`, `@analyst` |
 
-Essa separacao garante que agentes de codigo nao carregam peso desnecessario -- cada byte de contexto e reservado para o que importa: **seu codigo**.
+Essa separação garante que agentes de código não carregam peso desnecessário -- cada byte de contexto é reservado para o que importa: **seu código**.
 
 ---
 
 ## Pilar 2: Agentic Planning
 
-No desenvolvimento tradicional, uma pessoa (ou time) precisa dominar multiplas disciplinas simultaneamente. No AIOX, **agentes especializados dividem essa carga cognitiva**:
+No desenvolvimento tradicional, uma pessoa (ou time) precisa dominar múltiplas disciplinas simultaneamente. No AIOX, **agentes especializados dividem essa carga cognitiva**:
 
 ```
 @analyst (Pesquisa) --> @pm (PRD) --> @architect (Arquitetura) --> @sm (Stories) --> @dev (Codigo) --> @qa (Review) --> @devops (Deploy)
@@ -58,62 +58,62 @@ No desenvolvimento tradicional, uma pessoa (ou time) precisa dominar multiplas d
 
 Cada agente tem:
 
-- **Persona definida** com expertise especifica e arquetipo jungiano
+- **Persona definida** com expertise específica e arquétipo jungiano
 - **Comandos padronizados** prefixados com `*` para executar tarefas
-- **Quality gates** obrigatorios antes de passar o bastao
-- **Regras de colaboracao** que definem com quem interage e como delega
+- **Quality gates** obrigatórios antes de passar o bastão
+- **Regras de colaboração** que definem com quem interage e como delega
 
-<Callout type="warning" title="Planejamento nao e opcional">
-O AIOX impoe planejamento ANTES de codigo. Voce nao consegue pular etapas sem violar quality gates. Isso parece restritivo no inicio, mas elimina retrabalho massivo a longo prazo.
+<Callout type="warning" title="Planejamento não é opcional">
+O AIOX impõe planejamento ANTES de código. Você não consegue pular etapas sem violar quality gates. Isso parece restritivo no início, mas elimina retrabalho massivo a longo prazo.
 </Callout>
 
 ### Natural Language First
 
-Todo o framework e escrito em linguagem natural:
+Todo o framework é escrito em linguagem natural:
 
-- **Agentes** sao definidos em Markdown com frontmatter YAML
-- **Tasks** sao procedimentos passo-a-passo em Markdown
-- **Templates** sao estruturas YAML com instrucoes embutidas
-- **Workflows** orquestram multiplas tasks em sequencia
+- **Agentes** são definidos em Markdown com frontmatter YAML
+- **Tasks** são procedimentos passo-a-passo em Markdown
+- **Templates** são estruturas YAML com instruções embutidas
+- **Workflows** orquestram múltiplas tasks em sequência
 
-Nao existe codigo no core do framework. Isso significa que qualquer pessoa pode ler, entender e modificar o comportamento dos agentes sem saber programar.
+Não existe código no core do framework. Isso significa que qualquer pessoa pode ler, entender e modificar o comportamento dos agentes sem saber programar.
 
 ---
 
 ## Pilar 3: Engineering-Contextualized Development
 
-O terceiro pilar resolve um problema critico do desenvolvimento com LLMs: **perda de contexto entre sessoes e agentes**.
+O terceiro pilar resolve um problema crítico do desenvolvimento com LLMs: **perda de contexto entre sessões e agentes**.
 
 No AIOX, cada agente sabe:
 
-- O que os outros agentes ja fizeram (PRD, arquitetura, stories)
-- Quais padroes de codigo o projeto segue
-- Quais decisoes arquiteturais foram tomadas e por que
-- Qual e o estado atual de cada story e task
+- O que os outros agentes já fizeram (PRD, arquitetura, stories)
+- Quais padrões de código o projeto segue
+- Quais decisões arquiteturais foram tomadas e por quê
+- Qual é o estado atual de cada story e task
 
-Esse contexto compartilhado e possivel porque:
+Esse contexto compartilhado é possível porque:
 
 1. **Tudo vive no filesystem** -- arquivos Markdown que qualquer agente pode ler
-2. **Stories sao a fonte da verdade** -- cada task referencia acceptance criteria especificos
-3. **Quality gates conectam agentes** -- a saida de um agente e a entrada do proximo
-4. **Templates garantem consistencia** -- documentos gerados seguem estrutura padronizada
+2. **Stories são a fonte da verdade** -- cada task referencia acceptance criteria específicos
+3. **Quality gates conectam agentes** -- a saída de um agente é a entrada do próximo
+4. **Templates garantem consistência** -- documentos gerados seguem estrutura padronizada
 
 ---
 
-## Comparacao: Desenvolvimento Tradicional vs. AIOX
+## Comparação: Desenvolvimento Tradicional vs. AIOX
 
 <ComparisonTable
   title="Tradicional vs. AIOX"
   headers={["Aspecto", "Desenvolvimento Tradicional", "AIOX Method"]}
   rows={[
-    ["Planejamento", "Opcional ou informal. Reunioes e docs soltos", "Obrigatorio. PRD -> Epic -> Stories com quality gates"],
-    ["Contexto", "Perdido entre sessoes. Cada dev recria mental model", "Persistente em arquivos. Agentes compartilham conhecimento"],
-    ["Especializacao", "Generalistas sobrecarregados. Uma pessoa faz tudo", "12 agentes especializados. Cada um domina uma area"],
-    ["Quality Gates", "Code review manual no final. Bugs passam despercebidos", "Gates em cada etapa. PM valida PRD, Architect valida design, QA valida codigo"],
-    ["Onboarding", "Semanas para entender o projeto. Documentacao desatualizada", "Agentes mapeiam codebase automaticamente. Docs sempre sincronizados"],
-    ["Ferramentas", "IDE + terminal + dezenas de SaaS integrados manualmente", "CLI unico. Framework em linguagem natural. Zero config obrigatoria"],
-    ["Retrabalho", "Alto. Requisitos mal definidos geram codigo errado", "Minimo. Planejamento rigoroso antes de escrever uma linha"],
-    ["Escalabilidade", "Linear. Mais features = mais devs = mais coordenacao", "Squads modulares. Novos dominios adicionados sem alterar o core"]
+    ["Planejamento", "Opcional ou informal. Reuniões e docs soltos", "Obrigatório. PRD -> Epic -> Stories com quality gates"],
+    ["Contexto", "Perdido entre sessões. Cada dev recria mental model", "Persistente em arquivos. Agentes compartilham conhecimento"],
+    ["Especialização", "Generalistas sobrecarregados. Uma pessoa faz tudo", "12 agentes especializados. Cada um domina uma área"],
+    ["Quality Gates", "Code review manual no final. Bugs passam despercebidos", "Gates em cada etapa. PM valida PRD, Architect valida design, QA valida código"],
+    ["Onboarding", "Semanas para entender o projeto. Documentação desatualizada", "Agentes mapeiam codebase automaticamente. Docs sempre sincronizados"],
+    ["Ferramentas", "IDE + terminal + dezenas de SaaS integrados manualmente", "CLI único. Framework em linguagem natural. Zero config obrigatória"],
+    ["Retrabalho", "Alto. Requisitos mal definidos geram código errado", "Mínimo. Planejamento rigoroso antes de escrever uma linha"],
+    ["Escalabilidade", "Linear. Mais features = mais devs = mais coordenação", "Squads modulares. Novos domínios adicionados sem alterar o core"]
   ]}
 />
 
@@ -121,36 +121,36 @@ Esse contexto compartilhado e possivel porque:
 
 ## Quando o AIOX faz mais sentido?
 
-O AIOX **nao e para tudo**. Ele brilha em cenarios especificos:
+O AIOX **não é para tudo**. Ele brilha em cenários específicos:
 
-| Cenario | AIOX e ideal? | Por que |
+| Cenário | AIOX é ideal? | Por quê |
 |---|---|---|
 | Projeto greenfield com escopo definido | Sim | Fluxo completo do planejamento ao deploy |
-| Refactoring de codebase legado | Sim | Brownfield workflow com discovery automatica |
-| Script rapido de 50 linhas | Nao | Overhead de planejamento nao compensa |
-| Prototipo descartavel | Nao | AIOX e para software que vai durar |
+| Refactoring de codebase legado | Sim | Brownfield workflow com discovery automática |
+| Script rápido de 50 linhas | Não | Overhead de planejamento não compensa |
+| Protótipo descartável | Não | AIOX é para software que vai durar |
 | Time de 1 dev que quer qualidade enterprise | Sim | Agentes compensam a falta de um time completo |
 
 ---
 
-## Os Guiding Principles na Pratica
+## Os Guiding Principles na Prática
 
-Os principios do AIOX se traduzem em regras concretas para quem contribui e usa o framework:
+Os princípios do AIOX se traduzem em regras concretas para quem contribui e usa o framework:
 
 ### Design de Agentes
-- Agentes Dev devem ser **lean** -- dependencias minimas, foco no codigo
+- Agentes Dev devem ser **lean** -- dependências mínimas, foco no código
 - Agentes de Planejamento podem ser **ricos** -- mais contexto, mais tasks
-- Todos os agentes devem ter persona clara, expertise especifica e capabilities definidas
+- Todos os agentes devem ter persona clara, expertise específica e capabilities definidas
 
 ### Design de Tasks
-- Preferir **multiplas tasks pequenas** a uma task grande com muitos branches
+- Preferir **múltiplas tasks pequenas** a uma task grande com muitos branches
 - Reutilizar tasks comuns (como `create-doc`) em vez de criar duplicatas
-- Tasks de agentes Dev devem ser concisas -- contexto e precioso
+- Tasks de agentes Dev devem ser concisas -- contexto é precioso
 
 ### Quando criar Squads
-Squads sao extensoes modulares para dominios especializados. Use quando o caso de uso vai **alem de desenvolvimento de software**:
-- Dominios nao-tecnicos (negocios, wellness, educacao)
-- Dominios tecnicos especializados (games, mobile, infraestrutura)
+Squads são extensões modulares para domínios especializados. Use quando o caso de uso vai **além de desenvolvimento de software**:
+- Domínios não-técnicos (negócios, wellness, educação)
+- Domínios técnicos especializados (games, mobile, infraestrutura)
 - Bases de conhecimento pesadas
 
 <Callout type="tip" title="Regra de ouro">
@@ -161,16 +161,16 @@ Se adicionar ao core bloataria os agentes Dev, crie um Squad. O core deve perman
 
 ## Resumo
 
-O diferencial do AIOX nao esta em uma unica feature, mas na **combinacao dos tres pilares**:
+O diferencial do AIOX não está em uma única feature, mas na **combinação dos três pilares**:
 
 1. **CLI First** garante velocidade e portabilidade
-2. **Agentic Planning** garante qualidade e especializacao
-3. **Engineering-Contextualized Development** garante consistencia e continuidade
+2. **Agentic Planning** garante qualidade e especialização
+3. **Engineering-Contextualized Development** garante consistência e continuidade
 
-Juntos, eles criam um sistema onde agentes de IA nao sao ferramentas isoladas -- sao membros de um time coordenado, com papeis claros, comunicacao estruturada e quality gates em cada etapa.
+Juntos, eles criam um sistema onde agentes de IA não são ferramentas isoladas -- são membros de um time coordenado, com papéis claros, comunicação estruturada e quality gates em cada etapa.
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima licao, vamos ver o **roadmap completo do curso** -- o que cada modulo cobre, quanto tempo esperar e quais pre-requisitos voce precisa ter.
+Na próxima lição, vamos ver o **roadmap completo do curso** -- o que cada módulo cobre, quanto tempo esperar e quais pré-requisitos você precisa ter.

@@ -1,30 +1,30 @@
-# O que e AIOX?
+# O que é AIOX?
 
-**AIOX** (AI-Orchestrated Experience) e um meta-framework open source para desenvolvimento full-stack orquestrado por agentes de inteligencia artificial. Criado pela [SynkraAI](https://github.com/SynkraAI), ele transforma a forma como software e construido — de um processo centrado no humano para uma orquestracao inteligente entre agentes especializados.
+**AIOX** (AI-Orchestrated Experience) é um meta-framework open source para desenvolvimento full-stack orquestrado por agentes de inteligência artificial. Criado pela [SynkraAI](https://github.com/SynkraAI), ele transforma a forma como software é construído — de um processo centrado no humano para uma orquestração inteligente entre agentes especializados.
 
 ---
 
 ## O Problema que o AIOX Resolve
 
-Desenvolver software moderno envolve dezenas de decisoes: arquitetura, stack, padroes de codigo, testes, deploy, documentacao, gerenciamento de produto. Tradicionalmente, **uma pessoa** (ou um time) precisa dominar todas essas areas. Com LLMs, surgiu uma nova possibilidade: **agentes especializados** que dominam areas especificas e colaboram entre si.
+Desenvolver software moderno envolve dezenas de decisões: arquitetura, stack, padrões de código, testes, deploy, documentação, gerenciamento de produto. Tradicionalmente, **uma pessoa** (ou um time) precisa dominar todas essas áreas. Com LLMs, surgiu uma nova possibilidade: **agentes especializados** que dominam áreas específicas e colaboram entre si.
 
 Mas usar LLMs sem estrutura gera:
-- Resultados inconsistentes entre sessoes
+- Resultados inconsistentes entre sessões
 - Perda de contexto entre conversas
-- Falta de quality gates e validacao
-- Nenhuma orquestracao entre diferentes especialidades
+- Falta de quality gates e validação
+- Nenhuma orquestração entre diferentes especialidades
 
 **O AIOX resolve isso** fornecendo um framework completo onde cada agente tem:
-- Uma **persona** definida com expertise especifica
+- Uma **persona** definida com expertise específica
 - **Comandos** padronizados para executar tarefas
-- **Quality gates** obrigatorios antes de entregar
-- **Colaboracao** estruturada com outros agentes
+- **Quality gates** obrigatórios antes de entregar
+- **Colaboração** estruturada com outros agentes
 
 ---
 
 ## A Arquitetura em 30 Segundos
 
-O AIOX segue tres principios fundamentais:
+O AIOX segue três princípios fundamentais:
 
 ### 1. CLI First
 
@@ -32,19 +32,19 @@ O AIOX segue tres principios fundamentais:
 CLI > Observability > UI
 ```
 
-O terminal e a interface primaria. Tudo que o AIOX faz pode ser feito via CLI — sem interfaces graficas obrigatorias, sem servidores web. Isso torna o framework leve, rapido e integravel com qualquer IDE.
+O terminal é a interface primária. Tudo que o AIOX faz pode ser feito via CLI — sem interfaces gráficas obrigatórias, sem servidores web. Isso torna o framework leve, rápido e integrável com qualquer IDE.
 
 ### 2. Agentic Planning
 
-Antes de escrever uma linha de codigo, agentes especializados **planejam**:
+Antes de escrever uma linha de código, agentes especializados **planejam**:
 - `@analyst` pesquisa e analisa requisitos
 - `@pm` cria PRDs e define epics
-- `@architect` desenha a arquitetura tecnica
+- `@architect` desenha a arquitetura técnica
 - `@sm` cria user stories com acceptance criteria
 
 ### 3. Engineering-Contextualized Development
 
-Desenvolvimento acontece com **contexto completo** — cada agente sabe o que os outros fizeram, acessa a mesma base de conhecimento e segue os mesmos padroes de qualidade.
+Desenvolvimento acontece com **contexto completo** — cada agente sabe o que os outros fizeram, acessa a mesma base de conhecimento e segue os mesmos padrões de qualidade.
 
 ---
 
@@ -53,11 +53,11 @@ Desenvolvimento acontece com **contexto completo** — cada agente sabe o que os
 | Agente | Nome | Papel |
 |--------|------|-------|
 | 👑 @aiox-master | Orion | Orchestrador Mestre |
-| 🔍 @analyst | Atlas | Analista de Negocios |
+| 🔍 @analyst | Atlas | Analista de Negócios |
 | 🏛️ @architect | Aria | Arquiteta de Sistemas |
 | 📊 @data-engineer | Dara | Engenheira de Dados |
-| 💻 @dev | Dex | Desenvolvedor Senior |
-| ⚡ @devops | Gage | Guardiao de Repositorios |
+| 💻 @dev | Dex | Desenvolvedor Sênior |
+| ⚡ @devops | Gage | Guardião de Repositórios |
 | 📋 @pm | Morgan | Product Manager |
 | 🎯 @po | Pax | Product Owner |
 | ✅ @qa | Quinn | Arquiteto de Testes |
@@ -66,7 +66,7 @@ Desenvolvimento acontece com **contexto completo** — cada agente sabe o que os
 | 🏗️ @squad-creator | Craft | Arquiteto de Squads |
 
 Cada agente tem:
-- **Archetype** — um arquetipo jungiano que define sua personalidade
+- **Archetype** — um arquétipo jungiano que define sua personalidade
 - **Commands** — comandos prefixados com `*` que executam tarefas
 - **Dependencies** — tasks, templates e workflows que o agente usa
 - **Collaboration rules** — com quem colabora e como delega
@@ -81,11 +81,11 @@ Um projeto AIOX segue este fluxo:
 @analyst (Research) → @pm (PRD) → @sm (Stories) → @dev (Code) → @qa (Review) → @devops (Deploy)
 ```
 
-Em cada etapa, quality gates garantem que o trabalho atende aos padroes antes de avancar:
+Em cada etapa, quality gates garantem que o trabalho atende aos padrões antes de avançar:
 
 1. **Gate 1**: PM valida o PRD antes de criar epics
-2. **Gate 2**: Architect valida a arquitetura antes do dev comecar
-3. **Gate 3**: QA valida o codigo antes do merge
+2. **Gate 2**: Architect valida a arquitetura antes do dev começar
+3. **Gate 3**: QA valida o código antes do merge
 4. **Gate 4**: DevOps roda lint, tests e CodeRabbit antes do push
 
 ---
@@ -94,12 +94,12 @@ Em cada etapa, quality gates garantem que o trabalho atende aos padroes antes de
 
 - **Produtividade**: Agentes especializados trabalham em paralelo
 - **Qualidade**: Quality gates em cada etapa do processo
-- **Consistencia**: Padroes definidos no framework, nao na memoria do dev
-- **Escalabilidade**: Squads permitem criar times de agentes para qualquer dominio
+- **Consistência**: Padrões definidos no framework, não na memória do dev
+- **Escalabilidade**: Squads permitem criar times de agentes para qualquer domínio
 - **Open Source**: 100% gratuito, com comunidade ativa
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima licao, vamos entender o **diferencial do AIOX** em relacao a outros frameworks — o que torna a abordagem CLI First + Agentic Planning unica.
+Na próxima lição, vamos entender o **diferencial do AIOX** em relação a outros frameworks — o que torna a abordagem CLI First + Agentic Planning única.

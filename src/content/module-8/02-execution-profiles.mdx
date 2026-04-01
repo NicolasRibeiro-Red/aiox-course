@@ -1,12 +1,12 @@
-# Perfis de Execucao — Controlando a Autonomia dos Agentes
+# Perfis de Execução — Controlando a Autonomia dos Agentes
 
-Quanto controle voce quer ter sobre o que os agentes fazem? Os **Permission Modes** do AIOX permitem definir exatamente isso — de navegacao segura (read-only) ate autonomia total (YOLO mode).
+Quanto controle você quer ter sobre o que os agentes fazem? Os **Permission Modes** do AIOX permitem definir exatamente isso — de navegação segura (read-only) até autonomia total (YOLO mode).
 
 ---
 
-## Os Tres Modos
+## Os Três Modos
 
-O AIOX oferece tres modos de permissao que controlam o nivel de autonomia dos agentes:
+O AIOX oferece três modos de permissão que controlam o nível de autonomia dos agentes:
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -20,7 +20,7 @@ O AIOX oferece tres modos de permissao que controlam o nivel de autonomia dos ag
 └────────────────────────────────────────────────────────┘
 ```
 
-### Comandos Rapidos
+### Comandos Rápidos
 
 ```bash
 # Ver modo atual
@@ -35,9 +35,9 @@ O AIOX oferece tres modos de permissao que controlam o nivel de autonomia dos ag
 
 ---
 
-## Explore Mode — Navegacao Segura
+## Explore Mode — Navegação Segura
 
-**Melhor para:** Primeira exploracao de codebase, auditorias read-only, aprendizado.
+**Melhor para:** Primeira exploração de codebase, auditorias read-only, aprendizado.
 
 ```bash
 *mode explore
@@ -49,7 +49,7 @@ O AIOX oferece tres modos de permissao que controlam o nivel de autonomia dos ag
 - Buscar no codebase
 - Rodar comandos read-only (`git status`, `ls`, `cat`)
 
-### O que NAO Pode Fazer
+### O que NÃO Pode Fazer
 
 - Escrever ou editar arquivos
 - Executar builds, instalar pacotes
@@ -57,20 +57,20 @@ O AIOX oferece tres modos de permissao que controlam o nivel de autonomia dos ag
 - Fazer commits ou push
 
 <Callout type="info" title="Quando Usar Explore">
-Use Explore quando voce quer entender um codebase novo sem risco de modificar nada acidentalmente. Ideal para onboarding em projetos.
+Use Explore quando você quer entender um codebase novo sem risco de modificar nada acidentalmente. Ideal para onboarding em projetos.
 </Callout>
 
 ---
 
-## Ask Mode — Equilibrio (Padrao)
+## Ask Mode — Equilíbrio (Padrão)
 
-**Melhor para:** Desenvolvimento diario, equilibrio entre seguranca e produtividade.
+**Melhor para:** Desenvolvimento diário, equilíbrio entre segurança e produtividade.
 
 ```bash
 *mode ask
 ```
 
-O Ask mode e o padrao do AIOX. Cada operacao de escrita ou execucao exige confirmacao:
+O Ask mode é o padrão do AIOX. Cada operação de escrita ou execução exige confirmação:
 
 ```
 ⚠ Confirmation Required
@@ -82,9 +82,9 @@ File: src/components/Button.tsx
 [Proceed] [Skip] [Switch to Auto]
 ```
 
-### Aprovacao em Batch
+### Aprovação em Batch
 
-Em workflows autonomos (ADE), as operacoes sao agrupadas:
+Em workflows autônomos (ADE), as operações são agrupadas:
 
 ```
 ⚠ Batch Confirmation
@@ -99,13 +99,13 @@ The following 5 operations will be executed:
 [Approve All] [Review Each] [Cancel]
 ```
 
-Isso evita que voce precise aprovar cada operacao individualmente em workflows longos.
+Isso evita que você precise aprovar cada operação individualmente em workflows longos.
 
 ---
 
 ## Auto Mode (YOLO) — Autonomia Total
 
-**Melhor para:** Power users, builds autonomos, workflows confiados.
+**Melhor para:** Power users, builds autônomos, workflows confiados.
 
 ```bash
 *mode auto
@@ -115,30 +115,30 @@ Isso evita que voce precise aprovar cada operacao individualmente em workflows l
 
 ### O que Acontece
 
-- Leitura, escrita, execucao e delecao sem confirmacao
+- Leitura, escrita, execução e deleção sem confirmação
 - O agente tem autonomia total sobre o sistema de arquivos
-- Nenhuma interrupcao durante workflows
+- Nenhuma interrupção durante workflows
 
 <Callout type="danger" title="Use com Cautela">
-No modo Auto, o agente pode modificar e deletar arquivos sem perguntar. Use apenas em repositorios confiaveis e com commits salvos.
+No modo Auto, o agente pode modificar e deletar arquivos sem perguntar. Use apenas em repositórios confiáveis e com commits salvos.
 </Callout>
 
 ---
 
-## Classificacao de Operacoes
+## Classificação de Operações
 
-O sistema classifica cada operacao em 4 tipos:
+O sistema classifica cada operação em 4 tipos:
 
 | Tipo | Exemplos | Explore | Ask | Auto |
 |------|----------|---------|-----|------|
 | **read** | `Read`, `Glob`, `Grep`, `git status` | Sim | Sim | Sim |
-| **write** | `Write`, `Edit`, `mkdir`, `git commit` | Nao | Confirmar | Sim |
-| **execute** | `npm install`, `npm run`, task execution | Nao | Confirmar | Sim |
-| **delete** | `rm`, `git reset --hard`, `DROP TABLE` | Nao | Confirmar | Sim |
+| **write** | `Write`, `Edit`, `mkdir`, `git commit` | Não | Confirmar | Sim |
+| **execute** | `npm install`, `npm run`, task execution | Não | Confirmar | Sim |
+| **delete** | `rm`, `git reset --hard`, `DROP TABLE` | Não | Confirmar | Sim |
 
 ### Comandos Sempre Permitidos
 
-Mesmo no modo Explore, estes comandos sao liberados:
+Mesmo no modo Explore, estes comandos são liberados:
 
 ```bash
 # Git (read-only)
@@ -154,9 +154,9 @@ npm list, npm outdated, npm audit
 node --version, npm --version
 ```
 
-### Comandos Destructivos (Extra Cautela)
+### Comandos Destrutivos (Extra Cautela)
 
-Estes comandos sao classificados como `delete` e exigem aprovacao explicita mesmo no Ask mode:
+Estes comandos são classificados como `delete` e exigem aprovação explícita mesmo no Ask mode:
 
 ```bash
 rm -rf
@@ -171,7 +171,7 @@ TRUNCATE
 
 ## Indicador de Modo
 
-O modo atual e sempre visivel na saudacao do agente:
+O modo atual é sempre visível na saudação do agente:
 
 ```
 Aria (Architect) ready! [⚠ Ask]
@@ -180,26 +180,26 @@ Aria (Architect) ready! [⚠ Ask]
 | Badge | Significado |
 |-------|-------------|
 | `[Explore]` | Modo read-only |
-| `[⚠ Ask]` | Modo confirmacao (padrao) |
+| `[⚠ Ask]` | Modo confirmação (padrão) |
 | `[Auto]` | Modo autonomia total |
 
 ---
 
-## Integracao com ADE
+## Integração com ADE
 
-O Autonomous Development Engine (ADE) respeita os modos de permissao:
+O Autonomous Development Engine (ADE) respeita os modos de permissão:
 
 | Modo | Comportamento do ADE |
 |------|---------------------|
-| **Explore** | Apenas planeja, nao executa |
-| **Ask** | Agrupa operacoes para aprovacao em batch |
-| **Auto** | Execucao autonoma completa |
+| **Explore** | Apenas planeja, não executa |
+| **Ask** | Agrupa operações para aprovação em batch |
+| **Auto** | Execução autônoma completa |
 
 ---
 
-## Configuracao Persistente
+## Configuração Persistente
 
-O modo e salvo em `.aiox/config.yaml`:
+O modo é salvo em `.aiox/config.yaml`:
 
 ```yaml
 permissions:
@@ -220,31 +220,31 @@ Em pipelines automatizados, use auto mode:
 
 ---
 
-## Boas Praticas por Perfil
+## Boas Práticas por Perfil
 
-### Para Novos Usuarios
+### Para Novos Usuários
 
-1. Comece com `*mode explore` para navegar com seguranca
+1. Comece com `*mode explore` para navegar com segurança
 2. Mude para `*mode ask` quando estiver pronto para modificar
 3. Use `*mode auto` somente quando confiar no resultado
 
 ### Para Equipes
 
-- Padrao: `ask` em ambientes compartilhados
+- Padrão: `ask` em ambientes compartilhados
 - `explore` para code reviews
-- `auto` reservado para contas de automacao
+- `auto` reservado para contas de automação
 
 ### Para Desenvolvimento Solo
 
 - `ask` para o dia-a-dia
-- `auto` quando estiver no flow e quiser velocidade maxima
+- `auto` quando estiver no flow e quiser velocidade máxima
 - Sempre commite antes de trocar para `auto`
 
 ---
 
 ## API Reference
 
-Para integracao programatica:
+Para integração programática:
 
 ```javascript
 const { PermissionMode, OperationGuard } = require(
@@ -275,22 +275,22 @@ const result = await guard.guard('Bash', {
   title="Teste seus Conhecimentos"
   questions={[
     {
-      question: "Qual e o modo padrao de permissao no AIOX?",
+      question: "Qual é o modo padrão de permissão no AIOX?",
       options: ["Explore", "Ask", "Auto", "YOLO"],
       correct: 1,
-      explanation: "O modo padrao e 'Ask', que exige confirmacao para operacoes de escrita, execucao e delecao."
+      explanation: "O modo padrão é 'Ask', que exige confirmação para operações de escrita, execução e deleção."
     },
     {
       question: "O que o comando *yolo faz?",
-      options: ["Deleta tudo", "Ativa o modo Auto (autonomia total)", "Desfaz a ultima acao", "Roda todos os testes"],
+      options: ["Deleta tudo", "Ativa o modo Auto (autonomia total)", "Desfaz a última ação", "Roda todos os testes"],
       correct: 1,
-      explanation: "O *yolo e um atalho para *mode auto — ativa autonomia total onde o agente pode fazer qualquer operacao sem confirmacao."
+      explanation: "O *yolo é um atalho para *mode auto — ativa autonomia total onde o agente pode fazer qualquer operação sem confirmação."
     },
     {
       question: "Como o ADE se comporta no modo Explore?",
-      options: ["Executa tudo normalmente", "Pede confirmacao", "Apenas planeja, nao executa", "Nao funciona"],
+      options: ["Executa tudo normalmente", "Pede confirmação", "Apenas planeja, não executa", "Não funciona"],
       correct: 2,
-      explanation: "No modo Explore, o ADE apenas planeja as operacoes sem executar nenhuma. Ideal para visualizar o que seria feito antes de liberar."
+      explanation: "No modo Explore, o ADE apenas planeja as operações sem executar nenhuma. Ideal para visualizar o que seria feito antes de liberar."
     }
   ]}
 />

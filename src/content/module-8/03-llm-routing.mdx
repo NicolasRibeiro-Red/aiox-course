@@ -1,18 +1,18 @@
-# LLM Routing — Estrategias Multi-Modelo
+# LLM Routing — Estratégias Multi-Modelo
 
-O AIOX permite usar **diferentes modelos de linguagem para diferentes tarefas**, otimizando custo e qualidade. Com o LLM Routing, voce pode economizar ate 99% em custos de API sem sacrificar funcionalidade.
+O AIOX permite usar **diferentes modelos de linguagem para diferentes tarefas**, otimizando custo e qualidade. Com o LLM Routing, você pode economizar até 99% em custos de API sem sacrificar funcionalidade.
 
 ---
 
 ## O Conceito
 
-Nem toda tarefa precisa do modelo mais caro. Tarefas simples (renomear variaveis, gerar boilerplate) podem usar modelos economicos, enquanto tarefas complexas (decisoes de arquitetura, debugging profundo) merecem o melhor modelo disponivel.
+Nem toda tarefa precisa do modelo mais caro. Tarefas simples (renomear variáveis, gerar boilerplate) podem usar modelos econômicos, enquanto tarefas complexas (decisões de arquitetura, debugging profundo) merecem o melhor modelo disponível.
 
 O LLM Routing do AIOX formaliza isso com dois comandos:
 
 | Comando | Provider | Custo | Caso de Uso |
 |---------|----------|-------|-------------|
-| `claude-max` | Claude Max (OAuth) | Assinatura | Tarefas complexas, producao |
+| `claude-max` | Claude Max (OAuth) | Assinatura | Tarefas complexas, produção |
 | `claude-free` | DeepSeek | ~$0.14/M tokens | Desenvolvimento, testes |
 
 ---
@@ -22,25 +22,25 @@ O LLM Routing do AIOX formaliza isso com dois comandos:
 | Provider | Input Tokens | Output Tokens | Mensal (1M tokens) |
 |----------|-------------|---------------|---------------------|
 | Claude API | $15.00/M | $75.00/M | $90.00 |
-| Claude Max | Incluido | Incluido | $20/mes |
+| Claude Max | Incluído | Incluído | $20/mês |
 | **DeepSeek** | **$0.07/M** | **$0.14/M** | **$0.21** |
 
 <Callout type="tip" title="Economia Real">
-Com DeepSeek, a economia chega a 99.7% comparado a API direta do Claude. Para desenvolvimento e testes, e dinheiro real economizado todo mes.
+Com DeepSeek, a economia chega a 99.7% comparado à API direta do Claude. Para desenvolvimento e testes, é dinheiro real economizado todo mês.
 </Callout>
 
 ---
 
-## Instalacao
+## Instalação
 
-### Opcao 1: Com aiox-core clonado
+### Opção 1: Com aiox-core clonado
 
 ```bash
 # A partir do diretorio aiox-core
 node .aiox-core/infrastructure/scripts/llm-routing/install-llm-routing.js
 ```
 
-### Opcao 2: Fresh install
+### Opção 2: Fresh install
 
 ```bash
 # Clonar repositorio
@@ -60,15 +60,15 @@ node .aiox-core/infrastructure/scripts/llm-routing/install-llm-routing.js
 DEEPSEEK_API_KEY=sk-your-key-here
 ```
 
-<Callout type="warning" title="Seguranca">
-Nunca commite o arquivo `.env` no repositorio. Adicione ao `.gitignore`.
+<Callout type="warning" title="Segurança">
+Nunca commite o arquivo `.env` no repositório. Adicione ao `.gitignore`.
 </Callout>
 
 ---
 
-## Uso Diario
+## Uso Diário
 
-### claude-max — Experiencia Premium
+### claude-max — Experiência Premium
 
 ```bash
 claude-max
@@ -77,17 +77,17 @@ claude-max
 Usa sua assinatura Claude Max via OAuth (login claude.ai):
 
 - Capacidades completas do Claude
-- Sem API key necessaria
+- Sem API key necessária
 - Usa login existente do Claude
-- Melhor para raciocinio complexo
+- Melhor para raciocínio complexo
 
 **Quando usar:**
-- Analise de codigo complexa
-- Decisoes de arquitetura
-- Tarefas que exigem alta precisao
-- Trabalho critico de producao
+- Análise de código complexa
+- Decisões de arquitetura
+- Tarefas que exigem alta precisão
+- Trabalho crítico de produção
 
-### claude-free — Desenvolvimento Economico
+### claude-free — Desenvolvimento Econômico
 
 ```bash
 claude-free
@@ -97,13 +97,13 @@ Usa API do DeepSeek com endpoint Anthropic-compatible:
 
 - Tool calling suportado
 - Streaming suportado
-- ~99% reducao de custo
+- ~99% redução de custo
 
 **Quando usar:**
 - Desenvolvimento e testes
-- Tarefas simples de codigo
-- Aprendizado e experimentacao
-- Operacoes de alto volume
+- Tarefas simples de código
+- Aprendizado e experimentação
+- Operações de alto volume
 
 ---
 
@@ -111,16 +111,16 @@ Usa API do DeepSeek com endpoint Anthropic-compatible:
 
 ### claude-max
 
-1. Limpa configuracoes de provider alternativo
-2. Usa autenticacao OAuth padrao do Claude
-3. Lanca Claude Code com sua assinatura Max
+1. Limpa configurações de provider alternativo
+2. Usa autenticação OAuth padrão do Claude
+3. Lança Claude Code com sua assinatura Max
 
 ### claude-free
 
-1. Busca `.env` file (diretorio atual → diretorios pais)
+1. Busca `.env` file (diretório atual → diretórios pais)
 2. Carrega `DEEPSEEK_API_KEY`
 3. Configura endpoint Anthropic-compatible do DeepSeek
-4. Lanca Claude Code com backend DeepSeek
+4. Lança Claude Code com backend DeepSeek
 
 O endpoint do DeepSeek (`https://api.deepseek.com/anthropic`) fornece:
 
@@ -130,41 +130,41 @@ O endpoint do DeepSeek (`https://api.deepseek.com/anthropic`) fornece:
 
 ---
 
-## Estrategia de Routing
+## Estratégia de Routing
 
-Uma estrategia efetiva combina ambos os comandos ao longo do dia:
+Uma estratégia efetiva combina ambos os comandos ao longo do dia:
 
-| Momento | Comando | Razao |
+| Momento | Comando | Razão |
 |---------|---------|-------|
-| Manha: Planejamento | `claude-max` | Decisoes de arquitetura precisam do melhor modelo |
-| Tarde: Implementacao | `claude-free` | Codigo boilerplate nao precisa do modelo premium |
-| Review de PR | `claude-max` | Analise profunda de qualidade |
-| Geracao de testes | `claude-free` | Testes unitarios sao mecanicos |
-| Debug complexo | `claude-max` | Raciocinio multi-step precisa de qualidade |
-| Documentacao | `claude-free` | Geracao de docs e uma tarefa simples |
+| Manhã: Planejamento | `claude-max` | Decisões de arquitetura precisam do melhor modelo |
+| Tarde: Implementação | `claude-free` | Código boilerplate não precisa do modelo premium |
+| Review de PR | `claude-max` | Análise profunda de qualidade |
+| Geração de testes | `claude-free` | Testes unitários são mecânicos |
+| Debug complexo | `claude-max` | Raciocínio multi-step precisa de qualidade |
+| Documentação | `claude-free` | Geração de docs é uma tarefa simples |
 
 <ComparisonTable
   title="Quando Usar Cada Modelo"
   headers={["claude-max", "claude-free"]}
   rows={[
     ["Arquitetura e design", "Boilerplate e scaffolding"],
-    ["Debug complexo", "Testes unitarios"],
-    ["Code review profundo", "Documentacao"],
-    ["Decisoes irreversiveis", "Experimentacao"],
-    ["Producao critica", "Prototipagem rapida"],
+    ["Debug complexo", "Testes unitários"],
+    ["Code review profundo", "Documentação"],
+    ["Decisões irreversíveis", "Experimentação"],
+    ["Produção crítica", "Prototipagem rápida"],
   ]}
 />
 
 ---
 
-## Configuracao Avancada
+## Configuração Avançada
 
 ### Fontes da API Key
 
 O `claude-free` busca a key nesta ordem:
 
 1. **Arquivo `.env` do projeto** (recomendado)
-2. **Variavel de ambiente do sistema**
+2. **Variável de ambiente do sistema**
 
 ```bash
 # Windows
@@ -183,9 +183,9 @@ Edite os arquivos de template para usar diferentes modelos:
 export ANTHROPIC_MODEL="deepseek-chat"
 ```
 
-### Variaveis de Ambiente
+### Variáveis de Ambiente
 
-| Variavel | Descricao | Padrao |
+| Variável | Descrição | Padrão |
 |----------|-----------|--------|
 | `ANTHROPIC_BASE_URL` | Endpoint da API | `https://api.deepseek.com/anthropic` |
 | `ANTHROPIC_API_KEY` | API key | De DEEPSEEK_API_KEY |
@@ -194,21 +194,21 @@ export ANTHROPIC_MODEL="deepseek-chat"
 
 ---
 
-## Nota de Seguranca
+## Nota de Segurança
 
-Ambos os comandos usam o flag `--dangerously-skip-permissions` por padrao:
+Ambos os comandos usam o flag `--dangerously-skip-permissions` por padrão:
 
-- Pula prompts de confirmacao para operacoes de arquivo
-- Use apenas em repositorios/ambientes confiaveis
-- Nao recomendado para codebases nao-confiaveis
+- Pula prompts de confirmação para operações de arquivo
+- Use apenas em repositórios/ambientes confiáveis
+- Não recomendado para codebases não-confiáveis
 
-Se preferir confirmacoes interativas, rode `claude` diretamente em vez dos comandos de routing.
+Se preferir confirmações interativas, rode `claude` diretamente em vez dos comandos de routing.
 
 ---
 
 ## Troubleshooting
 
-### Comando nao encontrado
+### Comando não encontrado
 
 ```bash
 # Windows: verificar se npm global esta no PATH
@@ -218,17 +218,17 @@ echo $PATH | grep npm
 echo $PATH | grep -E "(local/bin|~/bin)"
 ```
 
-### DEEPSEEK_API_KEY nao encontrada
+### DEEPSEEK_API_KEY não encontrada
 
 - Verifique se `.env` existe na raiz do projeto
 - Formato correto: `DEEPSEEK_API_KEY=sk-...`
-- Sem espacos ao redor do `=`
+- Sem espaços ao redor do `=`
 
 ### Erros de API
 
-| Erro | Causa | Solucao |
+| Erro | Causa | Solução |
 |------|-------|---------|
-| 401 Unauthorized | Key invalida | Verifique no dashboard DeepSeek |
+| 401 Unauthorized | Key inválida | Verifique no dashboard DeepSeek |
 | 429 Rate Limited | Muitas requests | Aguarde e tente novamente |
 | Connection refused | Problema de rede | Verifique internet |
 
@@ -238,22 +238,22 @@ echo $PATH | grep -E "(local/bin|~/bin)"
   title="Teste seus Conhecimentos"
   questions={[
     {
-      question: "Quanto de economia o DeepSeek oferece comparado a API direta do Claude?",
+      question: "Quanto de economia o DeepSeek oferece comparado à API direta do Claude?",
       options: ["~50%", "~80%", "~95%", "~99.7%"],
       correct: 3,
-      explanation: "O DeepSeek oferece ate 99.7% de economia: $0.21/M tokens vs $90.00/M tokens da API direta do Claude."
+      explanation: "O DeepSeek oferece até 99.7% de economia: $0.21/M tokens vs $90.00/M tokens da API direta do Claude."
     },
     {
-      question: "Para qual tipo de tarefa o claude-free e mais indicado?",
-      options: ["Decisoes de arquitetura", "Debug complexo", "Desenvolvimento e testes", "Code review de producao"],
+      question: "Para qual tipo de tarefa o claude-free é mais indicado?",
+      options: ["Decisões de arquitetura", "Debug complexo", "Desenvolvimento e testes", "Code review de produção"],
       correct: 2,
-      explanation: "O claude-free (DeepSeek) e ideal para desenvolvimento e testes, onde a precisao maxima nao e critica mas o volume de uso e alto."
+      explanation: "O claude-free (DeepSeek) é ideal para desenvolvimento e testes, onde a precisão máxima não é crítica mas o volume de uso é alto."
     },
     {
       question: "De onde o claude-free busca a API key do DeepSeek primeiro?",
-      options: ["Variavel de ambiente do sistema", "Arquivo .env do projeto", "Configuracao do Claude", "Dashboard online"],
+      options: ["Variável de ambiente do sistema", "Arquivo .env do projeto", "Configuração do Claude", "Dashboard online"],
       correct: 1,
-      explanation: "O claude-free busca primeiro no arquivo .env do projeto (recomendado), e depois na variavel de ambiente do sistema."
+      explanation: "O claude-free busca primeiro no arquivo .env do projeto (recomendado), e depois na variável de ambiente do sistema."
     }
   ]}
 />

@@ -1,30 +1,30 @@
 # O Sistema de Templates
 
-Os templates sao o motor de geracao de documentos do AIOX. Eles vao muito alem de simples "preencha os campos" -- sao estruturas inteligentes que embutem instrucoes para LLMs, suportam condicionais, loops e um sistema interativo de elicitacao. Nesta licao, voce vai entender como o Template Engine v2 funciona por dentro.
+Os templates são o motor de geração de documentos do AIOX. Eles vão muito além de simples "preencha os campos" -- são estruturas inteligentes que embutem instruções para LLMs, suportam condicionais, loops e um sistema interativo de elicitação. Nesta lição, você vai entender como o Template Engine v2 funciona por dentro.
 
 ---
 
 ## Anatomia do Template Engine
 
-O sistema de templates e composto por tres componentes que trabalham juntos:
+O sistema de templates é composto por três componentes que trabalham juntos:
 
 | Componente | Arquivo | Papel |
 |---|---|---|
-| **Template Format** | `utils/template-format.md` | Define a sintaxe: variaveis, condicionais, loops |
-| **Create Doc** | `tasks/create-doc.md` | Orquestra o fluxo: selecao, interacao, geracao |
+| **Template Format** | `utils/template-format.md` | Define a sintaxe: variáveis, condicionais, loops |
+| **Create Doc** | `tasks/create-doc.md` | Orquestra o fluxo: seleção, interação, geração |
 | **Advanced Elicitation** | `tasks/advanced-elicitation.md` | Camada interativa: brainstorming, refinamento |
 
-<Callout type="info" title="Separacao de concerns">
-O markup do template e processado internamente pelos agentes e NUNCA exposto ao usuario. O usuario ve apenas o documento final gerado, limpo e formatado.
+<Callout type="info" title="Separação de concerns">
+O markup do template é processado internamente pelos agentes e NUNCA exposto ao usuário. O usuário vê apenas o documento final gerado, limpo e formatado.
 </Callout>
 
 ---
 
 ## Sintaxe de Templates
 
-### Variaveis Simples
+### Variáveis Simples
 
-A substituicao mais basica -- placeholders que sao trocados por valores:
+A substituição mais básica -- placeholders que são trocados por valores:
 
 ```markdown
 # {{TITLE}}
@@ -34,7 +34,7 @@ Date: {{DATE}}
 Version: {{VERSION}}
 ```
 
-Com os valores `{ TITLE: "Meu PRD", AUTHOR: "Morgan", DATE: "2026-01-15" }`, o resultado e:
+Com os valores `{ TITLE: "Meu PRD", AUTHOR: "Morgan", DATE: "2026-01-15" }`, o resultado é:
 
 ```markdown
 # Meu PRD
@@ -43,9 +43,9 @@ Created by: Morgan
 Date: 2026-01-15
 ```
 
-### Variaveis Aninhadas (Dot Notation)
+### Variáveis Aninhadas (Dot Notation)
 
-Acesse propriedades de objetos com notacao de ponto:
+Acesse propriedades de objetos com notação de ponto:
 
 ```markdown
 Project: {{project.name}}
@@ -55,7 +55,7 @@ Email: {{project.owner.email}}
 
 ### Condicionais
 
-Inclua secoes apenas se uma variavel for verdadeira:
+Inclua seções apenas se uma variável for verdadeira:
 
 ```markdown
 {{#IF_HAS_DEPENDENCIES}}
@@ -64,7 +64,7 @@ Inclua secoes apenas se uma variavel for verdadeira:
 {{/IF_HAS_DEPENDENCIES}}
 ```
 
-Se `HAS_DEPENDENCIES` for `false`, a secao inteira e omitida do output.
+Se `HAS_DEPENDENCIES` for `false`, a seção inteira é omitida do output.
 
 ### Loops
 
@@ -77,14 +77,14 @@ Itere sobre arrays de dados:
 {{/EACH_TASKS}}
 ```
 
-**Variaveis de contexto do loop:**
+**Variáveis de contexto do loop:**
 
-| Variavel | Descricao |
+| Variável | Descrição |
 |---|---|
-| `{{ITEM}}` | Item atual da iteracao |
-| `{{INDEX}}` | Indice atual (0-based) |
+| `{{ITEM}}` | Item atual da iteração |
+| `{{INDEX}}` | Índice atual (0-based) |
 | `{{FIRST}}` | `true` se for o primeiro item |
-| `{{LAST}}` | `true` se for o ultimo item |
+| `{{LAST}}` | `true` se for o último item |
 
 ### Escaping
 
@@ -94,13 +94,13 @@ Para exibir a sintaxe de template literalmente (sem processar):
 Para usar variaveis, escreva \{{VARIABLE_NAME}}.
 ```
 
-Output: `Para usar variaveis, escreva {{VARIABLE_NAME}}.`
+Output: `Para usar variáveis, escreva {{VARIABLE_NAME}}.`
 
 ---
 
 ## Diretivas LLM Embutidas
 
-O diferencial dos templates AIOX e a capacidade de embutir **instrucoes para a LLM** dentro do proprio template:
+O diferencial dos templates AIOX é a capacidade de embutir **instruções para a LLM** dentro do próprio template:
 
 ```markdown
 ## Requirements
@@ -114,28 +114,28 @@ Do NOT proceed without user confirmation.]]
 {{REQUIREMENTS}}
 ```
 
-Essas diretivas `[[LLM: ...]]` sao invisveis no documento final -- servem apenas para guiar o agente durante o processamento.
+Essas diretivas `[[LLM: ...]]` são invisíveis no documento final -- servem apenas para guiar o agente durante o processamento.
 
 ---
 
 ## O Pipeline de Processamento
 
-Quando um agente executa `*create-doc` (ou `*create-prd`, `*create-architecture`, etc.), o seguinte pipeline e executado:
+Quando um agente executa `*create-doc` (ou `*create-prd`, `*create-architecture`, etc.), o seguinte pipeline é executado:
 
 | Step | O que acontece |
 |---|---|
-| 1. Parse YAML | Template YAML e lido e secoes sao identificadas |
-| 2. Set Preferences | Preferencias tecnicas sao carregadas de `technical-preferences.md` |
-| 3. Process Sections | Cada secao e processada sequencialmente |
-| 4. Check Elicit | Se `elicit: true`, apresenta opcoes 1-9 ao usuario |
-| 5. Wait for Input | Aguarda resposta do usuario (NUNCA prossegue sem input) |
-| 6. Generate Content | LLM gera o conteudo da secao |
-| 7. Save Progress | Secao e salva no arquivo de output |
-| 8. Repeat | Proximo secao ate completar o documento |
+| 1. Parse YAML | Template YAML é lido e seções são identificadas |
+| 2. Set Preferences | Preferências técnicas são carregadas de `technical-preferences.md` |
+| 3. Process Sections | Cada seção é processada sequencialmente |
+| 4. Check Elicit | Se `elicit: true`, apresenta opções 1-9 ao usuário |
+| 5. Wait for Input | Aguarda resposta do usuário (NUNCA prossegue sem input) |
+| 6. Generate Content | LLM gera o conteúdo da seção |
+| 7. Save Progress | Seção é salva no arquivo de output |
+| 8. Repeat | Próxima seção até completar o documento |
 
-### Formato de Elicitacao Obrigatorio
+### Formato de Elicitação Obrigatório
 
-Quando uma secao tem `elicit: true`, o agente DEVE apresentar:
+Quando uma seção tem `elicit: true`, o agente DEVE apresentar:
 
 ```
 1. Proceed to next section (usar conteudo atual)
@@ -151,36 +151,36 @@ Quando uma secao tem `elicit: true`, o agente DEVE apresentar:
 Select 1-9 or just type your question/feedback:
 ```
 
-O agente NAO pode pular essa etapa. O usuario tem controle total sobre a profundidade de cada secao.
+O agente NÃO pode pular essa etapa. O usuário tem controle total sobre a profundidade de cada seção.
 
 ---
 
-## Templates Disponiveis
+## Templates Disponíveis
 
 ### Templates de Planejamento
 
-| Template | Arquivo | Secoes | Agente |
+| Template | Arquivo | Seções | Agente |
 |---|---|---|---|
-| PRD Greenfield | `prd-tmpl.yaml` | 8 secoes (4 com elicit) | @pm |
-| PRD Brownfield | `brownfield-prd-tmpl.yaml` | 7 secoes (3 com elicit) | @pm |
-| Project Brief | `project-brief-tmpl.yaml` | 10 secoes | @analyst |
-| Market Research | `market-research-tmpl.yaml` | 8 secoes | @analyst |
-| Competitor Analysis | `competitor-analysis-tmpl.yaml` | 8 secoes | @analyst |
+| PRD Greenfield | `prd-tmpl.yaml` | 8 seções (4 com elicit) | @pm |
+| PRD Brownfield | `brownfield-prd-tmpl.yaml` | 7 seções (3 com elicit) | @pm |
+| Project Brief | `project-brief-tmpl.yaml` | 10 seções | @analyst |
+| Market Research | `market-research-tmpl.yaml` | 8 seções | @analyst |
+| Competitor Analysis | `competitor-analysis-tmpl.yaml` | 8 seções | @analyst |
 
 ### Templates de Arquitetura
 
 | Template | Arquivo | Foco | Agente |
 |---|---|---|---|
 | Fullstack Architecture | `fullstack-architecture-tmpl.yaml` | Backend + Frontend + Infra | @architect |
-| Backend Architecture | `architecture-tmpl.yaml` | APIs, servicos, database | @architect |
+| Backend Architecture | `architecture-tmpl.yaml` | APIs, serviços, database | @architect |
 | Frontend Architecture | `front-end-architecture-tmpl.yaml` | Estado, routing, design system | @architect |
-| Brownfield Architecture | `brownfield-architecture-tmpl.yaml` | Integracao com legado | @architect |
+| Brownfield Architecture | `brownfield-architecture-tmpl.yaml` | Integração com legado | @architect |
 
 ---
 
 ## API do Template Engine
 
-Para uso programatico, o AIOX fornece uma classe `TemplateEngine`:
+Para uso programático, o AIOX fornece uma classe `TemplateEngine`:
 
 ```javascript
 const TemplateEngine = require('./.aiox-core/infrastructure/scripts/template-engine');
@@ -260,20 +260,20 @@ if (!validation.valid) {
 }
 ```
 
-<Callout type="warning" title="Sempre escape input do usuario">
-Use `engine.escapeInput(userInput)` para qualquer valor fornecido pelo usuario. Isso previne injecao de template -- um placeholder malicioso dentro de um valor poderia ser processado recursivamente.
+<Callout type="warning" title="Sempre escape input do usuário">
+Use `engine.escapeInput(userInput)` para qualquer valor fornecido pelo usuário. Isso previne injeção de template -- um placeholder malicioso dentro de um valor poderia ser processado recursivamente.
 </Callout>
 
 ---
 
 ## Troubleshooting Comum
 
-| Problema | Causa | Solucao |
+| Problema | Causa | Solução |
 |---|---|---|
-| Variavel nao substituida | Nome com typo (case-sensitive) | Verifique spelling exato |
-| Loop gera output vazio | Variavel nao e array | Certifique que e array, nao undefined |
-| Condicional sempre false | Variavel nao e truthy | Nao use string vazia, 0 ou null |
-| Template injection | Input do usuario nao escapado | Use `escapeInput()` |
+| Variável não substituída | Nome com typo (case-sensitive) | Verifique spelling exato |
+| Loop gera output vazio | Variável não é array | Certifique que é array, não undefined |
+| Condicional sempre false | Variável não é truthy | Não use string vazia, 0 ou null |
+| Template injection | Input do usuário não escapado | Use `escapeInput()` |
 
 ---
 
@@ -284,27 +284,27 @@ Use `engine.escapeInput(userInput)` para qualquer valor fornecido pelo usuario. 
   questions={[
     {
       question: "O que a diretiva [[LLM: ...]] faz dentro de um template?",
-      options: ["Gera codigo automaticamente", "Fornece instrucoes para a LLM processar a secao (invisivel no output final)", "Exibe uma nota para o usuario", "Define variaveis de ambiente"],
+      options: ["Gera código automaticamente", "Fornece instruções para a LLM processar a seção (invisível no output final)", "Exibe uma nota para o usuário", "Define variáveis de ambiente"],
       correct: 1,
-      explanation: "Diretivas [[LLM: ...]] sao instrucoes embutidas que guiam o agente durante o processamento. Elas sao invisveis no documento final gerado."
+      explanation: "Diretivas [[LLM: ...]] são instruções embutidas que guiam o agente durante o processamento. Elas são invisíveis no documento final gerado."
     },
     {
-      question: "O que acontece quando uma secao tem 'elicit: true'?",
-      options: ["A secao e pulada automaticamente", "O agente gera conteudo sem perguntar", "O agente apresenta 9 opcoes de interacao e aguarda resposta do usuario", "A secao e marcada como rascunho"],
+      question: "O que acontece quando uma seção tem 'elicit: true'?",
+      options: ["A seção é pulada automaticamente", "O agente gera conteúdo sem perguntar", "O agente apresenta 9 opções de interação e aguarda resposta do usuário", "A seção é marcada como rascunho"],
       correct: 2,
-      explanation: "Secoes com elicit: true obrigam o agente a apresentar opcoes 1-9 (proceed, challenge assumptions, deep dive, etc.) e aguardar a resposta antes de prosseguir."
+      explanation: "Seções com elicit: true obrigam o agente a apresentar opções 1-9 (proceed, challenge assumptions, deep dive, etc.) e aguardar a resposta antes de prosseguir."
     },
     {
-      question: "Qual metodo do TemplateEngine previne injecao de template?",
+      question: "Qual método do TemplateEngine previne injeção de template?",
       options: ["process()", "validateTemplate()", "escapeInput()", "getTemplateVariables()"],
       correct: 2,
-      explanation: "O metodo escapeInput() escapa caracteres especiais em valores fornecidos pelo usuario, prevenindo que placeholders maliciosos sejam processados."
+      explanation: "O método escapeInput() escapa caracteres especiais em valores fornecidos pelo usuário, prevenindo que placeholders maliciosos sejam processados."
     }
   ]}
 />
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima licao, vamos consolidar a terminologia oficial do AIOX e explorar o **tech stack** completo do framework.
+Na próxima lição, vamos consolidar a terminologia oficial do AIOX e explorar o **tech stack** completo do framework.

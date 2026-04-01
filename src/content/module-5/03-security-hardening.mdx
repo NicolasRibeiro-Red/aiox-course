@@ -1,10 +1,10 @@
 # Security Hardening — Protegendo seu Projeto AIOX
 
-O AIOX opera em uma camada privilegiada entre modelos de IA e o sistema. Isso significa que seguranca nao e opcional — e fundamental. Este capitulo cobre as estrategias de hardening especificas para ambientes de desenvolvimento orquestrados por IA.
+O AIOX opera em uma camada privilegiada entre modelos de IA e o sistema. Isso significa que segurança não é opcional — é fundamental. Este capítulo cobre as estratégias de hardening específicas para ambientes de desenvolvimento orquestrados por IA.
 
 ---
 
-## Arquitetura de Seguranca
+## Arquitetura de Segurança
 
 O AIOX implementa **defesa em profundidade** com 4 camadas:
 
@@ -13,44 +13,44 @@ O AIOX implementa **defesa em profundidade** com 4 camadas:
 │  CAMADA EXTERNA                               │
 │  Firewall | TLS | Rate Limiting               │
 ├──────────────────────────────────────────────┤
-│  CAMADA APLICACAO                             │
+│  CAMADA APLICAÇÃO                             │
 │  Permission Modes | Input Validation          │
 ├──────────────────────────────────────────────┤
-│  CAMADA EXECUCAO                              │
+│  CAMADA EXECUÇÃO                              │
 │  Sandboxing | Isolamento | Resource Limits    │
 ├──────────────────────────────────────────────┤
 │  CAMADA DADOS                                 │
-│  Encriptacao | Storage Seguro | Audit Log     │
+│  Encriptação | Storage Seguro | Audit Log     │
 └──────────────────────────────────────────────┘
 ```
 
-### Preocupacoes Especificas de IA
+### Preocupações Específicas de IA
 
-| Preocupacao | Risco | Mitigacao |
+| Preocupação | Risco | Mitigação |
 |---|---|---|
-| Execucao de codigo por agentes | CRITICO | Permission Modes, Sandboxing |
-| Exposicao de API keys | CRITICO | Isolamento de ambiente, encriptacao |
-| Command injection via IA | ALTO | Sanitizacao de input, hooks |
-| Acesso nao-autorizado a arquivos | ALTO | Restricoes de diretorio |
-| Hijacking de sessao | MEDIO | Rotacao de tokens |
-| Divulgacao de informacao | MEDIO | Audit logging, controle de acesso |
+| Execução de código por agentes | CRÍTICO | Permission Modes, Sandboxing |
+| Exposição de API keys | CRÍTICO | Isolamento de ambiente, encriptação |
+| Command injection via IA | ALTO | Sanitização de input, hooks |
+| Acesso não-autorizado a arquivos | ALTO | Restrições de diretório |
+| Hijacking de sessão | MÉDIO | Rotação de tokens |
+| Divulgação de informação | MÉDIO | Audit logging, controle de acesso |
 
 ---
 
 ## Gerenciamento de API Keys
 
-API keys sao os segredos mais criticos do AIOX. Chaves comprometidas podem levar a uso nao-autorizado, vazamento de dados e impacto financeiro significativo.
+API keys são os segredos mais críticos do AIOX. Chaves comprometidas podem levar a uso não-autorizado, vazamento de dados e impacto financeiro significativo.
 
 ### Hierarquia de Armazenamento
 
-| Nivel | Pratica | Exemplo |
+| Nível | Prática | Exemplo |
 |---|---|---|
-| **NUNCA** | Codigo fonte, repos Git, configs commitados, logs | Hardcoded no `.ts` |
-| **Aceitavel (Dev)** | Arquivos `.env` (gitignored), variaveis locais | `.env.local` |
+| **NUNCA** | Código fonte, repos Git, configs commitados, logs | Hardcoded no `.ts` |
+| **Aceitável (Dev)** | Arquivos `.env` (gitignored), variáveis locais | `.env.local` |
 | **Recomendado (Prod)** | Secret managers, CI/CD injection, Kubernetes secrets | AWS Secrets Manager |
 
-<Callout type="danger" title="Regra #1 de seguranca">
-NUNCA commite API keys, tokens ou credenciais em repositorios Git. Adicione `.env`, `.env.local` e `*.pem` ao `.gitignore` IMEDIATAMENTE ao criar o projeto.
+<Callout type="danger" title="Regra #1 de segurança">
+NUNCA commite API keys, tokens ou credenciais em repositórios Git. Adicione `.env`, `.env.local` e `*.pem` ao `.gitignore` IMEDIATAMENTE ao criar o projeto.
 </Callout>
 
 ### Template Seguro de .env
@@ -76,21 +76,21 @@ SESSION_SECRET=    # Gerar com: openssl rand -hex 32
 DATABASE_ENCRYPTION_KEY=  # openssl rand -hex 32
 ```
 
-### Politica de Rotacao de Chaves
+### Política de Rotação de Chaves
 
-| Tipo de Chave | Frequencia | Em Caso de Comprometimento |
+| Tipo de Chave | Frequência | Em Caso de Comprometimento |
 |---|---|---|
 | AI Provider Keys | 90 dias | Imediato |
 | JWT Secrets | 30 dias | Imediato |
 | MCP Server Keys | 90 dias | Imediato |
 | Service Tokens | 7 dias | Imediato |
-| Dev Keys | Nao reutilizar | Revogar imediatamente |
+| Dev Keys | Não reutilizar | Revogar imediatamente |
 
 ---
 
-## PII Scanning — Protecao de Dados Pessoais
+## PII Scanning — Proteção de Dados Pessoais
 
-Antes de **qualquer commit** com conteudo textual externo, execute um scan de PII (Personally Identifiable Information):
+Antes de **qualquer commit** com conteúdo textual externo, execute um scan de PII (Personally Identifiable Information):
 
 ```bash
 # Scan basico
@@ -102,29 +102,29 @@ git log -p --all -S "API_KEY" -- .
 git log -p --all -S "@gmail.com" -- .
 ```
 
-| Tipo de PII | Pattern de Busca | Acao |
+| Tipo de PII | Pattern de Busca | Ação |
 |---|---|---|
 | Nomes completos | Patterns de nomes brasileiros | Remover ou anonimizar |
-| Emails | `*@*.*` em conteudo nao-code | Remover |
+| Emails | `*@*.*` em conteúdo não-code | Remover |
 | CPFs | `\d{3}\.\d{3}\.\d{3}-\d{2}` | NUNCA commitar |
 | API Keys | `sk-`, `ghp_`, `apify_api_` | Revogar e rotacionar |
 | Tokens | `Bearer `, `token=` | Mover para .env |
 
 ---
 
-## Protecao de Branches
+## Proteção de Branches
 
-O AIOX configura protecao automatica para branches criticas:
+O AIOX configura proteção automática para branches críticas:
 
 ### Regras para `master`/`main`
 
-| Protecao | Configuracao |
+| Proteção | Configuração |
 |---|---|
-| Status checks obrigatorios | ESLint, TypeScript, Tests, Story Validation |
-| PR reviews obrigatorias | Minimo 1 aprovacao |
+| Status checks obrigatórios | ESLint, TypeScript, Tests, Story Validation |
+| PR reviews obrigatórias | Mínimo 1 aprovação |
 | Force push | **Bloqueado** |
-| Delecao da branch | **Bloqueada** |
-| Historico linear | Sim (rebase only) |
+| Deleção da branch | **Bloqueada** |
+| Histórico linear | Sim (rebase only) |
 | Dismiss stale reviews | Sim (em novos commits) |
 
 ```bash
@@ -137,9 +137,9 @@ gh api repos/OWNER/REPO/branches/main/protection
 
 ---
 
-## Validacao de Input
+## Validação de Input
 
-Todo input de usuario e de IA deve ser validado antes de execucao:
+Todo input de usuário e de IA deve ser validado antes de execução:
 
 ```javascript
 // .aiox-core/core/security/key-validator.js
@@ -190,12 +190,12 @@ function validateEnvironment() {
 ```
 
 <Callout type="warning" title="Ambientes separados">
-Nunca reutilize chaves entre ambientes. Mantenha conjuntos separados de API keys para desenvolvimento, staging e producao.
+Nunca reutilize chaves entre ambientes. Mantenha conjuntos separados de API keys para desenvolvimento, staging e produção.
 </Callout>
 
 ---
 
-## Protecao de Arquivos de Secrets
+## Proteção de Arquivos de Secrets
 
 ```bash
 # Criar diretorio seguro
@@ -215,7 +215,7 @@ chmod 600 ~/.aiox/secrets/*
 
 ## Audit Logging
 
-Todas as operacoes senssiveis devem ser registradas:
+Todas as operações sensíveis devem ser registradas:
 
 ```bash
 # Configuracao de audit
@@ -225,17 +225,17 @@ AUDIT_LOG_RETENTION_DAYS=90
 ```
 
 O AIOX registra automaticamente:
-- Execucao de comandos por agentes
-- Acesso a arquivos sensiveis
-- Mudancas em configuracao de seguranca
-- Tentativas de autenticacao
-- Operacoes de Git (push, merge, delete)
+- Execução de comandos por agentes
+- Acesso a arquivos sensíveis
+- Mudanças em configuração de segurança
+- Tentativas de autenticação
+- Operações de Git (push, merge, delete)
 
 ---
 
-## Checklist de Seguranca
+## Checklist de Segurança
 
-Use este checklist antes de colocar qualquer projeto AIOX em producao:
+Use este checklist antes de colocar qualquer projeto AIOX em produção:
 
 ```markdown
 ### Pre-Deploy Security Checklist
@@ -273,21 +273,21 @@ Use este checklist antes de colocar qualquer projeto AIOX em producao:
   questions={[
     {
       question: "Onde NUNCA devemos armazenar API keys?",
-      options: [".env files (gitignored)", "Secret managers (Vault, AWS)", "Codigo fonte ou repos Git", "Variaveis de ambiente locais"],
+      options: [".env files (gitignored)", "Secret managers (Vault, AWS)", "Código fonte ou repos Git", "Variáveis de ambiente locais"],
       correct: 2,
-      explanation: "API keys NUNCA devem estar em codigo fonte, repos Git, configs commitados ou logs. Mesmo em .env (gitignored) e aceitavel apenas para desenvolvimento."
+      explanation: "API keys NUNCA devem estar em código fonte, repos Git, configs commitados ou logs. Mesmo em .env (gitignored) é aceitável apenas para desenvolvimento."
     },
     {
-      question: "Com que frequencia JWT Secrets devem ser rotacionados?",
+      question: "Com que frequência JWT Secrets devem ser rotacionados?",
       options: ["7 dias", "30 dias", "90 dias", "Nunca"],
       correct: 1,
-      explanation: "JWT Secrets devem ser rotacionados a cada 30 dias. Em caso de comprometimento, a rotacao deve ser imediata."
+      explanation: "JWT Secrets devem ser rotacionados a cada 30 dias. Em caso de comprometimento, a rotação deve ser imediata."
     },
     {
       question: "O que o AIOX faz para proteger a branch master?",
-      options: ["Nada, e responsabilidade do usuario", "Bloqueia force push, exige reviews e status checks", "Apenas exige 1 aprovacao", "Apenas roda testes"],
+      options: ["Nada, é responsabilidade do usuário", "Bloqueia force push, exige reviews e status checks", "Apenas exige 1 aprovação", "Apenas roda testes"],
       correct: 1,
-      explanation: "O AIOX configura protecao completa: force push bloqueado, delecao bloqueada, status checks obrigatorios, reviews com 1+ aprovacao, historico linear e dismiss de stale reviews."
+      explanation: "O AIOX configura proteção completa: force push bloqueado, deleção bloqueada, status checks obrigatórios, reviews com 1+ aprovação, histórico linear e dismiss de stale reviews."
     }
   ]}
 />

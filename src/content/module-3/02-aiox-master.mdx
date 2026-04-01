@@ -1,6 +1,6 @@
 # Orion: O AIOX Master
 
-Orion e o **meta-agente** do AIOX -- o orquestrador universal que pode executar qualquer task de qualquer agente, criar e modificar componentes do framework, e coordenar workflows multi-agente complexos. Se os outros agentes sao especialistas, Orion e o maestro da orquestra.
+Orion é o **meta-agente** do AIOX -- o orquestrador universal que pode executar qualquer task de qualquer agente, criar e modificar componentes do framework, e coordenar workflows multi-agente complexos. Se os outros agentes são especialistas, Orion é o maestro da orquestra.
 
 ---
 
@@ -14,88 +14,88 @@ Orion e o **meta-agente** do AIOX -- o orquestrador universal que pode executar 
   description="Meta-agente principal do AIOX. Orquestra todos os agentes, desenvolve o framework, gerencia componentes e acessa o Knowledge Base completo. Quando nenhum agente especializado se encaixa, Orion resolve."
   commands={["*create agent/task/workflow", "*modify agent/task/workflow", "*analyze-framework", "*kb", "*task {name}", "*workflow {name}", "*help"]}
   whenToUse="Criar ou modificar componentes do framework, orquestrar workflows multi-agente, executar tasks diretamente sem trocar de agente, acessar o Knowledge Base do AIOX."
-  collaboratesWith={["@pm (delega criacao de epics)", "@analyst (delega brainstorming)", "@architect (delega geracao de AI prompts)", "@qa (delega criacao de test suites)"]}
-  restrictions={["Preferir agentes especializados para tarefas de dominio -- Orion e generalista, nao substituto"]}
+  collaboratesWith={["@pm (delega criação de epics)", "@analyst (delega brainstorming)", "@architect (delega geração de AI prompts)", "@qa (delega criação de test suites)"]}
+  restrictions={["Preferir agentes especializados para tarefas de domínio -- Orion é generalista, não substituto"]}
 />
 
 ---
 
 ## Quando Usar o Orion
 
-| Cenario | Use Orion? | Alternativa |
+| Cenário | Use Orion? | Alternativa |
 |---|---|---|
 | Criar um novo agente para o framework | Sim | -- |
 | Modificar uma task existente | Sim | -- |
-| Criar um PRD para o seu produto | Nao | @pm (Morgan) |
-| Implementar uma story | Nao | @dev (Dex) |
+| Criar um PRD para o seu produto | Não | @pm (Morgan) |
+| Implementar uma story | Não | @dev (Dex) |
 | Orquestrar workflow greenfield completo | Sim | -- |
-| Fazer code review | Nao | @qa (Quinn) |
+| Fazer code review | Não | @qa (Quinn) |
 | Consultar o Knowledge Base do AIOX | Sim | -- |
-| Executar qualquer task diretamente | Sim | Agente especializado e preferivel |
+| Executar qualquer task diretamente | Sim | Agente especializado é preferível |
 
 <Callout type="tip" title="Regra de ouro">
-Use Orion quando a tarefa e sobre o **framework em si** ou quando precisa **coordenar multiplos agentes**. Para tarefas de dominio especifico (PRD, codigo, review), use o agente especializado.
+Use Orion quando a tarefa é sobre o **framework em si** ou quando precisa **coordenar múltiplos agentes**. Para tarefas de domínio específico (PRD, código, review), use o agente especializado.
 </Callout>
 
 ---
 
 ## Os 5 Grupos de Comandos
 
-### 1. Comandos de Criacao
+### 1. Comandos de Criação
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
-| `*create agent {name}` | Cria novo agente via elicitacao progressiva |
+| `*create agent {name}` | Cria novo agente via elicitação progressiva |
 | `*create task {name}` | Cria nova task com estrutura padronizada |
 | `*create workflow {name}` | Cria novo workflow multi-agente |
 | `*create-doc {template}` | Cria documento a partir de template YAML |
-| `*create-next-story` | Cria proxima user story do backlog |
+| `*create-next-story` | Cria próxima user story do backlog |
 
-### 2. Comandos de Modificacao
+### 2. Comandos de Modificação
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
 | `*modify agent {name}` | Modifica agente existente (com backup e rollback) |
 | `*modify task {name}` | Modifica task preservando compatibilidade |
 | `*modify workflow {name}` | Modifica workflow mantendo integridade |
 | `*update-manifest` | Atualiza manifesto de equipe com novos agentes |
-| `*propose-modification` | Cria proposta de modificacao para revisao |
+| `*propose-modification` | Cria proposta de modificação para revisão |
 
-### 3. Comandos de Analise
+### 3. Comandos de Análise
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
-| `*analyze-framework` | Analise completa de estrutura, redundancias e performance |
-| `*deprecate-component` | Deprecia componente com timeline e plano de migracao |
-| `*execute-checklist {name}` | Executa checklist de validacao |
+| `*analyze-framework` | Análise completa de estrutura, redundâncias e performance |
+| `*deprecate-component` | Deprecia componente com timeline e plano de migração |
+| `*execute-checklist {name}` | Executa checklist de validação |
 | `*correct-course` | Analisa e corrige desvios de processo/qualidade |
 
-### 4. Comandos de Execucao
+### 4. Comandos de Execução
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
-| `*task {name}` | Executa task especifica diretamente |
+| `*task {name}` | Executa task específica diretamente |
 | `*workflow {name}` | Inicia workflow multi-agente |
 | `*plan [create\|status\|update]` | Planejamento de workflow |
 
 ### 5. Comandos de Utilidade
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
-| `*help` | Mostra todos os comandos disponiveis |
+| `*help` | Mostra todos os comandos disponíveis |
 | `*kb` | Ativa modo Knowledge Base interativo |
 | `*status` | Mostra contexto e progresso atual |
 | `*guide` | Guia de uso do agente |
-| `*yolo` | Toggle: pular confirmacoes |
+| `*yolo` | Toggle: pular confirmações |
 | `*shard-doc` | Fragmenta documento em partes menores |
-| `*index-docs` | Indexa documentacao para busca rapida |
+| `*index-docs` | Indexa documentação para busca rápida |
 | `*exit` | Sai do modo agente |
 
 ---
 
 ## O Knowledge Base (*kb)
 
-Um dos recursos mais poderosos do Orion e o modo KB -- acesso interativo a toda a base de conhecimento do AIOX:
+Um dos recursos mais poderosos do Orion é o modo KB -- acesso interativo a toda a base de conhecimento do AIOX:
 
 ```
 @aiox-master
@@ -105,14 +105,14 @@ Um dos recursos mais poderosos do Orion e o modo KB -- acesso interativo a toda 
 > Topicos: agents, tasks, workflows, templates, squads, architecture...
 ```
 
-O Knowledge Base contem:
-- Filosofia e principios do framework
-- Documentacao de todos os componentes
+O Knowledge Base contém:
+- Filosofia e princípios do framework
+- Documentação de todos os componentes
 - Best practices e anti-patterns
 - Guias de troubleshooting
 
 <Callout type="info" title="KB sob demanda">
-O Knowledge Base so e carregado quando voce executa `*kb`. Isso e intencional -- carregar tudo na ativacao desperdicaria contexto precioso.
+O Knowledge Base só é carregado quando você executa `*kb`. Isso é intencional -- carregar tudo na ativação desperdiçaria contexto precioso.
 </Callout>
 
 ---
@@ -125,32 +125,32 @@ Orion gerencia o ciclo de vida completo de qualquer componente do framework:
 IDEA → DRAFT → CREATED → ACTIVE → ANALYZED → DEPRECATED → REMOVED
 ```
 
-| Estado | Comando | Descricao |
+| Estado | Comando | Descrição |
 |---|---|---|
-| IDEA | `*propose-modification` | Proposta para revisao |
+| IDEA | `*propose-modification` | Proposta para revisão |
 | DRAFT | -- | Rascunho em progresso |
 | CREATED | `*create {type}` | Componente criado |
-| ACTIVE | Validacao OK | Em uso no sistema |
+| ACTIVE | Validação OK | Em uso no sistema |
 | ANALYZED | `*analyze-framework` | Analisado para melhorias |
-| DEPRECATED | `*deprecate-component` | Marcado para remocao (com timeline) |
-| REMOVED | Apos timeline | Removido do sistema |
+| DEPRECATED | `*deprecate-component` | Marcado para remoção (com timeline) |
+| REMOVED | Após timeline | Removido do sistema |
 
 ---
 
-## Delegacao Inteligente
+## Delegação Inteligente
 
 Orion pode executar qualquer task diretamente, mas **prefere delegar** para agentes especializados:
 
 | Tarefa | Orion delega para | Via |
 |---|---|---|
-| Criacao de epics | @pm (Morgan) | `brownfield-create-epic.md` |
+| Criação de epics | @pm (Morgan) | `brownfield-create-epic.md` |
 | Brainstorming | @analyst (Atlas) | `facilitate-brainstorming-session.md` |
-| Geracao de AI prompts | @architect (Aria) | `generate-ai-frontend-prompt.md` |
-| Criacao de test suites | @qa (Quinn) | `create-suite.md` |
+| Geração de AI prompts | @architect (Aria) | `generate-ai-frontend-prompt.md` |
+| Criação de test suites | @qa (Quinn) | `create-suite.md` |
 
 ---
 
-## Numeros do Orion
+## Números do Orion
 
 | Aspecto | Quantidade |
 |---|---|
@@ -159,12 +159,12 @@ Orion pode executar qualquer task diretamente, mas **prefere delegar** para agen
 | Workflows | 6 |
 | Checklists | 6 |
 | Agentes que delega | 4 (@pm, @analyst, @architect, @qa) |
-| Comandos de criacao | 5 |
-| Comandos de modificacao | 5 |
-| Comandos de analise | 4 |
-| Comandos de execucao | 3 |
+| Comandos de criação | 5 |
+| Comandos de modificação | 5 |
+| Comandos de análise | 4 |
+| Comandos de execução | 3 |
 | Comandos de utilidade | 10 |
-| Modos de execucao | 3 (YOLO, Interactive, Pre-Flight) |
+| Modos de execução | 3 (YOLO, Interactive, Pre-Flight) |
 
 ---
 
@@ -174,28 +174,28 @@ Orion pode executar qualquer task diretamente, mas **prefere delegar** para agen
   title="AIOX Master"
   questions={[
     {
-      question: "Qual e o papel principal do Orion (@aiox-master)?",
-      options: ["Escrever codigo", "Orquestrar agentes e gerenciar componentes do framework", "Fazer code review", "Deploy de aplicacoes"],
+      question: "Qual é o papel principal do Orion (@aiox-master)?",
+      options: ["Escrever código", "Orquestrar agentes e gerenciar componentes do framework", "Fazer code review", "Deploy de aplicações"],
       correct: 1,
-      explanation: "Orion e o meta-agente orquestrador: cria/modifica componentes do framework, coordena workflows multi-agente e acessa o Knowledge Base."
+      explanation: "Orion é o meta-agente orquestrador: cria/modifica componentes do framework, coordena workflows multi-agente e acessa o Knowledge Base."
     },
     {
-      question: "O que acontece quando voce executa *kb?",
-      options: ["Faz backup do Knowledge Base", "Ativa modo interativo de consulta ao Knowledge Base do AIOX", "Cria um novo arquivo de conhecimento", "Lista todos os agentes disponiveis"],
+      question: "O que acontece quando você executa *kb?",
+      options: ["Faz backup do Knowledge Base", "Ativa modo interativo de consulta ao Knowledge Base do AIOX", "Cria um novo arquivo de conhecimento", "Lista todos os agentes disponíveis"],
       correct: 1,
       explanation: "O comando *kb ativa o modo Knowledge Base interativo, permitindo consultas sobre qualquer aspecto do AIOX Method."
     },
     {
-      question: "Por que Orion delega criacao de epics para @pm em vez de fazer diretamente?",
-      options: ["Porque nao consegue", "Porque agentes especializados tem expertise mais profunda no dominio", "Por questao de performance", "Porque o @pm e mais rapido"],
+      question: "Por que Orion delega criação de epics para @pm em vez de fazer diretamente?",
+      options: ["Porque não consegue", "Porque agentes especializados têm expertise mais profunda no domínio", "Por questão de performance", "Porque o @pm é mais rápido"],
       correct: 1,
-      explanation: "Orion e generalista. Agentes especializados como @pm tem expertise mais profunda em seus dominios (produto, requisitos, estrategia), resultando em artefatos de maior qualidade."
+      explanation: "Orion é generalista. Agentes especializados como @pm têm expertise mais profunda em seus domínios (produto, requisitos, estratégia), resultando em artefatos de maior qualidade."
     }
   ]}
 />
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima licao, vamos conhecer os **agentes de planejamento**: Atlas (Analyst), Morgan (PM) e Aria (Architect).
+Na próxima lição, vamos conhecer os **agentes de planejamento**: Atlas (Analyst), Morgan (PM) e Aria (Architect).

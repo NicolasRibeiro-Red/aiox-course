@@ -124,12 +124,12 @@ export function LessonContent({ lessonId, moduleId }: LessonContentProps) {
         ) : (
           <div className="bg-card border border-border rounded-lg p-8 text-center">
             <p className="text-muted text-lg mb-2">
-              {error ? "Erro ao carregar conteudo" : "Conteudo em desenvolvimento"}
+              {error ? "Erro ao carregar conteúdo" : "Conteúdo em desenvolvimento"}
             </p>
             <p className="text-sm text-zinc-500">
               {error
-                ? "Tente recarregar a pagina."
-                : "Esta licao sera preenchida com conteudo da documentacao oficial do AIOX."}
+                ? "Tente recarregar a página."
+                : "Esta lição será preenchida com conteúdo da documentação oficial do AIOX."}
             </p>
           </div>
         )}
@@ -147,10 +147,10 @@ export function LessonContent({ lessonId, moduleId }: LessonContentProps) {
         >
           {completed ? (
             <>
-              <span>&#10003;</span> Licao Concluida
+              <span>&#10003;</span> Lição Concluída
             </>
           ) : (
-            "Marcar como Concluida"
+            "Marcar como Concluída"
           )}
         </button>
       </div>

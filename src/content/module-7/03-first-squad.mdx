@@ -1,6 +1,6 @@
 # Construindo sua Primeira Squad
 
-Nesta licao, voce vai construir uma squad funcional do zero — passo a passo. Ao final, tera um time de agentes IA trabalhando juntos em um dominio especifico.
+Nesta lição, você vai construir uma squad funcional do zero — passo a passo. Ao final, terá um time de agentes IA trabalhando juntos em um domínio específico.
 
 ---
 
@@ -9,14 +9,14 @@ Nesta licao, voce vai construir uma squad funcional do zero — passo a passo. A
 Vamos criar uma **code-review-squad** — uma squad simples com:
 - 1 agente reviewer
 - 1 task de review
-- Configuracao de coding standards
+- Configuração de coding standards
 - Manifesto completo
 
 ---
 
-## Pre-requisitos
+## Pré-requisitos
 
-Antes de comecar, certifique-se de ter:
+Antes de começar, certifique-se de ter:
 
 - Node.js 18+
 - Projeto AIOX inicializado (`.aiox-core/` existe)
@@ -24,14 +24,14 @@ Antes de comecar, certifique-se de ter:
 
 ---
 
-## Passo 1: Criar a Estrutura de Diretorios
+## Passo 1: Criar a Estrutura de Diretórios
 
 ```bash
 # Criar a estrutura da squad
 mkdir -p squads/code-review-squad/{agents,tasks,config,checklists}
 ```
 
-A estrutura inicial ficara:
+A estrutura inicial ficará:
 
 ```
 squads/code-review-squad/
@@ -45,7 +45,7 @@ squads/code-review-squad/
 
 ## Passo 2: Criar o Manifesto (squad.yaml)
 
-O manifesto e o primeiro arquivo a ser criado. Ele define a identidade e os componentes da squad:
+O manifesto é o primeiro arquivo a ser criado. Ele define a identidade e os componentes da squad:
 
 ```yaml
 # squads/code-review-squad/squad.yaml
@@ -162,8 +162,8 @@ dependencies:
 
 # CodeReviewer
 
-Especialista em revisao de codigo com foco em
-qualidade, seguranca e aderencia a padroes.
+Especialista em revisão de código com foco em
+qualidade, segurança e aderência a padrões.
 ```
 
 ---
@@ -244,7 +244,7 @@ sugerir split em PRs menores antes de revisar.
 
 ---
 
-## Passo 5: Criar Configuracoes
+## Passo 5: Criar Configurações
 
 ### Coding Standards
 
@@ -317,15 +317,15 @@ sugerir split em PRs menores antes de revisar.
 *validate-squad code-review-squad --strict
 ```
 
-<Callout type="warning" title="Erros Comuns na Validacao">
-Os erros mais comuns sao: `squad.yaml` com YAML invalido, agentes sem `id` unico, e tasks sem `Description` ou `Steps`. Corrija esses campos antes de tudo.
+<Callout type="warning" title="Erros Comuns na Validação">
+Os erros mais comuns são: `squad.yaml` com YAML inválido, agentes sem `id` único, e tasks sem `Description` ou `Steps`. Corrija esses campos antes de tudo.
 </Callout>
 
 ---
 
 ## Passo 7: Usar a Squad
 
-Com a squad validada, voce pode usa-la imediatamente:
+Com a squad validada, você pode usá-la imediatamente:
 
 ```bash
 # O agente fica disponivel no projeto
@@ -342,7 +342,7 @@ Com a squad validada, voce pode usa-la imediatamente:
 
 ## Usando o Squad Designer (Alternativa)
 
-Se voce ja tem documentacao do projeto (PRD, specs), o Squad Designer pode gerar a squad automaticamente:
+Se você já tem documentação do projeto (PRD, specs), o Squad Designer pode gerar a squad automaticamente:
 
 ```bash
 @squad-creator
@@ -360,13 +360,13 @@ Se voce ja tem documentacao do projeto (PRD, specs), o Squad Designer pode gerar
 *create-squad my-squad --from-design
 ```
 
-O Squad Designer gera um arquivo `.squad-design.yaml` com recomendacoes e confidence scores para cada componente sugerido.
+O Squad Designer gera um arquivo `.squad-design.yaml` com recomendações e confidence scores para cada componente sugerido.
 
 ---
 
-## Proximos Passos
+## Próximos Passos
 
-Agora que voce tem sua primeira squad funcionando:
+Agora que você tem sua primeira squad funcionando:
 
 1. **Estenda**: Adicione mais agentes e tasks
 2. **Teste**: Valide com `*validate-squad --strict`
@@ -379,22 +379,22 @@ Agora que voce tem sua primeira squad funcionando:
   title="Teste seus Conhecimentos"
   questions={[
     {
-      question: "Qual e o primeiro arquivo a criar ao montar uma squad?",
+      question: "Qual é o primeiro arquivo a criar ao montar uma squad?",
       options: ["README.md", "agents/main-agent.md", "squad.yaml", "config/settings.yaml"],
       correct: 2,
-      explanation: "O squad.yaml (manifesto) e o primeiro arquivo a ser criado. Ele define a identidade, componentes e configuracao da squad."
+      explanation: "O squad.yaml (manifesto) é o primeiro arquivo a ser criado. Ele define a identidade, componentes e configuração da squad."
     },
     {
-      question: "Como o Squad Designer gera recomendacoes?",
-      options: ["Copiando de templates", "Analisando documentacao do projeto", "Fazendo perguntas ao usuario", "Usando IA generativa aleatoria"],
+      question: "Como o Squad Designer gera recomendações?",
+      options: ["Copiando de templates", "Analisando documentação do projeto", "Fazendo perguntas ao usuário", "Usando IA generativa aleatória"],
       correct: 1,
-      explanation: "O Squad Designer analisa documentacao do projeto (PRDs, specs, requirements) e extrai conceitos, workflows e papeis para recomendar agentes e tasks."
+      explanation: "O Squad Designer analisa documentação do projeto (PRDs, specs, requirements) e extrai conceitos, workflows e papéis para recomendar agentes e tasks."
     },
     {
       question: "Qual comando valida a estrutura de uma squad em modo rigoroso?",
       options: ["*check-squad --full", "*validate-squad --strict", "*test-squad --all", "*lint-squad --rigorous"],
       correct: 1,
-      explanation: "O comando *validate-squad --strict executa validacao rigorosa, ideal para uso em pipelines de CI/CD."
+      explanation: "O comando *validate-squad --strict executa validação rigorosa, ideal para uso em pipelines de CI/CD."
     }
   ]}
 />

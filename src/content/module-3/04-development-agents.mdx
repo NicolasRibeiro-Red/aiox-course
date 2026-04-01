@@ -1,6 +1,6 @@
 # Agentes de Desenvolvimento: Dex, Dara e Uma
 
-Estes tres agentes transformam planejamento em realidade. **Dex** constroi codigo, **Dara** arquiteta dados e **Uma** projeta experiencias de usuario. Cada um e especialista profundo no seu dominio, com ferramentas e workflows especificos.
+Estes três agentes transformam planejamento em realidade. **Dex** constrói código, **Dara** arquiteta dados e **Uma** projeta experiências de usuário. Cada um é especialista profundo no seu domínio, com ferramentas e workflows específicos.
 
 ---
 
@@ -13,22 +13,22 @@ Estes tres agentes transformam planejamento em realidade. **Dex** constroi codig
   title="Full Stack Developer"
   archetype="Builder"
   zodiac="Aquarius"
-  description="Desenvolvedor full-stack pragmatico e orientado a solucoes. Dex implementa stories com precisao, escreve testes abrangentes, refatora codigo e aplica correcoes de QA. Atualiza apenas as secoes autorizadas dos arquivos de story e segue rigorosamente os acceptance criteria."
+  description="Desenvolvedor full-stack pragmático e orientado a soluções. Dex implementa stories com precisão, escreve testes abrangentes, refatora código e aplica correções de QA. Atualiza apenas as seções autorizadas dos arquivos de story e segue rigorosamente os acceptance criteria."
   commands={["*develop {story-id}", "*improve-code-quality {path}", "*optimize-performance {path}", "*suggest-refactoring {path}", "*backlog-debt", "*apply-qa-fixes", "*validate-story-draft", "*sync-documentation"]}
-  whenToUse="Quando tem uma story aprovada pronta para implementacao, precisa de refactoring, otimizacao de performance, ou aplicacao de fixes de QA."
-  collaboratesWith={["@sm (recebe stories)", "@qa (recebe fix requests)", "@devops (entrega codigo para deploy)", "@architect (consulta arquitetura)"]}
-  restrictions={["NAO cria stories (recebe do @sm)", "NAO faz git push (delega para @devops)", "NAO faz deploy", "NAO modifica secoes nao-autorizadas de stories"]}
+  whenToUse="Quando tem uma story aprovada pronta para implementação, precisa de refactoring, otimização de performance, ou aplicação de fixes de QA."
+  collaboratesWith={["@sm (recebe stories)", "@qa (recebe fix requests)", "@devops (entrega código para deploy)", "@architect (consulta arquitetura)"]}
+  restrictions={["NÃO cria stories (recebe do @sm)", "NÃO faz git push (delega para @devops)", "NÃO faz deploy", "NÃO modifica seções não-autorizadas de stories"]}
 />
 
 ### O Workflow de Desenvolvimento
 
 Quando Dex recebe `*develop STORY-42`, ele segue este fluxo:
 
-| Step | Acao | Descricao |
+| Step | Ação | Descrição |
 |---|---|---|
 | 1 | Read Story | Carrega STORY-42.md completa |
 | 2 | Load Context | Carrega arquitetura, technical preferences, gotchas |
-| 3 | Plan Approach | Analisa tasks e define ordem de implementacao |
+| 3 | Plan Approach | Analisa tasks e define ordem de implementação |
 | 4 | Implement | Executa cada task sequencialmente |
 | 5 | Write Tests | Testes para cada acceptance criteria |
 | 6 | Update Story | Marca tasks como `[x]`, atualiza file list |
@@ -54,10 +54,10 @@ Quando @qa encontra issues, Dex recebe um `qa-report.md` e usa `*apply-qa-fixes`
 @qa encontra issue → qa-report.md → @dev *apply-qa-fixes → @qa verifica fix
 ```
 
-O loop continua ate que @qa emita PASS no quality gate.
+O loop continua até que @qa emita PASS no quality gate.
 
 <Callout type="info" title="Recovery System">
-Se Dex falha em implementar uma subtask, ele tem um sistema de recovery: `*track-attempt` registra a tentativa, e apos 3 falhas, `*rollback` reverte para o ultimo estado bom.
+Se Dex falha em implementar uma subtask, ele tem um sistema de recovery: `*track-attempt` registra a tentativa, e após 3 falhas, `*rollback` reverte para o último estado bom.
 </Callout>
 
 ---
@@ -71,25 +71,25 @@ Se Dex falha em implementar uma subtask, ele tem um sistema de recovery: `*track
   title="Database Architect & Operations Engineer"
   archetype="Sage"
   zodiac="Gemini"
-  description="Especialista em design de schemas, migracoes seguras, Row Level Security (RLS), otimizacao de performance e operacoes de DBA. Dara modela dominios de negocio, implementa migracoes com snapshots e rollback, e garante integridade e seguranca dos dados."
+  description="Especialista em design de schemas, migrações seguras, Row Level Security (RLS), otimização de performance e operações de DBA. Dara modela domínios de negócio, implementa migrações com snapshots e rollback, e garante integridade e segurança dos dados."
   commands={["*model-domain", "*setup-database {type}", "*bootstrap", "*apply-migration {path}", "*dry-run {path}", "*snapshot {label}", "*rollback {snapshot}", "*security-audit {scope}", "*analyze-performance {type}", "*policy-apply {table} {mode}", "*test-as-user {user_id}"]}
-  whenToUse="Quando precisa projetar schemas, executar migracoes, configurar RLS, otimizar queries ou fazer operacoes de DBA."
-  collaboratesWith={["@architect (recebe requisitos de schema)", "@dev (fornece schema para implementacao)", "@qa (valida integridade de dados)"]}
-  restrictions={["NAO seleciona tecnologia de database (cabe ao @architect)", "NAO implementa logica de aplicacao"]}
+  whenToUse="Quando precisa projetar schemas, executar migrações, configurar RLS, otimizar queries ou fazer operações de DBA."
+  collaboratesWith={["@architect (recebe requisitos de schema)", "@dev (fornece schema para implementação)", "@qa (valida integridade de dados)"]}
+  restrictions={["NÃO seleciona tecnologia de database (cabe ao @architect)", "NÃO implementa lógica de aplicação"]}
 />
 
-### Principios Criticos de Dara
+### Princípios Críticos de Dara
 
-| Principio | Significado |
+| Princípio | Significado |
 |---|---|
 | **Corretude antes de velocidade** | Acertar primeiro, otimizar depois |
-| **Tudo versionado e reversivel** | Snapshots + scripts de rollback |
-| **Seguranca por padrao** | RLS, constraints, triggers |
-| **Idempotencia em todo lugar** | Seguro executar operacoes multiplas vezes |
-| **Access pattern first** | Design baseado em como dados serao consultados |
-| **Zero-downtime como objetivo** | Migracoes planejadas cuidadosamente |
+| **Tudo versionado e reversível** | Snapshots + scripts de rollback |
+| **Segurança por padrão** | RLS, constraints, triggers |
+| **Idempotência em todo lugar** | Seguro executar operações múltiplas vezes |
+| **Access pattern first** | Design baseado em como dados serão consultados |
+| **Zero-downtime como objetivo** | Migrações planejadas cuidadosamente |
 
-### Workflow de Migracao Segura
+### Workflow de Migração Segura
 
 ```
 1. *snapshot "pre-migration"     -- Salva estado atual
@@ -106,7 +106,7 @@ Se Dex falha em implementar uma subtask, ele tem um sistema de recovery: `*track
 | **Supabase** | `*setup-database supabase` | PostgreSQL + Auth + RLS |
 | **PostgreSQL** | `*setup-database postgresql` | Relacional puro |
 | **MongoDB** | `*setup-database mongodb` | Documentos |
-| **MySQL** | `*setup-database mysql` | Relacional classico |
+| **MySQL** | `*setup-database mysql` | Relacional clássico |
 | **SQLite** | `*setup-database sqlite` | Embarcado |
 
 ---
@@ -120,42 +120,42 @@ Se Dex falha em implementar uma subtask, ele tem um sistema de recovery: `*track
   title="UX Design Expert"
   archetype="Designer"
   zodiac="Pisces"
-  description="Hibrido de UX Research e Design System. Uma combina principios de Sally (empatia, user research) com Brad Frost (Atomic Design, tokens, ROI). Opera em 5 fases: Research, Audit, Tokens, Component Building e Quality/Documentation."
+  description="Híbrido de UX Research e Design System. Uma combina princípios de Sally (empatia, user research) com Brad Frost (Atomic Design, tokens, ROI). Opera em 5 fases: Research, Audit, Tokens, Component Building e Quality/Documentation."
   commands={["*research", "*wireframe", "*generate-ui-prompt", "*create-front-end-spec", "*audit {path}", "*consolidate", "*tokenize", "*build {component}", "*compose {molecule}", "*a11y-check", "*calculate-roi"]}
-  whenToUse="Quando precisa de pesquisa de usuario, wireframes, design system, auditoria de UI, ou criacao de componentes atomicos."
+  whenToUse="Quando precisa de pesquisa de usuário, wireframes, design system, auditoria de UI, ou criação de componentes atômicos."
   collaboratesWith={["@pm (recebe PRD com requisitos UI)", "@architect (entrega front-end spec)", "@dev (fornece componentes e tokens)"]}
-  restrictions={["NAO implementa codigo de producao", "NAO faz arquitetura backend"]}
+  restrictions={["NÃO implementa código de produção", "NÃO faz arquitetura backend"]}
 />
 
 ### As 5 Fases de Uma
 
 | Fase | Foco | Comandos | Output |
 |---|---|---|---|
-| **1. UX Research** | Pesquisa de usuario, personas, jornadas | `*research`, `*wireframe`, `*create-front-end-spec` | Personas, wireframes, front-end-spec.md |
-| **2. Design System Audit** | Escanear redundancias em codebase existente | `*audit {path}`, `*consolidate`, `*shock-report` | Relatorio de redundancias HTML |
+| **1. UX Research** | Pesquisa de usuário, personas, jornadas | `*research`, `*wireframe`, `*create-front-end-spec` | Personas, wireframes, front-end-spec.md |
+| **2. Design System Audit** | Escanear redundâncias em codebase existente | `*audit {path}`, `*consolidate`, `*shock-report` | Relatório de redundâncias HTML |
 | **3. Design Tokens** | Extrair e configurar tokens | `*tokenize`, `*setup`, `*migrate` | Tokens configurados |
-| **4. Component Building** | Construir atoms, molecules, organisms | `*build {component}`, `*compose {molecule}`, `*extend` | Componentes atomicos |
-| **5. Quality & Docs** | Acessibilidade, documentacao, ROI | `*a11y-check`, `*document`, `*calculate-roi` | Pattern library, WCAG report |
+| **4. Component Building** | Construir atoms, molecules, organisms | `*build {component}`, `*compose {molecule}`, `*extend` | Componentes atômicos |
+| **5. Quality & Docs** | Acessibilidade, documentação, ROI | `*a11y-check`, `*document`, `*calculate-roi` | Pattern library, WCAG report |
 
 ### Atomic Design no AIOX
 
 Uma segue a metodologia Atomic Design de Brad Frost:
 
-| Nivel | Descricao | Exemplo |
+| Nível | Descrição | Exemplo |
 |---|---|---|
-| **Atoms** | Elementos basicos indivisiveis | Button, Input, Label |
-| **Molecules** | Grupos de atoms com funcao | SearchBar (Input + Button) |
-| **Organisms** | Secoes complexas da interface | Header (Logo + Nav + SearchBar) |
+| **Atoms** | Elementos básicos indivisíveis | Button, Input, Label |
+| **Molecules** | Grupos de atoms com função | SearchBar (Input + Button) |
+| **Organisms** | Seções complexas da interface | Header (Logo + Nav + SearchBar) |
 
 <Callout type="tip" title="Audit antes de Build">
-Em projetos brownfield, SEMPRE execute `*audit {path}` antes de criar novos componentes. Uma identifica redundancias existentes que podem ser consolidadas em vez de criar duplicatas.
+Em projetos brownfield, SEMPRE execute `*audit {path}` antes de criar novos componentes. Uma identifica redundâncias existentes que podem ser consolidadas em vez de criar duplicatas.
 </Callout>
 
 ---
 
-## Como os Tres Trabalham Juntos
+## Como os Três Trabalham Juntos
 
-| Fluxo | Descricao |
+| Fluxo | Descrição |
 |---|---|
 | @architect -> @data-engineer | Aria define "usar PostgreSQL com Supabase". Dara projeta o schema, cria migrations e configura RLS |
 | @ux-design-expert -> @architect | Uma cria front-end-spec com tokens e componentes. Aria integra na arquitetura fullstack |
@@ -169,28 +169,28 @@ Em projetos brownfield, SEMPRE execute `*audit {path}` antes de criar novos comp
   title="Agentes de Desenvolvimento"
   questions={[
     {
-      question: "O que Dex faz quando @qa encontra issues no codigo?",
+      question: "O que Dex faz quando @qa encontra issues no código?",
       options: ["Ignora e faz deploy", "Usa *apply-qa-fixes para corrigir baseado no qa-report.md", "Cria uma nova story", "Delega para outro agente"],
       correct: 1,
-      explanation: "Dex recebe o qa-report.md e usa *apply-qa-fixes para corrigir cada issue. O loop continua ate @qa emitir PASS."
+      explanation: "Dex recebe o qa-report.md e usa *apply-qa-fixes para corrigir cada issue. O loop continua até @qa emitir PASS."
     },
     {
-      question: "Qual principio de Dara garante que migracoes sao seguras?",
-      options: ["Speed first", "Tudo versionado e reversivel (snapshots + rollback)", "Nunca fazer migracoes", "Migrar so de noite"],
+      question: "Qual princípio de Dara garante que migrações são seguras?",
+      options: ["Speed first", "Tudo versionado e reversível (snapshots + rollback)", "Nunca fazer migrações", "Migrar só de noite"],
       correct: 1,
-      explanation: "Dara sempre cria snapshot antes de migrar, faz dry-run para testar, e mantem rollback disponivel em caso de falha."
+      explanation: "Dara sempre cria snapshot antes de migrar, faz dry-run para testar, e mantém rollback disponível em caso de falha."
     },
     {
-      question: "Qual e a primeira fase de Uma em um projeto brownfield?",
+      question: "Qual é a primeira fase de Uma em um projeto brownfield?",
       options: ["Component Building", "Design System Audit (*audit)", "Deploy", "UX Research"],
       correct: 1,
-      explanation: "Em projetos brownfield, Uma comeca com Design System Audit para identificar redundancias existentes antes de criar novos componentes."
+      explanation: "Em projetos brownfield, Uma começa com Design System Audit para identificar redundâncias existentes antes de criar novos componentes."
     }
   ]}
 />
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima licao, vamos conhecer os **agentes de processo**: River (SM), Quinn (QA) e Pax (PO).
+Na próxima lição, vamos conhecer os **agentes de processo**: River (SM), Quinn (QA) e Pax (PO).

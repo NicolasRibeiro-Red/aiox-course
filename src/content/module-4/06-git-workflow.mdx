@@ -1,30 +1,30 @@
 # Auto Worktree e Git Workflow
 
-O AIOX implementa duas estrategias complementares para gerenciar codigo: **Auto Worktree** para isolamento de desenvolvimento e **Defense in Depth** para validacao em multiplas camadas. Juntas, elas garantem que stories sejam desenvolvidas em paralelo sem conflitos e que codigo ruim nunca chegue a branch principal.
+O AIOX implementa duas estratégias complementares para gerenciar código: **Auto Worktree** para isolamento de desenvolvimento e **Defense in Depth** para validação em múltiplas camadas. Juntas, elas garantem que stories sejam desenvolvidas em paralelo sem conflitos e que código ruim nunca chegue à branch principal.
 
 ---
 
 ## Auto Worktree — Isolamento por Story
 
-O Auto Worktree e um workflow que cria **worktrees Git isoladas** para cada story. Cada story trabalha em um diretorio e branch separados, permitindo desenvolvimento paralelo sem interferencia.
+O Auto Worktree é um workflow que cria **worktrees Git isoladas** para cada story. Cada story trabalha em um diretório e branch separados, permitindo desenvolvimento paralelo sem interferência.
 
 ### Como Funciona
 
 Quando o `@dev` inicia uma story, o workflow automaticamente:
 
-1. **Extrai o Story ID** do contexto (parametro, arquivo, task ou branch)
-2. **Verifica se ja existe** uma worktree para essa story
+1. **Extrai o Story ID** do contexto (parâmetro, arquivo, task ou branch)
+2. **Verifica se já existe** uma worktree para essa story
 3. **Limpa worktrees obsoletas** (> 30 dias sem uso, se habilitado)
 4. **Cria a worktree** em `.aiox/worktrees/{storyId}/` com branch `auto-claude/{storyId}`
-5. **Troca o contexto** para o novo diretorio
-6. **Exibe o resumo** com instrucoes
+5. **Troca o contexto** para o novo diretório
+6. **Exibe o resumo** com instruções
 
 ### Estrutura Criada
 
 ```
 .aiox/worktrees/
 ├── STORY-42/          # Worktree da story 42
-│   ├── src/           # Copia isolada do codigo
+│   ├── src/           # Cópia isolada do código
 │   └── ...
 ├── STORY-43/          # Worktree da story 43
 │   └── ...
@@ -37,7 +37,7 @@ Branches:
 
 ### Comandos de Worktree
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
 | `*create-worktree {storyId}` | Criar worktree manualmente |
 | `*list-worktrees` | Listar worktrees ativas |
@@ -46,14 +46,14 @@ Branches:
 | `*cleanup-worktrees` | Limpar worktrees obsoletas |
 
 <Callout type="info" title="Requisitos">
-O Auto Worktree requer Git >= 2.5. Verifique com `git --version`. O limite padrao e 10 worktrees simultaneas, configuravel em `.aiox/config.yaml`.
+O Auto Worktree requer Git >= 2.5. Verifique com `git --version`. O limite padrão é 10 worktrees simultâneas, configurável em `.aiox/config.yaml`.
 </Callout>
 
 ---
 
-## Defense in Depth — Validacao em 3 Camadas
+## Defense in Depth — Validação em 3 Camadas
 
-O AIOX implementa uma estrategia de **defesa em profundidade** com 3 camadas de validacao progressiva. Cada camada captura tipos diferentes de problemas no momento mais adequado.
+O AIOX implementa uma estratégia de **defesa em profundidade** com 3 camadas de validação progressiva. Cada camada captura tipos diferentes de problemas no momento mais adequado.
 
 ### As 3 Camadas
 
@@ -74,7 +74,7 @@ npm run lint      # ESLint com cache (.eslintcache)
 npm run typecheck # TypeScript incremental (.tsbuildinfo)
 ```
 
-Performance: primeira execucao ~10-15s, subsequentes < 5s gracas ao cache.
+Performance: primeira execução ~10-15s, subsequentes < 5s graças ao cache.
 
 ### Layer 2: Pre-push Hook
 
@@ -86,9 +86,9 @@ Executado automaticamente em cada `git push`. Valida stories:
 node .aiox-core/utils/aiox-validator.js pre-push
 ```
 
-Regras de validacao:
+Regras de validação:
 
-| Regra | Descricao |
+| Regra | Descrição |
 |---|---|
 | Status Consistency | Story `completed` mas tasks `[ ]`? Erro. |
 | Required Sections | id, title, description, acceptance_criteria, status |
@@ -97,7 +97,7 @@ Regras de validacao:
 
 ### Layer 3: CI/CD Pipeline (GitHub Actions)
 
-Executado na nuvem quando codigo e enviado ao GitHub:
+Executado na nuvem quando código é enviado ao GitHub:
 
 ```yaml
 # .github/workflows/ci.yml
@@ -113,19 +113,19 @@ jobs:
 
 ## Branch Protection
 
-O AIOX configura protecao automatica para a branch `master`:
+O AIOX configura proteção automática para a branch `master`:
 
-| Protecao | Configuracao |
+| Proteção | Configuração |
 |---|---|
-| Status checks obrigatorios | ESLint, TypeScript, Tests, Story Validation |
-| Reviews obrigatorias | 1 aprovacao minima |
+| Status checks obrigatórios | ESLint, TypeScript, Tests, Story Validation |
+| Reviews obrigatórias | 1 aprovação mínima |
 | Dismiss stale reviews | Sim, em novos commits |
-| Historico linear | Sim (rebase only) |
+| Histórico linear | Sim (rebase only) |
 | Force push | Bloqueado |
-| Delecao da branch | Bloqueada |
+| Deleção da branch | Bloqueada |
 
 ```bash
-# Configurar protecao automaticamente
+# Configurar proteção automaticamente
 node scripts/setup-branch-protection.js
 
 # Verificar status
@@ -134,9 +134,9 @@ node scripts/setup-branch-protection.js --status
 
 ---
 
-## Fluxo Diario Completo
+## Fluxo Diário Completo
 
-Um dia tipico de desenvolvimento com AIOX segue este fluxo:
+Um dia típico de desenvolvimento com AIOX segue este fluxo:
 
 ```bash
 # 1. Atualizar master
@@ -159,25 +159,25 @@ git push origin feature/minha-feature
 gh pr create --title "feat: Add feature" --body "Description"
 
 # 6. Review e merge
-# → Branch protection exige aprovacao
+# → Branch protection exige aprovação
 gh pr merge --squash --delete-branch
 ```
 
 <Callout type="warning" title="Evite --no-verify">
-Os comandos `git commit --no-verify` e `git push --no-verify` pulam os hooks de validacao. Use apenas em emergencias absolutas (hotfixes criticos). Validacoes puladas nao capturam problemas.
+Os comandos `git commit --no-verify` e `git push --no-verify` pulam os hooks de validação. Use apenas em emergências absolutas (hotfixes críticos). Validações puladas não capturam problemas.
 </Callout>
 
 ---
 
-## Resolucao de Problemas Comuns
+## Resolução de Problemas Comuns
 
-| Problema | Causa | Solucao |
+| Problema | Causa | Solução |
 |---|---|---|
-| Hook nao executa | Husky nao instalado | `npm run prepare` |
-| Pre-commit lento (> 10s) | Cache invalido | `rm .eslintcache .tsbuildinfo` |
+| Hook não executa | Husky não instalado | `npm run prepare` |
+| Pre-commit lento (> 10s) | Cache inválido | `rm .eslintcache .tsbuildinfo` |
 | Story validation falha | Checkbox inconsistente | Verificar `[x]` vs status |
 | CI falha mas local passa | Cache local diverge | `rm -rf node_modules && npm ci` |
-| Worktree nao cria | Git < 2.5 | Atualizar Git |
+| Worktree não cria | Git < 2.5 | Atualizar Git |
 | Limite de worktrees | >= 10 ativas | `*cleanup-worktrees` |
 | Conflito no merge | Branches divergiram | `git rebase main` dentro da worktree |
 
@@ -187,22 +187,22 @@ Os comandos `git commit --no-verify` e `git push --no-verify` pulam os hooks de 
   title="Teste seus conhecimentos"
   questions={[
     {
-      question: "Quantas camadas de validacao o AIOX implementa no Git workflow?",
+      question: "Quantas camadas de validação o AIOX implementa no Git workflow?",
       options: ["1 (pre-commit)", "2 (pre-commit e CI)", "3 (pre-commit, pre-push e CI)", "4 (pre-commit, pre-push, CI e deploy)"],
       correct: 2,
       explanation: "O AIOX implementa 3 camadas: Layer 1 (pre-commit, < 5s), Layer 2 (pre-push, < 2s) e Layer 3 (CI/CD na nuvem, 2-5 min)."
     },
     {
       question: "O que o Auto Worktree cria para cada story?",
-      options: ["Um container Docker", "Um diretorio e branch isolados", "Um repositorio separado", "Uma copia completa do projeto"],
+      options: ["Um container Docker", "Um diretório e branch isolados", "Um repositório separado", "Uma cópia completa do projeto"],
       correct: 1,
-      explanation: "O Auto Worktree cria um diretorio em .aiox/worktrees/{storyId}/ e uma branch auto-claude/{storyId}, usando git worktree para isolamento."
+      explanation: "O Auto Worktree cria um diretório em .aiox/worktrees/{storyId}/ e uma branch auto-claude/{storyId}, usando git worktree para isolamento."
     },
     {
-      question: "Qual e o threshold minimo de cobertura de testes no CI?",
+      question: "Qual é o threshold mínimo de cobertura de testes no CI?",
       options: ["60%", "70%", "80%", "90%"],
       correct: 2,
-      explanation: "O pipeline de CI exige cobertura minima de 80% nos testes. Abaixo disso, o job falha e o PR nao pode ser mergeado."
+      explanation: "O pipeline de CI exige cobertura mínima de 80% nos testes. Abaixo disso, o job falha e o PR não pode ser mergeado."
     }
   ]}
 />

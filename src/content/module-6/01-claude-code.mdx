@@ -1,25 +1,25 @@
-# Claude Code — A Melhor Experiencia AIOX
+# Claude Code — A Melhor Experiência AIOX
 
-O Claude Code e a plataforma que oferece a **integracao mais completa** com o AIOX. Com suporte nativo a hooks, memoria persistente, MCP integrado e slash commands, ele transforma agentes AIOX em cidadaos de primeira classe do seu ambiente de desenvolvimento.
+O Claude Code é a plataforma que oferece a **integração mais completa** com o AIOX. Com suporte nativo a hooks, memória persistente, MCP integrado e slash commands, ele transforma agentes AIOX em cidadãos de primeira classe do seu ambiente de desenvolvimento.
 
 ---
 
-## Por que Claude Code e o Melhor para AIOX?
+## Por que Claude Code é o Melhor para AIOX?
 
-O Claude Code nao e apenas "mais uma opcao" — e a plataforma de referencia para o AIOX. Todas as features do framework foram desenhadas pensando primeiro no Claude Code, e depois adaptadas para outras IDEs.
+O Claude Code não é apenas "mais uma opção" — é a plataforma de referência para o AIOX. Todas as features do framework foram desenhadas pensando primeiro no Claude Code, e depois adaptadas para outras IDEs.
 
 <ComparisonTable
   title="Claude Code vs Outras IDEs"
   headers={["Capacidade", "Claude Code"]}
   rows={[
-    ["Auto-Checks (pre/pos acao)", "Completo e nativo"],
-    ["Session Tracking", "Automatico"],
-    ["Audit Trail", "Mais rico disponivel"],
-    ["Ativacao de Agentes", "Slash commands (/dev, /qa)"],
+    ["Auto-Checks (pré/pós ação)", "Completo e nativo"],
+    ["Session Tracking", "Automático"],
+    ["Audit Trail", "Mais rico disponível"],
+    ["Ativação de Agentes", "Slash commands (/dev, /qa)"],
     ["MCP Support", "Nativo"],
-    ["Hooks System", "Pre/Post nativos"],
+    ["Hooks System", "Pré/Post nativos"],
     ["Custom Skills", "Suportado"],
-    ["Memoria Persistente", "Integrado"],
+    ["Memória Persistente", "Integrado"],
   ]}
 />
 
@@ -27,7 +27,7 @@ O Claude Code nao e apenas "mais uma opcao" — e a plataforma de referencia par
 
 ## Setup Inicial
 
-A configuracao do AIOX no Claude Code e automatica. Ao inicializar o projeto, o framework cria toda a estrutura necessaria:
+A configuração do AIOX no Claude Code é automática. Ao inicializar o projeto, o framework cria toda a estrutura necessária:
 
 ```yaml
 config_file: .claude/CLAUDE.md
@@ -43,7 +43,7 @@ special_features:
   - Memory persistence
 ```
 
-### Passos de Instalacao
+### Passos de Instalação
 
 ```bash
 # Sync automatico ao inicializar
@@ -53,17 +53,17 @@ npm run sync:ide
 ls -la .claude/commands/AIOX/agents/
 ```
 
-O AIOX automaticamente cria o diretorio `.claude/` na raiz do projeto e popula os agentes como slash commands.
+O AIOX automaticamente cria o diretório `.claude/` na raiz do projeto e popula os agentes como slash commands.
 
-<Callout type="tip" title="Ativacao Instantanea">
-No Claude Code, basta digitar `/dev`, `/qa`, `/architect` para ativar qualquer agente AIOX. Sem configuracao extra, sem copiar arquivos manualmente.
+<Callout type="tip" title="Ativação Instantânea">
+No Claude Code, basta digitar `/dev`, `/qa`, `/architect` para ativar qualquer agente AIOX. Sem configuração extra, sem copiar arquivos manualmente.
 </Callout>
 
 ---
 
-## Hooks — Automacao Pre e Pos Acao
+## Hooks — Automação Pré e Pós Ação
 
-O sistema de hooks e uma das features mais poderosas do Claude Code com AIOX. Hooks permitem executar validacoes e automacoes antes e depois de cada acao do agente.
+O sistema de hooks é uma das features mais poderosas do Claude Code com AIOX. Hooks permitem executar validações e automações antes e depois de cada ação do agente.
 
 ### Como Funcionam
 
@@ -76,8 +76,8 @@ O sistema de hooks e uma das features mais poderosas do Claude Code com AIOX. Ho
 
 Os hooks no Claude Code cobrem:
 
-- **Pre-action**: Validacao de contexto, verificacao de regras, carregamento de memoria
-- **Post-action**: Auditoria automatica, sincronizacao de estado, quality checks
+- **Pre-action**: Validação de contexto, verificação de regras, carregamento de memória
+- **Post-action**: Auditoria automática, sincronização de estado, quality checks
 - **Session start/end**: Detectados automaticamente pelo Claude Code
 
 ### Configurando Hooks
@@ -91,16 +91,16 @@ ls -la .claude/hooks/
 ```
 
 <Callout type="info" title="Exclusivo do Claude Code">
-O sistema de hooks com pre/post automaticos e exclusivo do Claude Code e Gemini CLI. Outras IDEs requerem execucao manual de validadores.
+O sistema de hooks com pré/post automáticos é exclusivo do Claude Code e Gemini CLI. Outras IDEs requerem execução manual de validadores.
 </Callout>
 
 ---
 
-## Memoria Persistente
+## Memória Persistente
 
-O Claude Code oferece persistencia de memoria nativa que o AIOX utiliza para manter contexto entre sessoes. Isso significa que um agente pode "lembrar" decisoes de arquitetura, bugs encontrados e padroes detectados.
+O Claude Code oferece persistência de memória nativa que o AIOX utiliza para manter contexto entre sessões. Isso significa que um agente pode "lembrar" decisões de arquitetura, bugs encontrados e padrões detectados.
 
-### Fluxo de Memoria
+### Fluxo de Memória
 
 ```
 Sessao 1: @architect decide usar PostgreSQL
@@ -110,19 +110,19 @@ Sessao 2: @dev sabe que o banco e PostgreSQL
 Sessao 3: @qa valida queries PostgreSQL
 ```
 
-A memoria funciona em camadas:
+A memória funciona em camadas:
 
-| Camada | Conteudo | Duracao |
+| Camada | Conteúdo | Duração |
 |--------|----------|---------|
-| **Hot** | Contexto ativo da sessao | Sessao atual |
-| **Warm** | Decisoes recentes, padroes | 15 dias a 1 mes |
+| **Hot** | Contexto ativo da sessão | Sessão atual |
+| **Warm** | Decisões recentes, padrões | 15 dias a 1 mês |
 | **Cold** | Aprendizados permanentes | Permanente |
 
 ---
 
 ## MCP Nativo
 
-O Model Context Protocol (MCP) no Claude Code e integrado nativamente, sem wrappers ou configuracoes complexas:
+O Model Context Protocol (MCP) no Claude Code é integrado nativamente, sem wrappers ou configurações complexas:
 
 ```bash
 # Configurar MCP servers globalmente
@@ -132,13 +132,13 @@ O Model Context Protocol (MCP) no Claude Code e integrado nativamente, sem wrapp
 aiox mcp status
 ```
 
-O MCP permite que agentes AIOX acessem ferramentas externas — busca web, documentacao de bibliotecas, scraping, automacao de browser — tudo de forma transparente.
+O MCP permite que agentes AIOX acessem ferramentas externas — busca web, documentação de bibliotecas, scraping, automação de browser — tudo de forma transparente.
 
 ---
 
 ## Subagentes com Task Tool
 
-O Claude Code suporta o **Task tool**, que permite a um agente delegar trabalho para sub-agentes. Isso e fundamental para workflows complexos:
+O Claude Code suporta o **Task tool**, que permite a um agente delegar trabalho para sub-agentes. Isso é fundamental para workflows complexos:
 
 ```
 @architect (agente principal)
@@ -147,13 +147,13 @@ O Claude Code suporta o **Task tool**, que permite a um agente delegar trabalho 
     └── Task 3: Benchmark performance → sub-agente de benchmark
 ```
 
-Cada sub-agente roda em seu proprio contexto, com suas proprias instrucoes, e retorna resultados ao agente principal.
+Cada sub-agente roda em seu próprio contexto, com suas próprias instruções, e retorna resultados ao agente principal.
 
 ---
 
 ## Sync System
 
-O AIOX mantém uma unica fonte de verdade para definicoes de agentes e sincroniza para todas as IDEs configuradas:
+O AIOX mantém uma única fonte de verdade para definições de agentes e sincroniza para todas as IDEs configuradas:
 
 ```
 ┌───────────────────────────────────────────┐
@@ -181,7 +181,7 @@ npm run sync:ide:check
 
 ## Troubleshooting
 
-### Agente nao aparece como slash command
+### Agente não aparece como slash command
 
 ```bash
 # Verificar se o agente existe na fonte
@@ -194,7 +194,7 @@ npm run sync:ide
 ls .claude/commands/AIOX/agents/
 ```
 
-### MCP nao conecta
+### MCP não conecta
 
 ```bash
 # Verificar configuracao MCP
@@ -204,9 +204,9 @@ cat ~/.claude.json
 aiox mcp status
 ```
 
-### Hooks nao executam
+### Hooks não executam
 
-Verifique permissoes de execucao e que o diretorio `.claude/` esta na raiz do projeto.
+Verifique permissões de execução e que o diretório `.claude/` está na raiz do projeto.
 
 ---
 
@@ -214,22 +214,22 @@ Verifique permissoes de execucao e que o diretorio `.claude/` esta na raiz do pr
   title="Teste seus Conhecimentos"
   questions={[
     {
-      question: "Qual e o nivel de Auto-Checks do Claude Code no AIOX?",
+      question: "Qual é o nível de Auto-Checks do Claude Code no AIOX?",
       options: ["Parcial", "Nenhum", "Completo (Full)", "Limitado"],
       correct: 2,
-      explanation: "O Claude Code oferece Auto-Checks completos (Full) — o nivel mais alto entre todas as IDEs suportadas pelo AIOX."
+      explanation: "O Claude Code oferece Auto-Checks completos (Full) — o nível mais alto entre todas as IDEs suportadas pelo AIOX."
     },
     {
       question: "Como se ativa um agente AIOX no Claude Code?",
       options: ["@agent-name", "/agent-name", "*agent-name", "#agent-name"],
       correct: 1,
-      explanation: "No Claude Code, agentes sao ativados via slash commands: /dev, /qa, /architect, etc."
+      explanation: "No Claude Code, agentes são ativados via slash commands: /dev, /qa, /architect, etc."
     },
     {
       question: "O que o Task tool permite fazer?",
       options: ["Criar tarefas no ClickUp", "Delegar trabalho para sub-agentes", "Agendar cron jobs", "Editar arquivos em batch"],
       correct: 1,
-      explanation: "O Task tool permite que um agente delegue trabalho para sub-agentes, cada um com seu proprio contexto e instrucoes."
+      explanation: "O Task tool permite que um agente delegue trabalho para sub-agentes, cada um com seu próprio contexto e instruções."
     }
   ]}
 />

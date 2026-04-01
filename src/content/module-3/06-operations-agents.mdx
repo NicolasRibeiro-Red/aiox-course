@@ -1,6 +1,6 @@
-# Agentes de Operacoes: Gage e Craft
+# Agentes de Operações: Gage e Craft
 
-Os agentes de operacoes garantem que o codigo chega ao mundo real e que o framework se expande de forma organizada. **Gage** cuida de infraestrutura, CI/CD e deploy. **Craft** cria squads modulares para novos dominios.
+Os agentes de operações garantem que o código chega ao mundo real e que o framework se expande de forma organizada. **Gage** cuida de infraestrutura, CI/CD e deploy. **Craft** cria squads modulares para novos domínios.
 
 ---
 
@@ -13,58 +13,58 @@ Os agentes de operacoes garantem que o codigo chega ao mundo real e que o framew
   title="DevOps & Infrastructure Operator"
   archetype="Operator"
   zodiac="Capricorn"
-  description="Especialista em infraestrutura e operacoes. Gage e o UNICO agente com permissao para git push, criacao de PRs, governanca de servidores MCP, configuracao de CI/CD, releases e seguranca. Filosofia: automatize tudo que pode ser automatizado."
+  description="Especialista em infraestrutura e operações. Gage é o ÚNICO agente com permissão para git push, criação de PRs, governança de servidores MCP, configuração de CI/CD, releases e segurança. Filosofia: automatize tudo que pode ser automatizado."
   commands={["*push", "*version-check", "*cleanup", "*ci-cd", "*release", "*environment-bootstrap", "*search-mcp", "*add-mcp", "*setup-mcp-docker", "*setup-github", "*security-audit", "*security-scan"]}
-  whenToUse="Quando precisa de git push, criacao de PRs, configuracao de CI/CD, gerenciamento de releases, setup de ambiente, ou qualquer operacao de infraestrutura MCP."
-  collaboratesWith={["@dev (recebe codigo pronto para deploy)", "@architect (recebe specs de infra)", "@qa (valida antes de deploy)"]}
-  restrictions={["NAO implementa features", "NAO cria stories ou PRDs", "NAO faz code review (cabe ao @qa)"]}
+  whenToUse="Quando precisa de git push, criação de PRs, configuração de CI/CD, gerenciamento de releases, setup de ambiente, ou qualquer operação de infraestrutura MCP."
+  collaboratesWith={["@dev (recebe código pronto para deploy)", "@architect (recebe specs de infra)", "@qa (valida antes de deploy)"]}
+  restrictions={["NÃO implementa features", "NÃO cria stories ou PRDs", "NÃO faz code review (cabe ao @qa)"]}
 />
 
-### Regra Critica: Governanca MCP
+### Regra Crítica: Governança MCP
 
 <Callout type="danger" title="MCP = Exclusivo do DevOps">
-Toda operacao de infraestrutura MCP (Model Context Protocol) e gerenciada EXCLUSIVAMENTE pelo Gage. Outros agentes sao CONSUMIDORES de MCP, nao administradores. Precisa adicionar um MCP? Chame @devops.
+Toda operação de infraestrutura MCP (Model Context Protocol) é gerenciada EXCLUSIVAMENTE pelo Gage. Outros agentes são CONSUMIDORES de MCP, não administradores. Precisa adicionar um MCP? Chame @devops.
 </Callout>
 
-| Operacao | Comando | Descricao |
+| Operação | Comando | Descrição |
 |---|---|---|
-| Buscar MCPs | `*search-mcp` | Pesquisa catalogo de servidores MCP disponiveis |
+| Buscar MCPs | `*search-mcp` | Pesquisa catálogo de servidores MCP disponíveis |
 | Adicionar MCP | `*add-mcp` | Instala e configura novo servidor MCP |
 | Listar MCPs | `*list-mcps` | Lista servidores MCP habilitados |
 | Remover MCP | `*remove-mcp` | Remove servidor MCP |
 | Setup Docker | `*setup-mcp-docker` | Configura MCPs via Docker MCP Toolkit |
 
-### Os 4 Dominios de Gage
+### Os 4 Domínios de Gage
 
 #### 1. Git e GitHub Operations
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
 | `*push` | Pre-push quality gate + git push |
-| `*setup-github` | Configura repositorio GitHub |
-| `*cleanup` | Limpeza de repositorio (branches, tags) |
-| `*version-check` | Verifica e gerencia versoes |
+| `*setup-github` | Configura repositório GitHub |
+| `*cleanup` | Limpeza de repositório (branches, tags) |
+| `*version-check` | Verifica e gerencia versões |
 
 O pre-push quality gate (`*push`) executa automaticamente:
 - `npm run lint` -- Linting
-- `npm run typecheck` -- Verificacao de tipos
+- `npm run typecheck` -- Verificação de tipos
 - `npm test` -- Testes automatizados
 - Security scan -- Busca por secrets expostos
 
 #### 2. CI/CD e Releases
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
-| `*ci-cd` | Configura pipeline de integracao e entrega continua |
-| `*release` | Gerencia versionamento e publicacao de releases |
+| `*ci-cd` | Configura pipeline de integração e entrega contínua |
+| `*release` | Gerencia versionamento e publicação de releases |
 | `*environment-bootstrap` | Bootstrap completo de novo ambiente |
 
-#### 3. Seguranca
+#### 3. Segurança
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
-| `*security-audit` | Auditoria completa de seguranca |
-| `*security-scan` | Varredura rapida por vulnerabilidades |
+| `*security-audit` | Auditoria completa de segurança |
+| `*security-scan` | Varredura rápida por vulnerabilidades |
 
 #### 4. MCP Management
 
@@ -72,9 +72,9 @@ Todos os comandos `*search-mcp`, `*add-mcp`, `*list-mcps`, `*remove-mcp`, `*setu
 
 ### Autoridade Exclusiva sobre Git Remoto
 
-Este e um ponto critico do AIOX: **somente @devops pode interagir com repositorios remotos**.
+Este é um ponto crítico do AIOX: **somente @devops pode interagir com repositórios remotos**.
 
-| Operacao | Quem pode |
+| Operação | Quem pode |
 |---|---|
 | `git push` | @devops APENAS |
 | `gh pr create` | @devops APENAS |
@@ -84,9 +84,9 @@ Este e um ponto critico do AIOX: **somente @devops pode interagir com repositori
 
 ### Worktree Management
 
-Gage tambem gerencia worktrees para desenvolvimento paralelo:
+Gage também gerencia worktrees para desenvolvimento paralelo:
 
-| Comando | Descricao |
+| Comando | Descrição |
 |---|---|
 | `*create-worktree {story}` | Cria worktree Git isolada para story |
 | `*list-worktrees` | Lista worktrees ativas |
@@ -94,7 +94,7 @@ Gage tambem gerencia worktrees para desenvolvimento paralelo:
 | `*cleanup-worktrees` | Remove worktrees stale/merged |
 
 <Callout type="tip" title="Worktrees para trabalho paralelo">
-Worktrees permitem trabalhar em multiplas stories simultaneamente em branches isoladas, sem conflitos de git. Cada story tem seu proprio diretorio de trabalho.
+Worktrees permitem trabalhar em múltiplas stories simultaneamente em branches isoladas, sem conflitos de git. Cada story tem seu próprio diretório de trabalho.
 </Callout>
 
 ---
@@ -108,16 +108,16 @@ Worktrees permitem trabalhar em multiplas stories simultaneamente em branches is
   title="Squad Creator & Manager"
   archetype="Creator"
   zodiac="Aries"
-  description="Especialista em criacao, validacao e gerenciamento de squads -- pacotes modulares de agentes, tasks e workflows para dominios especificos. Craft implementa a arquitetura task-first do AIOX e suporta 3 niveis de distribuicao: Local, aiox-squads e Synkra API."
+  description="Especialista em criação, validação e gerenciamento de squads -- pacotes modulares de agentes, tasks e workflows para domínios específicos. Craft implementa a arquitetura task-first do AIOX e suporta 3 níveis de distribuição: Local, aiox-squads e Synkra API."
   commands={["*create-squad", "*design-squad", "*validate-squad", "*list-squads", "*analyze-squad", "*extend-squad", "*migrate-to-v2", "*generate-skills", "*generate-workflow"]}
-  whenToUse="Quando precisa criar squads para novos dominios, validar squads existentes, estender squads com novos componentes, ou migrar squads para formato v2."
-  collaboratesWith={["@aiox-master (recebe direcao de framework)", "@dev (implementa scripts de squad)"]}
-  restrictions={["NAO implementa logica de aplicacao", "NAO faz deploy", "NAO cria stories de produto"]}
+  whenToUse="Quando precisa criar squads para novos domínios, validar squads existentes, estender squads com novos componentes, ou migrar squads para formato v2."
+  collaboratesWith={["@aiox-master (recebe direção de framework)", "@dev (implementa scripts de squad)"]}
+  restrictions={["NÃO implementa lógica de aplicação", "NÃO faz deploy", "NÃO cria stories de produto"]}
 />
 
-### O que sao Squads?
+### O que são Squads?
 
-Squads sao **extensoes modulares** do AIOX para dominios especializados. Cada squad e um pacote autocontido com:
+Squads são **extensões modulares** do AIOX para domínios especializados. Cada squad é um pacote autocontido com:
 
 ```
 squads/my-squad/
@@ -131,46 +131,46 @@ squads/my-squad/
 
 ### Quando Criar um Squad?
 
-| Cenario | Criar Squad? | Razao |
+| Cenário | Criar Squad? | Razão |
 |---|---|---|
-| Dominio nao-tecnico (wellness, educacao) | Sim | Vai alem de dev de software |
-| Dominio tecnico especializado (games, mobile) | Sim | Agentes especificos necessarios |
+| Domínio não-técnico (wellness, educação) | Sim | Vai além de dev de software |
+| Domínio técnico especializado (games, mobile) | Sim | Agentes específicos necessários |
 | Base de conhecimento pesada | Sim | Bloataria o core |
-| Feature simples de software | Nao | Core agents resolvem |
-| Workflow repetitivo no seu time | Sim | Reutilizavel entre projetos |
+| Feature simples de software | Não | Core agents resolvem |
+| Workflow repetitivo no seu time | Sim | Reutilizável entre projetos |
 
-### Principios Fundamentais
+### Princípios Fundamentais
 
-| Principio | Descricao |
+| Princípio | Descrição |
 |---|---|
-| **Task-First Architecture** | Tasks sao o ponto de entrada, agentes orquestram |
-| **Validacao obrigatoria** | Sempre validar contra JSON Schema antes de distribuir |
-| **3 niveis de distribuicao** | Local, Publico (aiox-squads), Marketplace (Synkra API) |
-| **Integracao com aiox-core** | Squads trabalham em sinergia com o framework |
+| **Task-First Architecture** | Tasks são o ponto de entrada, agentes orquestram |
+| **Validação obrigatória** | Sempre validar contra JSON Schema antes de distribuir |
+| **3 níveis de distribuição** | Local, Público (aiox-squads), Marketplace (Synkra API) |
+| **Integração com aiox-core** | Squads trabalham em sinergia com o framework |
 
-### Pipeline de Criacao de Squad
+### Pipeline de Criação de Squad
 
 <WorkflowVisualizer
-  title="Criacao de Squad"
+  title="Criação de Squad"
   steps={[
-    { agent: "Craft", agentIcon: "🔧", title: "Design", description: "Analisa documentacao e gera blueprint do squad", artifacts: "squad-blueprint.md" },
+    { agent: "Craft", agentIcon: "🔧", title: "Design", description: "Analisa documentação e gera blueprint do squad", artifacts: "squad-blueprint.md" },
     { agent: "Craft", agentIcon: "🔧", title: "Create", description: "Gera estrutura completa: agents, tasks, workflows", artifacts: "squads/my-squad/" },
-    { agent: "Craft", agentIcon: "🔧", title: "Validate", description: "Valida contra JSON Schema e padroes do AIOX", artifacts: "Validation report" },
+    { agent: "Craft", agentIcon: "🔧", title: "Validate", description: "Valida contra JSON Schema e padrões do AIOX", artifacts: "Validation report" },
     { agent: "Craft", agentIcon: "🔧", title: "Extend", description: "Adiciona skills, workflows e componentes extras", artifacts: "Squad completo" }
   ]}
 />
 
-### 3 Niveis de Distribuicao
+### 3 Níveis de Distribuição
 
-| Nivel | Onde vive | Escopo | Comando |
+| Nível | Onde vive | Escopo | Comando |
 |---|---|---|---|
 | **Local** | `./squads/` no projeto | Apenas este projeto | `*create-squad` |
-| **Publico** | Repositorio `aiox-squads` | Qualquer projeto AIOX | `*publish-squad` (futuro) |
+| **Público** | Repositório `aiox-squads` | Qualquer projeto AIOX | `*publish-squad` (futuro) |
 | **Marketplace** | Synkra API | Ecossistema global | `*sync-squad-synkra` (futuro) |
 
-### Validacao Obrigatoria
+### Validação Obrigatória
 
-Craft valida squads contra JSON Schema antes de qualquer distribuicao:
+Craft valida squads contra JSON Schema antes de qualquer distribuição:
 
 ```bash
 *validate-squad my-squad
@@ -186,13 +186,13 @@ Resultado: PASS (com warnings)
 
 ---
 
-## Gage + Craft: O Ciclo de Operacoes
+## Gage + Craft: O Ciclo de Operações
 
 | Fase | Agente | O que faz |
 |---|---|---|
-| **Setup** | Gage | Bootstrap de ambiente, configuracao de MCPs |
-| **Extension** | Craft | Criacao de squads para novos dominios |
-| **Development** | Dex + outros | Implementacao seguindo stories |
+| **Setup** | Gage | Bootstrap de ambiente, configuração de MCPs |
+| **Extension** | Craft | Criação de squads para novos domínios |
+| **Development** | Dex + outros | Implementação seguindo stories |
 | **Quality** | Quinn | Review e quality gates |
 | **Delivery** | Gage | Pre-push gate, PR, merge, release |
 
@@ -201,31 +201,31 @@ Resultado: PASS (com warnings)
 ## Teste seus Conhecimentos
 
 <QuizBlock
-  title="Agentes de Operacoes"
+  title="Agentes de Operações"
   questions={[
     {
-      question: "Qual agente e o UNICO com permissao para git push?",
+      question: "Qual agente é o ÚNICO com permissão para git push?",
       options: ["@dev (Dex)", "@architect (Aria)", "@devops (Gage)", "@aiox-master (Orion)"],
       correct: 2,
-      explanation: "Gage (@devops) e o unico agente com permissao para git push, criacao de PRs e operacoes de deploy. Todos os outros agentes devem delegar."
+      explanation: "Gage (@devops) é o único agente com permissão para git push, criação de PRs e operações de deploy. Todos os outros agentes devem delegar."
     },
     {
-      question: "Quando voce deve criar um Squad em vez de usar os agentes core?",
-      options: ["Sempre que quiser", "Quando o dominio vai alem de desenvolvimento de software ou bloataria o core", "Nunca -- os agentes core sao suficientes", "Apenas para projetos grandes"],
+      question: "Quando você deve criar um Squad em vez de usar os agentes core?",
+      options: ["Sempre que quiser", "Quando o domínio vai além de desenvolvimento de software ou bloataria o core", "Nunca -- os agentes core são suficientes", "Apenas para projetos grandes"],
       correct: 1,
-      explanation: "Squads sao para dominios especializados (nao-tecnicos, tech especifico, knowledge-heavy) que bloatariam os agentes core se adicionados diretamente."
+      explanation: "Squads são para domínios especializados (não-técnicos, tech específico, knowledge-heavy) que bloatariam os agentes core se adicionados diretamente."
     },
     {
       question: "O que o pre-push quality gate do Gage verifica?",
-      options: ["Apenas testes", "Lint, typecheck, testes e security scan", "Apenas formatacao", "Apenas se o commit tem mensagem"],
+      options: ["Apenas testes", "Lint, typecheck, testes e security scan", "Apenas formatação", "Apenas se o commit tem mensagem"],
       correct: 1,
-      explanation: "O pre-push quality gate executa 4 verificacoes automaticas: lint, typecheck, testes e security scan por secrets expostos."
+      explanation: "O pre-push quality gate executa 4 verificações automáticas: lint, typecheck, testes e security scan por secrets expostos."
     }
   ]}
 />
 
 ---
 
-## Proximo Passo
+## Próximo Passo
 
-Na proxima e ultima licao do modulo, vamos consolidar a **referencia completa de comandos** de todos os agentes.
+Na próxima e última lição do módulo, vamos consolidar a **referência completa de comandos** de todos os agentes.
