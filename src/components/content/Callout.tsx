@@ -1,5 +1,5 @@
 interface CalloutProps {
-  type?: "info" | "warning" | "tip" | "danger";
+  type?: "info" | "warning" | "tip" | "danger" | "error";
   title?: string;
   children: React.ReactNode;
 }
@@ -36,7 +36,7 @@ const styles = {
 };
 
 export function Callout({ type = "info", title, children }: CalloutProps) {
-  const s = styles[type];
+  const s = styles[type === "error" ? "danger" : type];
   return (
     <div
       className={`${s.border} ${s.bg} border rounded-lg p-4 my-6 not-prose`}
