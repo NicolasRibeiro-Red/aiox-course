@@ -66,14 +66,16 @@ export function WorkflowVisualizer({ title, steps }: WorkflowVisualizerProps) {
             {steps[activeStep].description}
           </p>
 
-          {steps[activeStep].artifacts &&
-            steps[activeStep].artifacts!.length > 0 && (
+          {steps[activeStep].artifacts && (
               <div>
                 <h5 className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">
                   Artefatos Gerados
                 </h5>
                 <div className="space-y-1">
-                  {steps[activeStep].artifacts!.map((artifact, i) => (
+                  {(Array.isArray(steps[activeStep].artifacts)
+                    ? steps[activeStep].artifacts!
+                    : (steps[activeStep].artifacts as unknown as string).split(", ")
+                  ).map((artifact, i) => (
                     <div
                       key={i}
                       className="text-xs font-mono text-zinc-400 bg-zinc-800 px-3 py-1.5 rounded"

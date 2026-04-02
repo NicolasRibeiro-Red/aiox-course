@@ -90,6 +90,7 @@ export function LessonContent({ lessonId, moduleId, lessonTitle }: LessonContent
   const completed = isLessonCompleted(lessonId);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setLoading(true);
     setError(false);
     setContent(null);
