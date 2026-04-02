@@ -16,6 +16,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Callout,
     CommandReference,
     FileTree,
+    "FileTree.File": FileTree.File,
+    "FileTree.Folder": FileTree.Folder,
     InteractionTranscript,
     ComparisonTable,
     WorkflowVisualizer,
